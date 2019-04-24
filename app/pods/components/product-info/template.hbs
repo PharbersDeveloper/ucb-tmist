@@ -1,0 +1,57 @@
+{{#bp-layout tagName="h3" main="between" cross="center" local-class="title" class="px-4" }}
+	<span>
+		<span local-class="icon" {{action 'showContent'}}>{{bp-icon icon=icon }}</span>
+		{{#if (bp-eq goods.productConfig.productType 0)}}
+			<span local-class="type self">产品</span>
+		{{else}}
+			<span local-class="type compete">竞品</span>
+		{{/if}}
+		{{goods.productConfig.product.name}} - {{goods.productConfig.product.generalName}}
+	</span>
+{{/bp-layout}}
+{{#bs-collapse collapsed=showContent}}
+	{{#bp-layout local-class="product-content"
+		classNames="p-4" }}
+		{{#bp-layout main="between" local-class="left" }}
+			{{#each goods.productConfig.product.images as |item|}}
+				<img src={{item.img}} alt={{goods.productConfig.product.name}} class="mr-4">
+			{{/each}}
+			{{#bp-layout local-class="product-infos"}}
+				{{#bp-layout direction="col"}}
+					<span local-class="keys" class="mb-3">治疗领域</span>
+					<span local-class="keys" class="mb-3">上市时间</span>
+					<span local-class="keys" class="mb-3">所属公司</span>
+					<span local-class="keys" class="mb-3">药品类型</span>
+					<span local-class="keys" class="mb-3">市场定位</span>
+					<span local-class="keys" class="mb-3">日使用费用</span>
+				{{/bp-layout}}
+				{{#bp-layout direction="col" classNames="ml-3"}}
+					<span local-class="values" class="mb-3">
+						{{goods.productConfig.treatmentArea}}
+					</span>
+					<span local-class="values" class="mb-3">
+						{{goods.productConfig.launchTime}}
+					</span>
+					<span local-class="values" class="mb-3">
+						{{goods.productConfig.product.corpName}}
+					</span>
+					<span local-class="values" class="mb-3">
+						{{goods.productConfig.patentDescribe}}
+					</span>
+					<span local-class="values" class="mb-3">
+						{{goods.productConfig.lifeCycle}}
+					</span>
+					<span local-class="values" class="mb-3">
+						{{goods.productConfig.lifeCycle}}*
+					</span>
+				{{/bp-layout}}
+			{{/bp-layout}}
+		{{/bp-layout}}
+		{{#bp-layout tagName="p" local-class="right" }}
+			<span local-class="keys" class="mr-3">药品特点</span>
+			<span local-class="values">
+				{{goods.productConfig.productFeature}}
+			</span>
+		{{/bp-layout}}
+	{{/bp-layout}}
+{{/bs-collapse}}

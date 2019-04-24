@@ -1,0 +1,23 @@
+<div local-class="products-container reference-content">
+	<div local-class="trend" class="mb-4">
+		<div local-class="trend-line">
+			{{bp-line/tm
+				title="产品份额竞争趋势"
+				subText='全国'
+				lineData=model.lineDataTm
+				lineColor=model.lineColorTm}}
+		</div>
+	</div>
+	{{#bp-layout tagName="h3" main="between" cross="center"
+		local-class="title"
+		classNames="m-0 px-4 bg-white"}}
+		<p local-class="main" class="m-0">药品详细信息</p>
+		<p local-class="overview" class="m-0">
+			<span class="mr-4">公司产品数量：3*</span>
+			<span>竞品产品数量：3*</span>
+		</p>
+	{{/bp-layout}}
+	{{#each model.goodsConfigs as |item|}}
+		{{product-info goods=item}}
+	{{/each}}
+</div>

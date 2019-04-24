@@ -1,0 +1,108 @@
+{{#bp-layout tagName="h4" main='between' cross="center"
+	local-class="title" classNames="px-4  bg-white"}}
+	{{model.destConfig.hospitalConfig.hospital.name}}
+	{{#bp-button onClick=(action 'reInput')}}重置{{/bp-button}}
+{{/bp-layout}}
+{{#bp-layout direction="col" local-class="reps-allocate" 
+	classNames="mb-2 bg-white"}}
+	{{#bp-layout tagName="h5" cross="center" 
+			local-class="title" classNames="px-4 m-0"}}
+		代表和时间分配
+	{{/bp-layout}}
+	{{#bp-layout direction="col" classNames="p-4"}}
+		<p local-class="description" class="mb-4">第一周期提交后，后续周期中将不可更改医院代表，只能进行药品相关资源设定</p>
+		{{#bp-layout local-class="operating"}}
+			{{#if tmpRc.id}}
+				<img src={{tmpRc.representativeConfig.representative.images.firstObject.img}} local-class="avatar" alt="" class="mr-4">
+			{{else}}
+				<img src="/assets/images/businessman_avatar.png" local-class="avatar" alt="" class="mr-4">
+			{{/if}}
+			{{#bp-layout direction="col"}}
+				<p local-class="title" class="mb-3">医院代表</p>
+				{{#bp-dropdown widthSize="auto" 
+					local-class="dd-representative" classNames="mb-4" as |dd|}}
+					{{#dd.button}}
+						{{#if tmpRc.id}}
+							<p>{{tmpRc.representativeConfig.representative.name}}</p>
+						{{else}}
+							未分配代表
+						{{/if}}
+						{{bp-icon icon='down'}}
+					{{/dd.button}}
+					{{#dd.menu as |menu|}}
+						{{#each model.repConfs as |rc|}}
+							{{#if (bp-eq rc.resourceType 1)}}
+								{{#menu.option value=rc 
+									onClick=(action 'changedRep')
+									local-class="representative-info"}}
+									{{#bp-layout cross="center"}}
+										<img width="24" height="24" src={{rc.representativeConfig.representative.images.firstObject.img}} alt="avatar"
+										 class="mr-2">
+										<span local-class="name" class="mr-2">
+											{{rc.representativeConfig.representative.name}}
+										</span>
+									{{/bp-layout}}
+								{{/menu.option}}
+							{{/if}}
+						{{/each}}
+					{{/dd.menu}}
+				{{/bp-dropdown}}
+			{{/bp-layout}}
+		{{/bp-layout}}
+	{{/bp-layout}}
+{{/bp-layout}}
+{{#bp-layout tagName="h5" cross="center" 
+			local-class="title" classNames="m-0 px-4 bg-white "}}
+	药品相关资源分配
+{{/bp-layout}}
+<table local-class="prod" class="table mb-2">
+	<thead>
+		<tr>
+			<th class="border-0 pb-2 pl-2">产品名称</th>
+			<th class="border-0 pb-2 pl-2">药品潜力</th>
+			<th class="border-0 pb-2 pl-2">上季度销售额</th>
+			<th class="border-0 pb-2 pl-2">销售指标设定</th>
+			<th class="border-0 pb-2 pl-2">预算设定</th>
+		</tr>
+	</thead>
+	<tbody class="bg-white">
+		{{#each model.salesConfigs as |sc|}}
+			{{#if (bp-eq sc.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
+				<tr class="mx-0">
+					<td class="pl-2 border-0">{{sc.goodsConfig.productConfig.product.name}}</td>
+					<td class="pl-2 border-0">
+						{{#each sc.salesReport.hospitalSalesReports as |hsr|}}
+							{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
+								{{format-number hsr.potential}}
+							{{/if}}
+						{{/each}}
+					</td>
+					<td class="pl-2 border-0">
+						{{#each sc.salesReport.hospitalSalesReports as |hsr|}}
+							{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
+								{{format-number hsr.sales}}
+							{{/if}}
+						{{/each}}
+					</td>
+					<td class="pl-2 border-0">
+						{{bp-input block=true widthSize="auto" 
+							value=model.businessinput.salesTarget
+							disabled=(not tmpRc.id)
+							local-class="input-prepend input-money"
+							classNames="mb-2"}}
+						{{!-- <p class="m-0 ">
+							{{IndicatorAllocationPercent}}%
+						</p> --}}
+					</td>
+					<td class="pl-2 border-0">
+						{{!-- <p class="mb-2">￥{{budgetNumber}}</p> --}}
+						{{bp-input block=true widthSize="auto"
+							value=model.businessinput.budget
+							disabled=(not tmpRc.id)
+							local-class="input-prepend input-money"}}
+					</td>
+				</tr>
+			{{/if}}
+		{{/each}}
+	</tbody>
+</table>

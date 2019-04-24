@@ -1,0 +1,83 @@
+h4.title {
+	height: 54px;
+	@extend %header-medium;
+}
+
+h5.title {
+	height: 52px;
+	@extend %header-small;
+}
+
+.prod {
+	thead {
+		th {
+			@extend %p-small;
+		}
+	}
+
+	tbody {
+		tr {
+
+			td {
+				align-self: center;
+				padding: 2*$spacing 0;
+				vertical-align: middle;
+				@extend %p-primary;
+			}
+		}
+	}
+}
+
+.reps-allocate {
+	.description {
+		@extend %p-small;
+	}
+
+	.operating {
+		img.avatar {
+			width: 88px;
+			height: 88px;
+			border-radius: 50%;
+		}
+
+		.title {
+			@extend %p-primary;
+		}
+	}
+}
+
+.reps-meeting .input-prepend,
+.prod .input-prepend {
+	position: relative;
+
+	input {
+		padding-left: 30px;
+	}
+
+	&::after {
+		position: absolute;
+		left: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		@extend %p-secondary;
+
+	}
+
+	&.input-time {
+		&::after {
+			content: '%';
+		}
+	}
+
+	&.input-meeting {
+		&::after {
+			content: '个';
+		}
+	}
+
+	&.input-money {
+		&::after {
+			content: '￥';
+		}
+	}
+}
