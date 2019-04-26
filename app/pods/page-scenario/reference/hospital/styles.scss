@@ -11,7 +11,7 @@
 
 			table thead th {
 				@extend %p-small;
-				border-width: 1px;
+				border: 0;
 			}
 
 			table tbody tr td {
@@ -46,8 +46,28 @@
 	.content {
 		flex: 1;
 
-		.city-info {
+		.city-infos {
 			flex: 1;
+
+			h3.title {
+				height: 52px;
+
+				.main {
+					@extend %header-small;
+				}
+
+				.desc {
+					@extend %p-small;
+				}
+			}
+
+			.keys {
+				@extend %p-primary;
+			}
+
+			.values {
+				@extend %p-secondary;
+			}
 		}
 	}
 

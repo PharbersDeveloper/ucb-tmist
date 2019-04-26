@@ -9,8 +9,8 @@ export default Route.extend({
 		const ajax = this.get('ajax'),
 			applicationAdapter = this.get('store').adapterFor('application');
 
-		let host = 'http://192.168.100.116:9097',
-			version = 'v0',
+		let host = `${applicationAdapter.get('serviceHost')}`,
+			version = `${applicationAdapter.get('namespace')}`,
 			resource = 'Thirdparty',
 			scope = 'App/System:[UCB]',
 			url = '',

@@ -55,10 +55,10 @@
 			{{/bp-layout}}
 		{{/each}}
 	{{/bp-layout}}
-	{{#bp-layout local-class="content"}}
+	{{#bp-layout direction="col" local-class="content"}}
 		{{#bp-layout direction="col" local-class="city-infos"}}
-			{{#bp-layout tagName="h3" main="between" cross="center " 
-			 	local-class="title" classNames="bg-white"}}
+			{{#bp-layout tagName="h3" main="between" cross="center" 
+			 	local-class="title" classNames="px-4 bg-white"}}
 				<span local-class="main">{{tmpCityInfo.name}}*</span>
 				<span local-class="desc">该城市共有医院 {{tmpCityInfo.destConfigs.length}}</span>
 			{{/bp-layout}}
@@ -70,14 +70,17 @@
 					<p local-class="keys">该城市下共有医院数量</p>
 				{{/bp-layout}}
 				{{#bp-layout direction="col"}}
-					<p local-class="values">地级市/非地级市</p>
-					<p local-class="values">核心城市/外围城市</p>
-					<p local-class="values">80%</p>
-					<p local-class="values">55133</p>
+					<p local-class="values" class="ml-3">地级市/非地级市</p>
+					<p local-class="values" class="ml-3">核心城市/外围城市</p>
+					<p local-class="values" class="ml-3">80%</p>
+					<p local-class="values" class="ml-3">55133</p>
 				{{/bp-layout}}
 			{{/bp-layout}}
-			{{#each tmpCityInfo.destConfigs as |dc|}}
-				{{item}}
-			{{/each}}
 		{{/bp-layout}}
+		{{#each tmpCityInfo.destConfigs as |destConfig|}}
+			{{hospital-info
+					destConfig=destConfig 
+					salesConfigs=model.salesConfigs}}
+		{{/each}}
 	{{/bp-layout}}
+{{/bp-layout}}

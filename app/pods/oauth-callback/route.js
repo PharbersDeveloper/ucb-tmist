@@ -13,7 +13,7 @@ export default Route.extend({
 			applicationAdapter = this.get('store').adapterFor('application');
 
 		let version = `${applicationAdapter.get('namespace')}`,
-			host = 'http://192.168.100.116:9097',
+			host = `${applicationAdapter.get('serviceHost')}`,
 			resource = 'GenerateAccessToken',
 			scope = 'App/System:[UCB]',
 			url = '',
