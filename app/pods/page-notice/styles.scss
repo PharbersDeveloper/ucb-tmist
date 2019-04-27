@@ -136,52 +136,6 @@
 				}
 			}
 
-			// .resource {
-			// 	background-color: $n040;
-
-			// 	h2 {
-			// 		@extend %header-medium;
-
-			// 	}
-
-			// 	.item-resource {
-			// 		.icon {
-			// 			flex: 0 0 32px;
-			// 			height: 32px;
-			// 			margin-right: $spacing-3;
-			// 		}
-
-			// 		.blank {
-			// 			flex: 1;
-			// 		}
-
-			// 		.main-box {
-			// 			flex: 3;
-
-			// 			:global(.bp-progress) {
-			// 				height: $spacing;
-			// 			}
-
-			// 			p {
-			// 				@extend %p-small;
-			// 			}
-
-			// 			.circle {
-			// 				width: 64px;
-			// 				height: 64px;
-			// 			}
-			// 		}
-
-			// 		h4 {
-			// 			@extend %p-secondary;
-			// 		}
-
-			// 		span.schedule {
-			// 			@extend %header-medium;
-			// 		}
-			// 	}
-			// }
-
 			.entry-mission {
 				a {
 					color: #fff;
@@ -193,14 +147,4 @@
 			}
 		}
 	}
-}
-
-:global(.bs-popover-bottom) {
-	&.rule {
-		:global(.popover-body) {
-			@extend %p-secondary;
-		}
-
-	}
-
 }

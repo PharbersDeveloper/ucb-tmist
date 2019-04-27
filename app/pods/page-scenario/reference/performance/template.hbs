@@ -18,25 +18,138 @@
 		{{/bp-layout}}
 	{{/bp-layout}}
 	{{#bp-layout local-class="content"}}
-		{{#if (bp-eq salesGroupValue 0)}}
-			<div local-class="report product">
-				{{#bp-layout tagName="h2" cross="center" local-class="title"
+		{{!-- {{#if (bp-eq salesGroupValue 0)}} --}}
+		<div local-class="report product">
+			{{#bp-layout tagName="h2" cross="center" local-class="title"
 				 classNames="m-0 bg-white px-4"}}
-					产品销售结构分布图
-				{{/bp-layout}}
-				<div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
-					{{bp-circle-double
+				{{#each pageContent as |item index|}}
+					{{#if (bp-eq index salesGroupValue)}}
+						{{item}}销售结构分布图
+					{{/if}}
+				{{/each}}
+			{{/bp-layout}}
+			<div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
+				{{bp-circle-double
 						eid="circleProd"
-						circleSize=circlePie}}
-				</div>
-				{{#bp-layout tagName="h2" cross="center" local-class="title"
-				 classNames="m-0 bg-white px-4"}}
-					产品销售趋势图
-				{{/bp-layout}}
-				{{#bp-layout tagName="h2" cross="center" local-class="title"
-				 classNames="m-0 bg-white px-4"}}
+						circleSize=circlePie
+						circleData=doubleCircleData}}
+			</div>
+			{{#bp-layout tagName="h2" cross="center" 
+					local-class="title"
+					classNames="m-0 bg-white px-4"}}
+				{{#each pageContent as |item index|}}
+					{{#if (bp-eq index salesGroupValue)}}
+						{{item}}销售趋势图
+					{{/if}}
+				{{/each}}
+			{{/bp-layout}}
+			{{#bp-layout main="between" 
+						local-class="choose-container"
+						classNames="mb-4 bg-white"}}
+				{{#if (bp-eq salesGroupValue 1)}}
+					{{#bp-layout main="between" cross="center"
+							local-class="choose-area" 
+							classNames="px-4"}}
+						<span local-class="keys" class="mr-4">
+							选择代表
+						</span>
+						{{#bp-dropdown widthSize="auto"
+								local-class="dd-medicines dd-area" as |dd|}}
+							{{#dd.button}}
+								{{#if tmpRsr.id}}
+									<p>{{tmpRsr.representativeName}}</p>
+								{{else}}
+									请选择
+								{{/if}}
+								{{bp-icon icon='down'}}
+							{{/dd.button}}
+							{{#dd.menu as |menu|}}
+								{{#menu.option value=totalRepresentatives
+									onClick=(action (mut tmpRsr))}}
+									全部选择
+								{{/menu.option}}
+								{{#each model.representativeSalesReports as |rsrs|}}
+									{{#menu.option value=rsrs
+												onClick=(action (mut tmpRsr))}}
+										{{rsrs.representativeName}}
+									{{/menu.option}}
+								{{/each}}
+							{{/dd.menu}}
+						{{/bp-dropdown}}
+					{{/bp-layout}}
+				{{else if (bp-eq salesGroupValue 2)}}
+					{{#bp-layout main="between" cross="center"
+							local-class="choose-area" 
+							classNames="px-4"}}
+						<span local-class="keys" class="mr-4">
+							选择医院
+						</span>
+						{{#bp-dropdown widthSize="auto"
+								local-class="dd-medicines dd-area" as |dd|}}
+							{{#dd.button}}
+								{{#if tmpRsr.id}}
+									<p>{{tmpRsr.representativeName}}</p>
+								{{else}}
+									请选择
+								{{/if}}
+								{{bp-icon icon='down'}}
+							{{/dd.button}}
+							{{#dd.menu as |menu|}}
+								{{#menu.option value=totalRepresentatives
+									onClick=(action (mut tmpRsr))}}
+									全部选择
+								{{/menu.option}}
+								{{#each model.representativeSalesReports as |rsrs|}}
+									{{#menu.option value=rsrs
+												onClick=(action (mut tmpRsr))}}
+										{{rsrs.representativeName}}
+									{{/menu.option}}
+								{{/each}}
+							{{/dd.menu}}
+						{{/bp-dropdown}}
+					{{/bp-layout}}
+				{{/if}}
+				{{#bp-layout main="between" cross="center"
+							local-class="choose-area" 
+							classNames="px-4"}}
+					<span local-class="keys" class="mr-4">
+						选择产品
+					</span>
 					{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
+						{{#dd.button}}
+							{{#if tmpRsr.id}}
+								<p>{{tmpRsr.representativeName}}</p>
+							{{else}}
+								请选择
+							{{/if}}
+							{{bp-icon icon='down'}}
+						{{/dd.button}}
+						{{#dd.menu as |menu|}}
+							{{#menu.option value=totalRepresentatives
+									onClick=(action (mut tmpRsr))}}
+								全部选择
+							{{/menu.option}}
+							{{#each model.representativeSalesReports as |rsrs|}}
+								{{#menu.option value=rsrs
+												onClick=(action (mut tmpRsr))}}
+									{{rsrs.representativeName}}
+								{{/menu.option}}
+							{{/each}}
+						{{/dd.menu}}
+					{{/bp-dropdown}}
+				{{/bp-layout}}
+				{{#if (bp-eq salesGroupValue 0)}}
+					<div local-class="choose-area"></div>
+				{{/if}}
+				{{!-- <div local-class="choose-area"></div> --}}
+			{{/bp-layout}}
+			{{!-- {{#bp-layout cross="center" 
+					local-class="choose-area"
+					classNames="m-0 bg-white px-4"}}
+					<p class="mb-0 mr-3">选择产品</p>
+					{{#bp-dropdown widthSize="auto"
+						local-class="dd-medicines dd-area" as |dd|}}
 						{{#dd.button}}
 							{{#if tmpPsr.id}}
 								<p>{{tmpPsr.productName}}</p>
@@ -47,7 +160,7 @@
 						{{/dd.button}}
 						{{#dd.menu as |menu|}}
 							{{#menu.option value=totalProduct
-												onClick=(action (mut tmpPsr))}}
+								onClick=(action (mut tmpPsr))}}
 								全部选择
 							{{/menu.option}}
 							{{#each model.productSalesReports as |psrs|}}
@@ -55,41 +168,36 @@
 												onClick=(action (mut tmpPsr))}}
 									{{psrs.productName}}
 								{{/menu.option}}
-							{{/each}}
-						{{/dd.menu}}
-					{{/bp-dropdown}}
-				{{/bp-layout}}
-				<div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
-					{{bp-bar-line
-						eid="chartbarLine"
-						}}
-				</div>
-				{{#bp-layout tagName="h2" main='between' cross="center" local-class="title"
+ 
+				{{/bp-layout}} --}}
+			<div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
+				{{bp-bar-line
+					eid="chartbarLine"
+					chartData=barLineData
+				}}
+			</div>
+			{{#bp-layout tagName="h2" main='between' cross="center" local-class="title"
 				 classNames="m-0 bg-white px-4"}}
-					产品销售数据表
-					{{#bp-button}}导出数据{{/bp-button}}
-				{{/bp-layout}}
-				{{#bp-layout direction="col"}}
-					<div class="table-responsive">
-						<table local-class="table-container" class="table">
-							<thead>
-								<th>药品名称 </th>
-								{{#each model.tableHead as |tcontent|}}
-									<th class="text-center">{{tcontent}}</th>
-								{{/each}}
-							</thead>
-							<tbody class="bg-white">
-								{{#each model.prodTableBody as |trContent|}}
-									{{#if (bp-not-eq tmpPsr.productName undefined '全部选择')}}
-										{{#if (bp-eq tmpPsr.productName trContent.name)}}
-											<tr>
-												<td>{{trContent.name}}</td>
-												{{#each trContent.tableTr as |tdContent|}}
-													<td>￥{{format-number tdContent}}</td>
-												{{/each}}
-											</tr>
-										{{/if}}
-									{{else}}
+				{{#each pageContent as |item index|}}
+					{{#if (bp-eq index salesGroupValue)}}
+						{{item}}销售数据表
+					{{/if}}
+				{{/each}}
+				{{#bp-button}}导出数据{{/bp-button}}
+			{{/bp-layout}}
+			{{#bp-layout direction="col"}}
+				<div class="table-responsive">
+					<table local-class="table-container" class="table">
+						<thead>
+							<th>药品名称 </th>
+							{{#each model.tableHead as |tcontent|}}
+								<th class="text-center">{{tcontent}}</th>
+							{{/each}}
+						</thead>
+						<tbody class="bg-white">
+							{{#each model.prodTableBody as |trContent|}}
+								{{#if (bp-not-eq tmpPsr.productName undefined '全部选择')}}
+									{{#if (bp-eq tmpPsr.productName trContent.name)}}
 										<tr>
 											<td>{{trContent.name}}</td>
 											{{#each trContent.tableTr as |tdContent|}}
@@ -97,20 +205,29 @@
 											{{/each}}
 										</tr>
 									{{/if}}
-								{{/each}}
-							</tbody>
-						</table>
-					</div>
-				{{/bp-layout}}
-			</div>
-		{{else if (bp-eq salesGroupValue 1)}}
+								{{else}}
+									<tr>
+										<td>{{trContent.name}}</td>
+										{{#each trContent.tableTr as |tdContent|}}
+											<td>￥{{format-number tdContent}}</td>
+										{{/each}}
+									</tr>
+								{{/if}}
+							{{/each}}
+						</tbody>
+					</table>
+				</div>
+			{{/bp-layout}}
+		</div>
+		{{!-- {{else if (bp-eq salesGroupValue 1)}}
 			<div local-class="report representative" class="bg-white">
 				{{#bp-layout tagName="h2" cross="center" local-class="title"
 				 classNames="m-0 bg-white px-4"}}
 					代表销售报告
 				{{/bp-layout}}
 				{{#bp-layout direction="col"}}
-					{{#bp-layout main="between" local-class="choose-container"
+					{{#bp-layout main="between" 
+						local-class="choose-container"
 						classNames="mb-4 bg-white"}}
 						{{#bp-layout main="between" cross="center"
 							local-class="choose-area" 
@@ -273,6 +390,6 @@
 					</table>
 				{{/bp-layout}}
 			</div>
-		{{/if}}
+		{{/if}} --}}
 	{{/bp-layout}}
 {{/bp-layout}}

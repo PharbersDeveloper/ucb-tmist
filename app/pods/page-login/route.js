@@ -5,6 +5,7 @@ export default Route.extend({
 	ajax: service(),
 	clientId: '5cbe7ab8f4ce4352ecb082a3',
 	clientSecret: '5c90db71eeefcc082c0823b2',
+	showNav: false,
 	model() {
 		const ajax = this.get('ajax'),
 			applicationAdapter = this.get('store').adapterFor('application');

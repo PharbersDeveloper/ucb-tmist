@@ -1,14 +1,19 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import RSVP from 'rsvp';
-import { A } from '@ember/array';
 import { isEmpty } from '@ember/utils';
+import { A } from '@ember/array';
+import RSVP from 'rsvp';
+
 export default Route.extend({
 	cookies: service(),
 	beforeModel({ targetName }) {
 		let cookies = this.get('cookies'),
 			token = cookies.read('access_token');
 
+		// 初始化 notice 页面的 notcie
+		if (isEmpty(localStorage.getItem('notice'))) {
+			localStorage.setItem('notice', true);
+		}
 		if (!token && targetName !== 'oauth-callback') {
 			this.transitionTo('page-login');
 		}
