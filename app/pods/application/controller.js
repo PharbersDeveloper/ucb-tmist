@@ -6,7 +6,6 @@ const { keys } = Object;
 
 export default Controller.extend({
 	cookies: service(),
-
 	actions: {
 		/**
 		 * 账号设置

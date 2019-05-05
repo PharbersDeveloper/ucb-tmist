@@ -9,12 +9,13 @@ export default Route.extend({
 	beforeModel({ targetName }) {
 		let cookies = this.get('cookies'),
 			token = cookies.read('access_token');
+		// scope = cookies.read('scope');
 
 		// 初始化 notice 页面的 notcie
 		if (isEmpty(localStorage.getItem('notice'))) {
 			localStorage.setItem('notice', true);
 		}
-		if (!token && targetName !== 'oauth-callback') {
+		if (isEmpty(token) && targetName !== 'oauth-callback') {
 			this.transitionTo('page-login');
 		}
 	},

@@ -1,7 +1,14 @@
 {{#bp-layout local-class="historical-sales-container"}}
 	{{#bp-layout tagName="ul" direction="col" local-class="nav" 
 				classNames="mr-4 p-4 bg-white"}}
-		{{#bp-layout tagName="li" cross="center" 
+		{{#each pageContent as |pc index|}}
+			{{#bp-layout tagName="li" cross="center" 
+					local-class=(if (bp-eq salesGroupValue index) "active")
+					classNames="px-4"}}
+				<span {{action 'changeSalesValue' index}}>{{pc}}销售报告</span>
+			{{/bp-layout}}
+		{{/each}}
+		{{!-- {{#bp-layout tagName="li" cross="center" 
 					local-class=(if (bp-eq salesGroupValue 0) "active")
 					classNames="px-4"}}
 			<span {{action 'changeSalesValue' 0}}>产品销售报告</span>
@@ -15,7 +22,7 @@
 					local-class=(if (bp-eq salesGroupValue 2) "active")
 					classNames="px-4"}}
 			<span {{action 'changeSalesValue' 2}}>医院销售报告</span>
-		{{/bp-layout}}
+		{{/bp-layout}} --}}
 	{{/bp-layout}}
 	{{#bp-layout local-class="content"}}
 		{{!-- {{#if (bp-eq salesGroupValue 0)}} --}}

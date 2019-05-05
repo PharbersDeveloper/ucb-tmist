@@ -13,7 +13,7 @@ export default Route.extend({
 		let host = `${applicationAdapter.get('serviceHost')}`,
 			version = `${applicationAdapter.get('namespace')}`,
 			resource = 'Thirdparty',
-			scope = 'App/System:[UCB]',
+			scope = `${applicationAdapter.get('scope')}`,
 			url = '',
 			redirectUri = `${applicationAdapter.get('host')}/oauth-callback`;
 

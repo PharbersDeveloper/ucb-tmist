@@ -11,11 +11,6 @@
 				{{#bp-button type="subtle"  classNames="mr-3" 
 				onClick=(action (mut rules) true)}}
 					规则介绍
-					{{!-- {{#bs-popover placement="bottom" title="" local-class="rule"}}
-						这是您本期的任务内容，
-						我们将在您提交执行决策后，对您的决策的结果和表现进行评估。<br>
-						期待您为公司带来业绩上的增长和团队能力的提升!
-					{{/bs-popover}} --}}
 				{{/bp-button}}
 				{{#bp-button onClick=(action "exitMission")}}退出任务{{/bp-button}}
 			</span>
@@ -43,8 +38,7 @@
 {{#bp-modal
 		open=rules 
 		position='center'
-		onHidden=(action (mut rules) false) 
-		local-class="bp-modal" as |modal|}}
+		onHidden=(action (mut rules) false) as |modal|}}
 	{{#modal.header classNames='px-4 py-3 border-0'}}
 		规则介绍
 	{{/modal.header}}

@@ -4,7 +4,7 @@ import { A } from '@ember/array';
 export default Controller.extend({
 	salesGroupValue: 0,
 	circlePie: A([0, 90]),
-	pageContent: A(['产品', '代表', '医院']),
+	pageContent: A(['产品', '地区', '代表', '医院']),
 	init() {
 		this._super(...arguments);
 		// 初始化 全部选择 的一些数据
