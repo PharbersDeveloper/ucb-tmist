@@ -85,23 +85,46 @@
 						{{/each}}
 					</td>
 					<td class="pl-2 border-0">
-						{{bp-input block=true widthSize="auto" 
+						{{#each model.goodsConfigInputs as |goodsConfigInput|}}
+							{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsConfigInput.goodsConfig.productConfig.product.id)}}
+								{{bp-input block=true widthSize="auto" 
+								value=goodsConfigInput.salesTarget
+								disabled=(not tmpRc.id)
+								local-class="input-prepend input-money"
+								classNames="mb-2"}}
+								<p class="mt-2 mb-0 text-center" local-class="percent">
+									{{IndicatorAllocationPercent.percent}}%
+								</p>
+							{{/if}}
+						{{/each}}
+						{{!-- {{bp-input block=true widthSize="auto" 
 							value=model.businessinput.salesTarget
 							disabled=(not tmpRc.id)
 							local-class="input-prepend input-money"
 							classNames="mb-2"}}
 						<p class="mt-2 mb-0 text-center" local-class="percent">
 							{{IndicatorAllocationPercent.percent}}%
-						</p>
+						</p> --}}
 					</td>
 					<td class="pl-2 border-0">
-						{{bp-input block=true widthSize="auto"
+						{{#each model.goodsConfigInputs as |goodsConfigInput|}}
+							{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsConfigInput.goodsConfig.productConfig.product.id)}}
+								{{bp-input block=true widthSize="auto"
+									value=goodsConfigInput.budget
+									disabled=(not tmpRc.id)
+									local-class="input-prepend input-money"}}
+								<p class="mt-2 mb-0 text-center" local-class="percent">
+									{{budgetPercent.percent}}%
+								</p>
+							{{/if}}
+						{{/each}}
+						{{!-- {{bp-input block=true widthSize="auto"
 							value=model.businessinput.budget
 							disabled=(not tmpRc.id)
 							local-class="input-prepend input-money"}}
 						<p class="mt-2 mb-0 text-center" local-class="percent">
 							{{budgetPercent.percent}}%
-						</p>
+						</p> --}}
 					</td>
 				</tr>
 			{{/if}}

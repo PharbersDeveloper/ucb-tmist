@@ -13,6 +13,17 @@ export default Controller.extend({
 		{ name: '已分配', state: 2 }
 
 	]),
+	indicatorsData: computed('model.goodsConfigs', function () {
+		let goodsConfigs = this.get('model.goodsConfigs'),
+			goodsConfigsSelf = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0),
+			initData = goodsConfigsSelf.map(ele => {
+				return { value: 0, name: ele.get('productConfig.product.name') };
+			});
+
+		console.log(initData);
+		return A([{ seriesName: '', data: initData }
+		]);
+	}),
 	overallFilterData: computed('currentHospState.state', 'businessInputs.@each.isFinish', function () {
 		let currentHospState = this.get('currentHospState').state,
 			destConfigs = this.get('model').destConfigs,
@@ -57,6 +68,8 @@ export default Controller.extend({
 		this.set('currentHospState', {
 			name: '全部', state: 0
 		});
+
+		this.set('circleSize', A([0, 100]));
 	},
 	actions: {
 		goToHospital(id) {

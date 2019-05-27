@@ -114,7 +114,13 @@
 					{{format-number total.usedSalesTarget}} /
 					￥{{format-number model.resourceConfManager.managerConfig.totalBusinessIndicators}}
 				</p>
-				{{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
+				<div local-class='circle-container'>
+					{{bp-circle-double
+					eid="totalBusinessIndicators"
+					circleData=indicatorsData
+					circleSize=circleSize}}
+				</div>
+				{{!-- {{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
 					{{p.bar value=total.usedSalesTarget maxValue=model.resourceConfManager.managerConfig.totalBusinessIndicators}}
 				{{/bp-progress}}
 				{{#bp-layout tagName="p" cross="center" local-class="legend" classNames="m-0"}}
@@ -124,7 +130,7 @@
 							{{model.salesConfigs.firstObject.goodsConfig.productConfig.product.name}}
 						</span>
 					{{/bp-layout}}
-				{{/bp-layout}}
+				{{/bp-layout}}  --}}
 			</div>
 		</div>
 		<div local-class="item" class="mx-2">
@@ -136,7 +142,13 @@
 					{{format-number total.usedBudget}} /
 					￥{{format-number model.resourceConfManager.managerConfig.totalBudgets}}
 				</p>
-				{{#bp-progress classNames="mb-4" as |p|}}
+				<div local-class='circle-container'>
+					{{bp-circle-double
+					eid="totalBudget"
+					circleData=indicatorsData
+					circleSize=circleSize}}
+				</div>
+				{{!-- {{#bp-progress classNames="mb-4" as |p|}}
 					{{p.bar value=total.usedBudget maxValue=model.resourceConfManager.managerConfig.totalBudgets}}
 				{{/bp-progress}}
 				{{#bp-layout tagName="p" cross="center" local-class="legend" classNames="m-0"}}
@@ -146,7 +158,7 @@
 							{{model.salesConfigs.firstObject.goodsConfig.productConfig.product.name}}
 						</span>
 					{{/bp-layout}}
-				{{/bp-layout}}
+				{{/bp-layout}} --}}
 			</div>
 		</div>
 		{{!-- TODO 删除 --}}

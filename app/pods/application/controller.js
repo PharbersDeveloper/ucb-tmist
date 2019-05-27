@@ -27,9 +27,9 @@ export default Controller.extend({
 			promiseArray = A([]);
 
 		promiseArray = A([
-			store.peekAll('businessinput').save(),
-			store.peekAll('managerinput').save(),
-			store.peekAll('representativeinput').save()
+			store.peekAll('businessinput').save()
+			// store.peekAll('managerinput').save(),
+			// store.peekAll('representativeinput').save()
 		]);
 
 		RSVP.Promise.all(promiseArray)
@@ -40,17 +40,17 @@ export default Controller.extend({
 						phase,
 						scenario: scenario,
 						time: new Date().getTime(),
-						businessinputs: data[0],
-						managerinputs: data[1],
-						representativeinputs: data[2]
+						businessinputs: data[0]
+						// managerinputs: data[1],
+						// representativeinputs: data[2]
 					}).save();
 				}
 				paperinput.setProperties({
 					phase,
 					time: new Date().getTime(),
-					businessinputs: data[0],
-					managerinputs: data[1],
-					representativeinputs: data[2]
+					businessinputs: data[0]
+					// managerinputs: data[1],
+					// representativeinputs: data[2]
 				});
 				return paperinput.save();
 			}).then(data => {
