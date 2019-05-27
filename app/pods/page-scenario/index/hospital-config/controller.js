@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
-import { A } from '@ember/array';
+// import { A } from '@ember/array';
 
 export default Controller.extend({
 	numberVerify: /^-?[1-9]\d*$/,
@@ -42,32 +42,30 @@ export default Controller.extend({
 		};
 	}),
 	// 代表分配时间percent
-	representativesVisitPercent: computed('businessinput.visitTime', 'tmpRc', function () {
-		let resourceConfigs = this.get('model').repConfs,
-			result = A([]),
-			newBusinessinputs = this.get('businessInputs');
+	// representativesVisitPercent: computed('businessinput.visitTime', 'tmpRc', function () {
+	// 	let resourceConfigs = this.get('model').repConfs,
+	// 		result = A([]),
+	// 		newBusinessinputs = this.get('businessInputs');
 
-		result = resourceConfigs.map(ele => {
+	// 	result = resourceConfigs.map(ele => {
 
-			let usedTime = 0,
-				totalTime = ele.get('representativeConfig.totalTime');
+	// 		let usedTime = 0,
+	// 			totalTime = ele.get('representativeConfig.totalTime');
 
-			newBusinessinputs.map(nbi => {
-				if (ele.get('id') === nbi.get('resourceConfigId')) {
-					usedTime += Number(nbi.get('visitTime'));
-				}
-			});
-			return {
-				id: ele.get('id'),
-				totalTime,
-				usedTime,
-				restTime: 100 - usedTime
-			};
-		});
-
-		return result;
-
-	}),
+	// 		newBusinessinputs.map(nbi => {
+	// 			if (ele.get('id') === nbi.get('resourceConfigId')) {
+	// 				usedTime += Number(nbi.get('visitTime'));
+	// 			}
+	// 		});
+	// 		return {
+	// 			id: ele.get('id'),
+	// 			totalTime,
+	// 			usedTime,
+	// 			restTime: 100 - usedTime
+	// 		};
+	// 	});
+	// 	return result;
+	// }),
 	actions: {
 		changedRep(item) {
 			let businessinput = this.get('businessinput');
@@ -79,17 +77,21 @@ export default Controller.extend({
 			});
 		},
 		reInput() {
-			let businessinput = this.get('businessinput');
+			let businessinput = this.get('businessinput'),
+				goodsConfigInputs = businessinput.get('goodsConfigInputs');
+
+			goodsConfigInputs.forEach(goodsConfigInput => {
+				goodsConfigInput.setProperties({
+					salesTarget: '',	// 销售目标设定
+					budget: ''
+				});
+			});
 
 			this.set('tmpRc', null);
 
 			businessinput.setProperties({
 				resourceConfigId: '',
-				resourceConfig: null,
-				visitTime: '',
-				meetingPlaces: '',
-				salesTarget: '',
-				budget: ''
+				resourceConfig: null
 			});
 		}
 	}

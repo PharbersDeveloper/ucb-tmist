@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import rsvp from 'rsvp';
+// import rsvp from 'rsvp';
 import { A } from '@ember/array';
 
 export default Route.extend({
