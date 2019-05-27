@@ -1,10 +1,19 @@
 import Controller from '@ember/controller';
+// import { inject as service } from '@ember/service';
+import ENV from 'ucb-tmist/config/environment';
+import { computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
-// 因临时逻辑暂时注释
 // import { A } from '@ember/array';
 // import rsvp from 'rsvp';
 
 export default Controller.extend({
+	testBtn: computed(function () {
+		if (ENV.environment === 'development') {
+			return true;
+		}
+		return false;
+	}),
+	// 提交验证与 new-tmist 不同，需要重新设计，可参考 new-tmist
 	actions: {
 		submit() {
 			let store = this.get('store'),
@@ -90,6 +99,20 @@ export default Controller.extend({
 			// 	});
 			// 临时逻辑
 			// this.transitionToRoute('page-result');
+		},
+		saveInputs() {
+			// this.set('confirmSubmit', false);
+
+			// let judgeAuth = this.judgeOauth();
+
+			// if (isEmpty(judgeAuth)) {
+			// 	window.location = judgeAuth;
+			// 	return;
+			// }
+			// this.sendInput(1);
+		},
+		testResult() {
+			this.transitionToRoute('page-result');
 		}
 	}
 });

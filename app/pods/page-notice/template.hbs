@@ -13,12 +13,22 @@
 		{{/bp-layout}}
 		{{#bp-layout direction="col" local-class="rule" classNames="p-4"}}
 			<h2 local-class="title" class="mb-4">规则介绍</h2>
-			<p>1. 经理需完成 业务决策 后才能提交任务。</p>
+			<p class="mb-3">1. 经理需完成 业务决策 后才能提交任务。</p>
+			<p class="mb-3">
+				2. 第一周期，经理需为每个医院分配代表，之后周期代表将固定不变更。
+			</p>
+			<p class="mb-3">
+				3.必须向每一家医院分配销售额指标和预算，且总销售指标需要被达成，总预算需要被用尽。（若不分配资源可设定数值为0）。
+			</p>
+			<p class="mb-3">
+				4.每一周期决策提交后将不可再修改，当期决策可在“决策回顾”中查看。
+			</p>
+			{{!-- <p>1. 经理需完成 业务决策 后才能提交任务。</p>
 			<p>2. 所有医院都必须被制定指标和分配资源。（若不分配资源可设数值为0）。</p>
 			<p>3. 所有代表都必须被分配负责的医院。</p>
 			<p>4. 预算的分配不可超过给定的总预算。</p>
 			<p>5. 每一周期决策提交后，将不可再修改。当期决策可在“决策回顾”中查看。</p>
-			<p>6. 第一周期提交后，后续周期中将不可更改医院代表，只能进行药品相关资源设定。</p>
+			<p>6. 第一周期提交后，后续周期中将不可更改医院代表，只能进行药品相关资源设定。</p> --}}
 		{{/bp-layout}}
 	{{/bp-layout}}
 	{{#bp-layout direction="col" local-class="mission-notice item" classNames="mt-4"}}
@@ -126,7 +136,7 @@
 						local-class="icon"}}
 					{{#bp-layout direction="col" local-class="main-box"}}
 						{{#bp-layout main="between" classNames="mb-2"}}
-							<h4 class="m-0">分配预算总金额</h4>
+							<h4 class="m-0">总预算</h4>
 							<span local-class="schedule">
 								￥{{format-number model.resourceConfigManager.managerConfig.totalBusinessIndicators}}
 							</span>
@@ -160,10 +170,13 @@
 			{{/bp-layout}}
 		</div>
 		{{#bp-layout main="end" local-class="entry-mission"}}
-			{{#bp-button type="primary"}}
+			{{!-- {{#bp-button type="primary"}}
 				{{#link-to "page-scenario" model.detailProposal.proposal.id}}
 					进入任务
 				{{/link-to}}
+			{{/bp-button}} --}}
+			{{#bp-button type="primary" onClick=(action 'entryMission' model.detailProposal.proposal.id)}}
+				进入任务
 			{{/bp-button}}
 		{{/bp-layout}}
 	{{/bp-layout}}

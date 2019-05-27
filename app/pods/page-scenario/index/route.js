@@ -14,52 +14,58 @@ export default Route.extend({
 			firstDestConfig = destConfigs.get('firstObject'),
 			proposalId = transition.params['page-scenario']['proposal_id'];
 
+		console.log(proposalId);
+		console.log(firstDestConfig.id);
+		console.log('/scenario/' + proposalId + '/index/hospital/' +
+			firstDestConfig.get('id'));
 		this.transitionTo('/scenario/' + proposalId + '/index/hospital/' +
-			firstDestConfig.id);
+			firstDestConfig.get('id'));
 	},
-	isHaveBusinessInput(businessInputs, self, destConfigs) {
-		let isNewBusinessInputs = businessInputs.filter(ele => ele.get('isNew'));
+	// isHaveBusinessInput(businessInputs, self, destConfigs) {
+	// 	let isNewBusinessInputs = businessInputs.filter(ele => ele.get('isNew'));
 
-		if (isNewBusinessInputs.length > 0) {
-			return self.normalFlow(isNewBusinessInputs);
-		}
-		return self.generateBusinessInputs(destConfigs);
-	},
-	normalFlow(newBusinessInputs) {
-		return newBusinessInputs;
-	},
-	generateBusinessInputs(destConfigs) {
-		let promiseArray = A([]);
+	// 	if (isNewBusinessInputs.length > 0) {
+	// 		return self.normalFlow(isNewBusinessInputs);
+	// 	}
+	// 	return self.generateBusinessInputs(destConfigs);
+	// },
+	// normalFlow(newBusinessInputs) {
+	// 	return newBusinessInputs;
+	// },
+	// generateBusinessInputs(destConfigs) {
+	// 	let promiseArray = A([]);
 
-		promiseArray = destConfigs.map(ele => {
-			return this.get('store').createRecord('businessinput', {
-				destConfig: ele,
-				destConfigId: ele.id,
-				representativeId: '',
-				resourceConfigId: '',
-				salesTarget: '',
-				budget: '',
-				meetingPlaces: '',
-				visitTime: ''
-			});
-		});
-		return promiseArray;
-	},
+	// 	promiseArray = destConfigs.map(ele => {
+	// 		return this.get('store').createRecord('businessinput', {
+	// 			destConfig: ele,
+	// 			destConfigId: ele.id,
+	// 			representativeId: '',
+	// 			resourceConfigId: '',
+	// 			salesTarget: '',
+	// 			budget: '',
+	// 			meetingPlaces: '',
+	// 			visitTime: ''
+	// 		});
+	// 	});
+	// 	return promiseArray;
+	// },
 	model() {
-		let store = this.get('store'),
-			totalConfigs = this.modelFor('page-scenario'),
-			destConfigs = totalConfigs.destConfigs,
-			goodsConfigs = totalConfigs.goodsConfigs,
-			businessInputs = store.peekAll('businessinput'),
-			tmp = this.isHaveBusinessInput(businessInputs, this, destConfigs);
+		let pageScenarioModel = this.modelFor('page-scenario'),
+			destConfigs = pageScenarioModel.destConfigs,
+			goodsConfigs = pageScenarioModel.goodsConfigs,
+			businessInputs = pageScenarioModel.businessInputs,
+			resourceConfRep = pageScenarioModel.resourceConfRep;
 
-		this.controllerFor('page-scenario.index').set('businessInputs', tmp);
+		this.controllerFor('page-scenario.index').set('businessInputs', businessInputs);
+		this.controllerFor('page-scenario').set('businessInputs', businessInputs);
+
 		return hash({
-			businessInputs: tmp,
-			mConf: totalConfigs.resourceConfManager,
+			businessInputs: businessInputs,
+			resourceConfManager: pageScenarioModel.resourceConfManager,
 			goodsConfigs,
 			destConfigs,
-			salesConfigs: totalConfigs.salesConfigs
+			resourceConfRep,
+			salesConfigs: pageScenarioModel.salesConfigs
 		});
 	}
 });

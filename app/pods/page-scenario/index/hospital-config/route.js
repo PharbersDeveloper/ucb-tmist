@@ -1,17 +1,18 @@
 import Route from '@ember/routing/route';
+import { hash } from 'rsvp';
 import { isEmpty } from '@ember/utils';
-import RSVP from 'rsvp';
 
 export default Route.extend({
 	model(params) {
 		let dCId = params['destConfig_id'],
 			store = this.get('store'),
-			totalModels = this.modelFor('page-scenario'),
-			managerConf = totalModels.resourceConfManager,
-			repConfs = totalModels.resourceConfRep,
-			salesConfigs = totalModels.salesConfigs,
+			pageScenarioModel = this.modelFor('page-scenario'),
+			managerConf = pageScenarioModel.resourceConfManager,
+			repConfs = pageScenarioModel.resourceConfRep,
+			salesConfigs = pageScenarioModel.salesConfigs,
 			currentController = this.controllerFor('page-scenario.index.hospital-config'),
-			businessInputs = store.peekAll('businessinput'),
+			businessController = this.controllerFor('page-scenario.index'),
+			businessInputs = pageScenarioModel.businessInputs,
 			businessinput = null;
 
 		/**
@@ -22,6 +23,7 @@ export default Route.extend({
 				businessinput = ele;
 			}
 		});
+
 		/**
 		 * 获取总业务指标/总预算/总名额
 		 */
@@ -37,10 +39,11 @@ export default Route.extend({
 					totalBusinessIndicators: data.tbi,
 					totalBudgets: data.tbg,
 					totalMeetingPlaces: data.tmp,
+					businessInputs,
 					businessinput: businessinput
 				});
 				// 判断是否已经选择代表
-				if (isEmpty(businessinput.get('resourceConfigId'))) {
+				if (isEmpty(businessinput.get('resourceConfig.id'))) {
 					currentController.set('tmpRc', '');
 				} else {
 					repConfs.forEach(ele => {
@@ -51,11 +54,12 @@ export default Route.extend({
 				}
 			})
 			.then(() => {
-				return RSVP.hash({
+				return hash({
 					managerConf,
 					repConfs,
 					destConfig: store.peekRecord('destConfig', dCId),
 					businessinput,
+					businessInputs,
 					salesConfigs
 				});
 			});

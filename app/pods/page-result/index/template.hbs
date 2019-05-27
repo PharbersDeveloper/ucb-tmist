@@ -9,12 +9,17 @@
 		{{#bp-layout tagName="li" cross="center" 
 					local-class=(if (bp-eq salesGroupValue 1) "active")
 					classNames="px-4"}}
-			<span {{action 'changeSalesValue' 1}}>代表销售报告</span>
+			<span {{action 'changeSalesValue' 1}}>地区销售报告</span>
 		{{/bp-layout}}
 		{{#bp-layout tagName="li" cross="center" 
 					local-class=(if (bp-eq salesGroupValue 2) "active")
 					classNames="px-4"}}
-			<span {{action 'changeSalesValue' 2}}>医院销售报告</span>
+			<span {{action 'changeSalesValue' 2}}>代表销售报告</span>
+		{{/bp-layout}}
+		{{#bp-layout tagName="li" cross="center" 
+					local-class=(if (bp-eq salesGroupValue 3) "active")
+					classNames="px-4"}}
+			<span {{action 'changeSalesValue' 3}}>医院销售报告</span>
 		{{/bp-layout}}
 	{{/bp-layout}}
 	{{#bp-layout local-class="content"}}

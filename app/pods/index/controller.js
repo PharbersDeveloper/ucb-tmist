@@ -1,37 +1,35 @@
 import Controller from '@ember/controller';
 import { htmlSafe } from '@ember/template';
+import { computed } from '@ember/object';
+import { A } from '@ember/array';
 
 export default Controller.extend({
 	notice: localStorage.getItem('notice') !== 'false',
 	step: 1,
 	detail: htmlSafe(`<p class='m-0 model-desc'>平台介绍</p><p class='m-0 model-desc'>在平台中，您将作为区域销售经理</p>`),
+	neverShow: A(['不在显示']),
+	reports: computed('model.detailPaper', function () {
+		let paper = this.get('model.detailPaper'),
+			inputs = paper.get('paperinputs');
 
+		return inputs.sortBy('time').reverse();
+	}),
 	actions: {
 		changeDetail(useableProposal, paper) {
 			this.set('model.detailProposal', useableProposal);
 			this.set('model.detailPaper', paper);
 		},
-		/**
-		 * 确认重新部署
-		 */
-		reConfirmDeploy() {
-			let id = this.get('model').detailProposal.proposal.id;
-
-
+		startDeploy(proposalId) {
+			localStorage.setItem('notice', false);
+			this.transitionToRoute('page-notice', proposalId);
 		},
-		/**
-		 * 继续部署
-		 * @param  {string} id proposal id
-		 */
-		continueDeploy(id) {
+		reDeploy() {
+			let proposalId = this.get('model').detailProposal.get('proposal.id');
 
-		},
-		/**
-		 * 开始部署
-		 * @param  {string} id proposal id
-		 */
-		deploy(id) {
-			this.transitionToRoute('page-notice', id);
+			this.set('reDeploy', false);
+			// reDeploy 为 1 的时候，代表用户选择`重新部署`
+			localStorage.setItem('reDeploy', 1);
+			this.transitionToRoute('page-notice', proposalId);
 		},
 		prevStep() {
 			let step = this.get('step') - 1;
@@ -63,6 +61,13 @@ export default Controller.extend({
 		},
 		closeNotice() {
 			this.set('notice', false);
+		},
+		chooseItem(item) {
+			if (item.length > 0) {
+				localStorage.setItem('notice', false);
+			} else {
+				localStorage.setItem('notice', true);
+			}
 		}
 	}
 });

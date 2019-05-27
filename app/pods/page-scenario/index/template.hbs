@@ -19,15 +19,15 @@
 				{{#bp-layout direction="col" local-class="values"}}
 					<p class="mb-3">
 						{{format-number total.usedSalesTarget}} /
-						{{format-number model.mConf.managerConfig.totalBusinessIndicators}}
+						{{format-number model.resourceConfManager.managerConfig.totalBusinessIndicators}}
 					</p>
 					<p class="mb-3">
 						{{format-number total.usedBudget}} /
-						{{format-number model.mConf.managerConfig.totalBudgets}}
+						{{format-number model.resourceConfManager.managerConfig.totalBudgets}}
 					</p>
 					<p>
 						{{format-number total.usedMeetingPlaces}} /
-						{{format-number model.mConf.managerConfig.totalMeetingPlaces}}
+						{{format-number model.resourceConfManager.managerConfig.totalMeetingPlaces}}
 					</p>
 				{{/bp-layout}}
 			{{/bp-layout}}
@@ -112,10 +112,10 @@
 			<div class="p-4">
 				<p local-class="info" class="mb-4">
 					{{format-number total.usedSalesTarget}} /
-					￥{{format-number model.mConf.managerConfig.totalBusinessIndicators}}
+					￥{{format-number model.resourceConfManager.managerConfig.totalBusinessIndicators}}
 				</p>
 				{{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
-					{{p.bar value=total.usedSalesTarget maxValue=model.mConf.managerConfig.totalBusinessIndicators}}
+					{{p.bar value=total.usedSalesTarget maxValue=model.resourceConfManager.managerConfig.totalBusinessIndicators}}
 				{{/bp-progress}}
 				{{#bp-layout tagName="p" cross="center" local-class="legend" classNames="m-0"}}
 					{{#bp-layout tagName="span" cross="center"}}
@@ -134,10 +134,10 @@
 			<div class="p-4">
 				<p local-class="info" class="mb-4">
 					{{format-number total.usedBudget}} /
-					￥{{format-number model.mConf.managerConfig.totalBudgets}}
+					￥{{format-number model.resourceConfManager.managerConfig.totalBudgets}}
 				</p>
 				{{#bp-progress classNames="mb-4" as |p|}}
-					{{p.bar value=total.usedBudget maxValue=model.mConf.managerConfig.totalBudgets}}
+					{{p.bar value=total.usedBudget maxValue=model.resourceConfManager.managerConfig.totalBudgets}}
 				{{/bp-progress}}
 				{{#bp-layout tagName="p" cross="center" local-class="legend" classNames="m-0"}}
 					{{#bp-layout tagName="span" cross="center"}}
@@ -157,10 +157,10 @@
 			<div class="p-4">
 				<p local-class="info" class="mb-4">
 					{{format-number total.usedMeetingPlaces}} /
-					{{format-number model.mConf.managerConfig.totalMeetingPlaces}}
+					{{format-number model.resourceConfManager.managerConfig.totalMeetingPlaces}}
 				</p>
 				{{#bp-progress as |p|}}
-					{{p.bar value=total.usedMeetingPlaces maxValue=model.mConf.managerConfig.totalMeetingPlaces}}
+					{{p.bar value=total.usedMeetingPlaces maxValue=model.resourceConfManager.managerConfig.totalMeetingPlaces}}
 				{{/bp-progress}}
 			</div>
 		</div> --}}

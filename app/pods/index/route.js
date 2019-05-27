@@ -1,25 +1,18 @@
 import Route from '@ember/routing/route';
-import RSVP from 'rsvp';
-import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
+import { A } from '@ember/array';
+import RSVP from 'rsvp';
 
 export default Route.extend({
 	cookies: service(),
-	beforeModel() {
-		const cookies = this.get('cookies');
-
-		let token = cookies.read('access_token');
-
-		if (!token) {
-			this.transitionTo('page-login');
-		}
-	},
+	ajax: service(),
 	activate() {
 		this._super(...arguments);
 		let applicationController = this.controllerFor('application');
 
 		applicationController.set('testProgress', 0);
+		localStorage.removeItem('reDeploy');
 	},
 	model() {
 		let applicationModel = this.modelFor('application'),
@@ -45,21 +38,34 @@ export default Route.extend({
 			let promiseArray = A([]);
 
 			promiseArray = useableProposals.map(ele => {
-				return store.query('paper', {
-					'proposal-id': ele.get('proposal').get('id'),
-					'account-id': accountId
-				});
+				return ele.get('proposal');
+			});
+			return RSVP.Promise.all(promiseArray);
+		}).then(data => {
+			let useableProposalIds = data,
+				promiseArray = A([]),
+				ajax = this.get('ajax');
+
+			promiseArray = useableProposalIds.map(ele => {
+				return ajax.request(`/v0/GeneratePaper?proposal-id=${ele.id}
+				&account-id=${cookies.read('account_id')}`, {
+						method: 'POST',
+						data: {}
+					});
 			});
 			return RSVP.Promise.all(promiseArray);
 
 		}).then(data => {
-			papers = data;
+			data.forEach(ele => {
+				store.pushPayload(ele);
+			});
+			papers = store.peekAll('paper');
 			return RSVP.hash({
 				results: A([]),
 				papers,
 				useableProposals,
 				detailProposal: useableProposals.get('firstObject'),
-				detailPaper: papers[0].get('firstObject')
+				detailPaper: papers.get('firstObject')
 			});
 		});
 	}

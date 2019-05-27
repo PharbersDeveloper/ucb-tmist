@@ -73,14 +73,14 @@
 					<td class="pl-2 border-0">
 						{{#each sc.salesReport.hospitalSalesReports as |hsr|}}
 							{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
-								{{format-number hsr.potential}}
+								￥{{format-number hsr.potential}}
 							{{/if}}
 						{{/each}}
 					</td>
 					<td class="pl-2 border-0">
 						{{#each sc.salesReport.hospitalSalesReports as |hsr|}}
 							{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
-								{{format-number hsr.sales}}
+								￥{{format-number hsr.sales 0}}
 							{{/if}}
 						{{/each}}
 					</td>
@@ -90,16 +90,18 @@
 							disabled=(not tmpRc.id)
 							local-class="input-prepend input-money"
 							classNames="mb-2"}}
-						{{!-- <p class="m-0 ">
-							{{IndicatorAllocationPercent}}%
-						</p> --}}
+						<p class="mt-2 mb-0 text-center" local-class="percent">
+							{{IndicatorAllocationPercent.percent}}%
+						</p>
 					</td>
 					<td class="pl-2 border-0">
-						{{!-- <p class="mb-2">￥{{budgetNumber}}</p> --}}
 						{{bp-input block=true widthSize="auto"
 							value=model.businessinput.budget
 							disabled=(not tmpRc.id)
 							local-class="input-prepend input-money"}}
+						<p class="mt-2 mb-0 text-center" local-class="percent">
+							{{budgetPercent.percent}}%
+						</p>
 					</td>
 				</tr>
 			{{/if}}
