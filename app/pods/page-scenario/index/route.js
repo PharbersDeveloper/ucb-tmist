@@ -14,10 +14,6 @@ export default Route.extend({
 			firstDestConfig = destConfigs.get('firstObject'),
 			proposalId = transition.params['page-scenario']['proposal_id'];
 
-		console.log(proposalId);
-		console.log(firstDestConfig.id);
-		console.log('/scenario/' + proposalId + '/index/hospital/' +
-			firstDestConfig.get('id'));
 		this.transitionTo('/scenario/' + proposalId + '/index/hospital/' +
 			firstDestConfig.get('id'));
 	},

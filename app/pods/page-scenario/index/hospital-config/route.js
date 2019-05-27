@@ -18,11 +18,14 @@ export default Route.extend({
 		/**
 		 * 当前的业务决策实例
 		 */
-		businessInputs.forEach(ele => {
-			if (ele.get('destConfig.id') === dCId) {
-				businessinput = ele;
-			}
-		});
+		businessinput = businessInputs.filterBy('destConfig.id', dCId).get('firstObject');
+
+		// businessInputs.forEach(ele => {
+		// 	if (ele.get('destConfig.id') === dCId) {
+		// 		businessinput = ele;
+		// 	}
+		// });
+		// console.log(businessinput);
 
 		/**
 		 * 获取总业务指标/总预算/总名额
@@ -54,11 +57,13 @@ export default Route.extend({
 				}
 			})
 			.then(() => {
+				console.log(businessinput.get('goodsConfigInputs'));
 				return hash({
 					managerConf,
 					repConfs,
 					destConfig: store.peekRecord('destConfig', dCId),
 					businessinput,
+					goodsConfigInputs: businessinput.get('goodsConfigInputs'),
 					businessInputs,
 					salesConfigs
 				});

@@ -16,6 +16,10 @@
 				@extend %header-large;
 			}
 
+			.circle-container {
+				height: 268px;
+			}
+
 			:global(.bp-progress) {
 				height: $spacing;
 

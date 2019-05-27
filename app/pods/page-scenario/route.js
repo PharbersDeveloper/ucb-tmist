@@ -55,25 +55,32 @@ export default Route.extend({
 		return this.generateManagerInput(resourceConfigs);
 	},
 	// 判断是否有 businessinput
-	isHaveBusinessInput(paper, destConfigs, goodsConfig) {
+	isHaveBusinessInput(paper, destConfigs, selfGoodsConfigs) {
 		let state = paper.get('state'),
 			reDeploy = Number(localStorage.getItem('reDeploy')) === 1;
-
 
 		if (state === 1 && !reDeploy) {
 			return this.get('store').peekAll('businessinput');
 		}
-		return this.generateBusinessInputs(destConfigs, goodsConfig);
+		return this.generateBusinessInputs(destConfigs, selfGoodsConfigs);
 	},
 	// normalFlow(newBusinessInputs) {
 	// 	return newBusinessInputs;
 	// },
 	// 生成 businessinputs
-	generateBusinessInputs(destConfigs, goodsConfig) {
+	generateBusinessInputs(destConfigs, selfGoodsConfigs) {
 		let promiseArray = A([]),
 			store = this.get('store');
 
 		promiseArray = destConfigs.map(ele => {
+			let goodsConfigInputs = selfGoodsConfigs.map(item => {
+				return store.createRecord('goodsConfigInput', {
+					goodsConfig: item,
+					salesTarget: '',	// 销售目标设定
+					budget: ''
+				});
+			});
+
 			return store.createRecord('businessinput', {
 				destConfig: ele,
 				destConfigId: ele.id,
@@ -82,7 +89,8 @@ export default Route.extend({
 				resourceConfig: null,
 				salesTarget: '',
 				budget: '',
-				goodsConfig,
+				goodsConfigs: selfGoodsConfigs,
+				goodsConfigInputs,
 				meetingPlaces: '',
 				visitTime: ''
 			});
@@ -187,9 +195,9 @@ export default Route.extend({
 				// managerInput = inputResource.managerInput;
 				// representativeInputs = inputResource.representativeInputs;
 
-				let goodsConfig = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0).get('firstObject');
+				let selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
 
-				businessInputs = this.isHaveBusinessInput(paper, destConfigs, goodsConfig);
+				businessInputs = this.isHaveBusinessInput(paper, destConfigs, selfGoodsConfigs);
 
 				return hash({
 					proposal,

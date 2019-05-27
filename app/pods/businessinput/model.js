@@ -21,5 +21,7 @@ export default DS.Model.extend({
 	}),
 	destConfig: DS.belongsTo(),
 	resourceConfig: DS.belongsTo(),
-	goodsConfig: DS.belongsTo()
+	goodsConfigs: DS.hasMany(),
+	goodsConfigInputs: DS.hasMany()
+	// goodsConfig: DS.belongsTo()
 });

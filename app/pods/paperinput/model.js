@@ -5,7 +5,7 @@ export default DS.Model.extend({
 	scenario: DS.belongsTo(),
 	phase: DS.attr('number'),
 	time: DS.attr('formatDate'),
-	businessinputs: DS.hasMany('businessinput'),
-	managerinputs: DS.hasMany('managerinput'),
-	representativeinputs: DS.hasMany('representativeinput')
+	businessinputs: DS.hasMany('businessinput')
+	// managerinputs: DS.hasMany('managerinput'),
+	// representativeinputs: DS.hasMany('representativeinput')
 });
