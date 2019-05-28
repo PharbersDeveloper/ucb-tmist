@@ -7,7 +7,7 @@
 					{{model.proposal.name}}
 				{{/left.item}}
 				{{#left.item}}
-					{{model.scenario.name}}
+					{{model.scenario.name}} 关卡进度 {{model.scenario.phase}} / {{model.proposal.totalPhase}}
 				{{/left.item}}
 			{{/body.left}}
 			{{#body.right}}
@@ -60,7 +60,6 @@
 	{{/modal.body}}
 	{{#modal.footer}}
 		{{#bp-button type="primary" onClick=(action modal.close)}}好的{{/bp-button}}
-		{{!-- {{#bp-button type="danger"}}Delete{{/bp-button}} --}}
 		{{!-- {{#bp-button type="success" onClick=(action modal.submit)}}Save{{/bp-button}} --}}
 	{{/modal.footer}}
 {{/bp-modal}}

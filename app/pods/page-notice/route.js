@@ -9,7 +9,7 @@ export default Route.extend({
 
 		applicationController.set('testProgress', 1);
 	},
-	model({ proposal_id }) {
+	model(params) {
 		let store = this.get('store'),
 			indexModel = this.modelFor('index'),
 			detailPaper = indexModel.detailPaper,
@@ -19,7 +19,7 @@ export default Route.extend({
 			paperinput = null;
 
 		return store.query('scenario', {
-			'proposal-id': proposal_id,
+			'proposal-id': params['proposal_id'],
 			'account-id': cookies.read('account_id')
 		})
 			.then(data => {

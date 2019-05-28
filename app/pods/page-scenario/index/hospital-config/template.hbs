@@ -10,7 +10,11 @@
 		代表和时间分配
 	{{/bp-layout}}
 	{{#bp-layout direction="col" classNames="p-4"}}
-		<p local-class="description" class="mb-4">第一周期提交后，后续周期中将不可更改医院代表，只能进行药品相关资源设定</p>
+		{{#unless model.notFirstPhase}}
+			<p local-class="description" class="mb-4">
+				第一周期提交后，后续周期中将不可更改医院代表，只能进行药品相关资源设定
+			</p>
+		{{/unless}}
 		{{#bp-layout local-class="operating"}}
 			{{#if tmpRc.id}}
 				<img src={{tmpRc.representativeConfig.representative.images.firstObject.img}} local-class="avatar" alt="" class="mr-4">
@@ -19,9 +23,9 @@
 			{{/if}}
 			{{#bp-layout direction="col"}}
 				<p local-class="title" class="mb-3">医院代表</p>
-				{{#bp-dropdown widthSize="auto" 
+				{{#bp-dropdown widthSize='auto'
 					local-class="dd-representative" classNames="mb-4" as |dd|}}
-					{{#dd.button}}
+					{{#dd.button disabled=notFirstPhase}}
 						{{#if tmpRc.id}}
 							<p>{{tmpRc.representativeConfig.representative.name}}</p>
 						{{else}}
@@ -51,40 +55,44 @@
 		{{/bp-layout}}
 	{{/bp-layout}}
 {{/bp-layout}}
-{{#bp-layout tagName="h5" cross="center" 
-			local-class="title" classNames="m-0 px-4 bg-white "}}
+{{#bp-layout tagName="h5" cross="center" local-class=(if tmpRc.id 'title' 'title disabled')
+	classNames="m-0 px-4 bg-white "}}
 	药品相关资源分配
 {{/bp-layout}}
-<table local-class="prod" class="table mb-2">
+<table local-class={{if tmpRc.id 'prod' 'prod disabled'}} class="table mb-2">
 	<thead>
 		<tr>
-			<th class="border-0 pb-2 pl-2">产品名称</th>
-			<th class="border-0 pb-2 pl-2">药品潜力</th>
-			<th class="border-0 pb-2 pl-2">上季度销售额</th>
-			<th class="border-0 pb-2 pl-2">销售指标设定</th>
-			<th class="border-0 pb-2 pl-2">预算设定</th>
+			<th class="border-0 pb-2 pl-2 text-left">产品名称</th>
+			<th class="border-0 pb-2 pl-2 text-center">治疗领域</th>
+			<th class="border-0 pb-2 pl-2 text-right">患者数量</th>
+			<th class="border-0 pb-2 pl-2 text-right">上季度销售额</th>
+			<th class="border-0 pb-2 pl-2 text-right">销售指标设定</th>
+			<th class="border-0 pb-2 pl-2 text-right">预算设定</th>
 		</tr>
 	</thead>
 	<tbody class="bg-white">
 		{{#each model.salesConfigs as |sc|}}
 			{{#if (bp-eq sc.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
 				<tr class="mx-0">
-					<td class="pl-2 border-0">{{sc.goodsConfig.productConfig.product.name}}</td>
-					<td class="pl-2 border-0">
+					<td class="pl-2 border-0 text-left">{{sc.goodsConfig.productConfig.product.name}}</td>
+					<td class="pl-2 border-0 text-center">
+						{{sc.goodsConfig.productConfig.treatmentArea}}
+					</td>
+					<td class="pl-2 border-0  text-right">
 						{{#each sc.salesReport.hospitalSalesReports as |hsr|}}
 							{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
-								￥{{format-number hsr.potential}}
+								{{format-number hsr.potential}}
 							{{/if}}
 						{{/each}}
 					</td>
-					<td class="pl-2 border-0">
+					<td class="pl-2 border-0 text-right">
 						{{#each sc.salesReport.hospitalSalesReports as |hsr|}}
 							{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
 								￥{{format-number hsr.sales 0}}
 							{{/if}}
 						{{/each}}
 					</td>
-					<td class="pl-2 border-0">
+					<td class="pl-2 border-0 text-right">
 						{{#each model.goodsConfigInputs as |goodsConfigInput|}}
 							{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsConfigInput.goodsConfig.productConfig.product.id)}}
 								{{bp-input block=true widthSize="auto" 
@@ -97,16 +105,8 @@
 								</p>
 							{{/if}}
 						{{/each}}
-						{{!-- {{bp-input block=true widthSize="auto" 
-							value=model.businessinput.salesTarget
-							disabled=(not tmpRc.id)
-							local-class="input-prepend input-money"
-							classNames="mb-2"}}
-						<p class="mt-2 mb-0 text-center" local-class="percent">
-							{{IndicatorAllocationPercent.percent}}%
-						</p> --}}
 					</td>
-					<td class="pl-2 border-0">
+					<td class="pl-2 border-0 text-right">
 						{{#each model.goodsConfigInputs as |goodsConfigInput|}}
 							{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsConfigInput.goodsConfig.productConfig.product.id)}}
 								{{bp-input block=true widthSize="auto"
@@ -118,13 +118,6 @@
 								</p>
 							{{/if}}
 						{{/each}}
-						{{!-- {{bp-input block=true widthSize="auto"
-							value=model.businessinput.budget
-							disabled=(not tmpRc.id)
-							local-class="input-prepend input-money"}}
-						<p class="mt-2 mb-0 text-center" local-class="percent">
-							{{budgetPercent.percent}}%
-						</p> --}}
 					</td>
 				</tr>
 			{{/if}}

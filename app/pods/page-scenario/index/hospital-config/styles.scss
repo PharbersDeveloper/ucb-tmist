@@ -9,6 +9,8 @@ h5.title {
 }
 
 .prod {
+	table-layout: fixed;
+
 	thead {
 		th {
 			@extend %p-small;
@@ -46,7 +48,6 @@ h5.title {
 	}
 }
 
-.reps-meeting .input-prepend,
 .prod .input-prepend {
 	position: relative;
 
@@ -63,21 +64,51 @@ h5.title {
 
 	}
 
-	&.input-time {
-		&::after {
-			content: '%';
-		}
-	}
-
-	&.input-meeting {
-		&::after {
-			content: '个';
-		}
-	}
-
 	&.input-money {
+		input {
+			max-width: 100% !important;
+			padding-left: 8px;
+			padding-right: 30px;
+		}
+
 		&::after {
+			left: auto;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
 			content: '￥';
 		}
+	}
+}
+
+.disabled {
+	color: $n060 !important;
+
+	.input-prepend {
+		&::after {
+			color: $n060;
+		}
+	}
+
+	thead {
+		th {
+			color: $n060;
+		}
+	}
+
+	tbody {
+		tr {
+			td {
+				color: $n060;
+
+				.percent {
+					color: $n060;
+				}
+			}
+		}
+	}
+
+	input {
+		color: $n060 !important;
 	}
 }
