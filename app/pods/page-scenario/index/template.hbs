@@ -218,3 +218,23 @@
 		{{/bp-layout}}
 	{{/bp-layout}}
 {{/bp-layout}}
+{{!-- 总业务指标/总预算/总会议名额 超额提醒 --}}
+{{#bp-modal
+		open=warning.open 
+		position='center'
+		onHidden=(action (mut warning.open) false) as |modal|}}
+	{{#modal.header}}
+		<h4 class="modal-title">
+			{{warning.title}}
+		</h4>
+	{{/modal.header}}
+	{{#modal.body classNames="p-4"}}
+		<p class="desc m-0">
+			{{warning.detail}}
+		</p>
+	{{/modal.body}}
+	{{#modal.footer}}
+		{{#bp-button type="primary" onClick=(action modal.close)}}好的{{/bp-button}}
+		{{!-- {{#bp-button type="success" onClick=(action modal.submit)}}Save{{/bp-button}} --}}
+	{{/modal.footer}}
+{{/bp-modal}}
