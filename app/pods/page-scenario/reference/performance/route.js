@@ -49,14 +49,13 @@ export default Route.extend({
 			salesReports = store.peekAll('paper').get('firstObject').get('salesReports'),
 			increaseSalesReports = A([]),
 			tmpHead = A([]),
-			dealedData = A([]),
 			productSalesReports = A([]),
 			representativeSalesReports = A([]),
 			hospitalSalesReports = A([]),
 			tableHead = A([]),
 			prodTableBody = A([]),
 			repTableBody = A([]),
-			pieSeriesNameArr = A([]),
+			// pieSeriesNameArr = A([]),
 			doubleCircleProduct = A([]),
 			hospTableBody = A([]);
 
@@ -82,56 +81,28 @@ export default Route.extend({
 			return rsvp.Promise.all(promiseArray);
 		}).then(data => {
 			// data 代表两个时期
-
 			let tmpData = data.slice(-2),
-				circleSeriesName = tmpHead.slice(-2);
+				dealedData = tmpData.map(ele => {
+					return ele.filterBy('goodsConfig.productConfig.productType', 0);
+				});
 
-			dealedData = tmpData.map((ele,index) => {
-				console.log(circleSeriesName[index]);
-				pieSeriesNameArr.push(circleSeriesName[index])
-				return ele.filterBy('goodsConfig.productConfig.productType', 0);
-			});
-
-			console.log(dealedData);
 			productSalesReports = data[0];
 			prodTableBody = this.generateTableBody(data, 'productName');
 
-			return null;
-		}).then(() => {
-			// doubleCircleProduct: A([
-			// 	{
-			// 		seriesName: '2018Q1', data: A([
-			// 			{ value: 61089, name: 'Kosovo' },
-			// 			{ value: 38922, name: 'Cyprus' },
-			// 			{ value: 23204, name: 'Ireland' }
-			// 		])
-			// 	},
-			// 	{
-			// 		seriesName: '2018Q2', data: A([
-			// 			{ value: 60954, name: 'Kosovo' },
-			// 			{ value: 48258, name: 'Cyprus' },
-			// 			{ value: 63933, name: 'Ireland' }
-			// 		])
-			// 	}
-			// ]),
-			dealedData.forEach((ele,index) => {
-				let circleData = A([]);
-
-				ele.forEach(item => {
-					let tmpobj = {
+			return dealedData;
+		}).then(data => {
+			doubleCircleProduct = data.map((ele,index) => {
+				let circleData = ele.map(item => {
+					return {
 						value: item.get('share'),
 						name: item.get('goodsConfig.productConfig.product.name')
-					}
-					circleData.push(tmpobj)
+					};
 				});
 
-				let tmpPieData = {
-					seriesName: pieSeriesNameArr[index],
+				return {
+					seriesName:tmpHead.slice(-2)[index],
 					data: circleData
 				};
-
-				doubleCircleProduct.push(tmpPieData);
-
 			});
 		}).then(() => {
 			//	获取代表销售报告
