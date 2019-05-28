@@ -21,19 +21,16 @@ export default DS.Model.extend({
 			totalBudget += Number(budget);
 			isFinish.push(...[salesTarget, budget, this.get('resourceConfigId')]);
 		});
+
 		return {
 			totalSalesTarget,
 			totalBudget,
 			isFinish: isFinish.every(ele => !isEmpty(ele))
 		};
 	}),
-	totalSalesTarget: alias('total.totalSalesTarget'),
-	totalBudget: alias('total.totalBudget'),
-	isFinish: alias('total.isFinish'),
-	// salesTarget: DS.attr('number'),	// 销售目标设定
-	// budget: DS.attr('number'),	// 预算费用
-	// meetingPlaces: DS.attr('number'),	//	会议名额 ucb中删除
-	// visitTime: DS.attr('number'),	// ucb中删除
+	totalSalesTarget: alias('total.totalSalesTarget'),// 总销售指标设定
+	totalBudget: alias('total.totalBudget'),// 总预算费用
+	isFinish: alias('total.isFinish'),	// 是否填写完毕 true-> 完毕
 	destConfig: DS.belongsTo(),
 	resourceConfig: DS.belongsTo(),
 	goodsConfigs: DS.hasMany(),

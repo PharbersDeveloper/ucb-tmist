@@ -5,11 +5,17 @@
 		@extend %header-small;
 	}
 
+	.item {
+		flex: 1;
+	}
+
 	.keys {
 		@extend %p-primary;
 	}
 
 	.values {
 		@extend %p-secondary;
+		font-size: 12px;
+
 	}
 }

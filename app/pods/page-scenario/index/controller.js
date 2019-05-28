@@ -1,32 +1,18 @@
 import Controller from '@ember/controller';
-import { A } from '@ember/array';
-import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { alias } from '@ember/object/computed';
+import { computed } from '@ember/object';
+import { A } from '@ember/array';
 
 export default Controller.extend({
-	// 设置一些默认值
-	indicatorValue: 0,
-	budgetValue: 0,
-	meetingValue: 0,
+	verify: service('service-verify'),
 	hospitalState: A([
 		{ name: '全部', state: 0 },
 		{ name: '待分配', state: 1 },
 		{ name: '已分配', state: 2 }
-
 	]),
-	// indicatorsData: computed('model.goodsConfigs', function () {
-	// 	let goodsConfigs = this.get('model.goodsConfigs'),
-	// 		goodsConfigsSelf = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0),
-	// 		initData = goodsConfigsSelf.map(ele => {
-	// 			return { value: 0, name: ele.get('productConfig.product.name') };
-	// 		});
-
-	// 	return A([{ seriesName: '', data: initData }
-	// 	]);
-	// }),
 	indicatorsData: alias('total.indicatorsData'),
 	budgetData: alias('total.budgetData'),
-
 	overallFilterData: computed('currentHospState.state', 'businessInputs.@each.isFinish', function () {
 		let currentHospState = this.get('currentHospState').state,
 			destConfigs = this.get('model').destConfigs,
@@ -47,10 +33,37 @@ export default Controller.extend({
 		}
 		return destConfigs;
 	}),
-	total: computed('businessInputs.@each.{total}', function () {
-		const store = this.get('store');
+	warning: computed('total.verify.{overTotalBusinessIndicators,overTotalBudgets,illegal}', function () {
+		let { overTotalBusinessIndicators, overTotalBudgets, illegal } =
+			this.get('total.verify'),
+			warning = { open: false, title: '', detail: '' };
 
-		let businessInputs = this.get('businessInputs'),
+		switch (true) {
+		case illegal:
+			warning.open = true;
+			warning.title = '非法值警告';
+			warning.detail = '请输入数字！';
+			return warning;
+		case overTotalBusinessIndicators:
+			warning.open = true;
+			warning.title = '总业务指标超额';
+			warning.detail = '您的销售额指标设定总值已超出业务总指标限制，请重新分配。';
+			return warning;
+		case overTotalBudgets:
+			warning.open = true;
+			warning.title = '总预算超额';
+			warning.detail = '您的预算设定总值已超出总预算限制，请重新分配。';
+			return warning;
+		default:
+			return warning;
+		}
+	}),
+	total: computed('model.businessInputs.@each.{total}', function () {
+		const store = this.get('store'),
+			resourceConfigManager = this.get('model.resourceConfManager');
+
+		let verifyService = this.get('verify'),
+			businessInputs = this.get('businessInputs'),
 			newBusinessInputs = businessInputs.filter(ele => ele.get('isNew')),
 			usedSalesTarget = 0,
 			usedBudget = 0,
@@ -83,18 +96,14 @@ export default Controller.extend({
 				value: budget,
 				name: goodsConfig.get('productConfig.product.name')
 			});
-			// return {
-			// 	value: target,
-			// 	name: goodsConfig.get('productConfig.product.name')
-			// };
 		});
 
 		return {
 			usedSalesTarget,
 			usedBudget,
 			indicatorsData: A([{ seriesName: '', data: indicatorsData }]),
-			budgetData: A([{ seriesName: '', data: budgetData }])
-
+			budgetData: A([{ seriesName: '', data: budgetData }]),
+			verify: verifyService.verifyInput(businessInputs, resourceConfigManager)
 		};
 	}),
 	init() {
