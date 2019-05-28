@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import RSVP, { hash } from 'rsvp';
+import { hash } from 'rsvp';
 import { A } from '@ember/array';
 
 export default Route.extend({
