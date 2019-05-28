@@ -49,22 +49,22 @@ export default Controller.extend({
 		]));
 	},
 	// 临时mock数据
-	doubleCircleProduct: A([
-		{
-			seriesName: '2018Q1', data: A([
-				{ value: 61089, name: 'Kosovo' },
-				{ value: 38922, name: 'Cyprus' },
-				{ value: 23204, name: 'Ireland' }
-			])
-		},
-		{
-			seriesName: '2018Q2', data: A([
-				{ value: 60954, name: 'Kosovo' },
-				{ value: 48258, name: 'Cyprus' },
-				{ value: 63933, name: 'Ireland' }
-			])
-		}
-	]),
+	// doubleCircleProduct: A([
+	// 	{
+	// 		seriesName: '2018Q1', data: A([
+	// 			{ value: 61089, name: 'Kosovo' },
+	// 			{ value: 38922, name: 'Cyprus' },
+	// 			{ value: 23204, name: 'Ireland' }
+	// 		])
+	// 	},
+	// 	{
+	// 		seriesName: '2018Q2', data: A([
+	// 			{ value: 60954, name: 'Kosovo' },
+	// 			{ value: 48258, name: 'Cyprus' },
+	// 			{ value: 63933, name: 'Ireland' }
+	// 		])
+	// 	}
+	// ]),
 	// 临时mock数据
 	doubleCircleRepresentative: A([
 		{

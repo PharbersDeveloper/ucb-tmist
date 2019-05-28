@@ -55,6 +55,8 @@ export default Route.extend({
 			tableHead = A([]),
 			prodTableBody = A([]),
 			repTableBody = A([]),
+			// pieSeriesNameArr = A([]),
+			doubleCircleProduct = A([]),
 			hospTableBody = A([]);
 
 		// 拼接 产品销售报告数据
@@ -79,11 +81,29 @@ export default Route.extend({
 			return rsvp.Promise.all(promiseArray);
 		}).then(data => {
 			// data 代表两个时期
-			productSalesReports = data[0];
+			let tmpData = data.slice(-2),
+				dealedData = tmpData.map(ele => {
+					return ele.filterBy('goodsConfig.productConfig.productType', 0);
+				});
 
+			productSalesReports = data[0];
 			prodTableBody = this.generateTableBody(data, 'productName');
 
-			return null;
+			return dealedData;
+		}).then(data => {
+			doubleCircleProduct = data.map((ele,index) => {
+				let circleData = ele.map(item => {
+					return {
+						value: item.get('share'),
+						name: item.get('goodsConfig.productConfig.product.name')
+					};
+				});
+
+				return {
+					seriesName:tmpHead.slice(-2)[index],
+					data: circleData
+				};
+			});
 		}).then(() => {
 			//	获取代表销售报告
 			let promiseArray = this.generatePromiseArray(increaseSalesReports, 'representativeSalesReports');
@@ -117,8 +137,13 @@ export default Route.extend({
 					tableHead,
 					prodTableBody,
 					repTableBody,
-					hospTableBody
+					hospTableBody,
+					doubleCircleProduct
 				});
 			});
+	},
+	setupController(controller, model) {
+		this._super(controller, model);
+		this.controller.set('doubleCircleData', model.doubleCircleProduct);
 	}
 });
