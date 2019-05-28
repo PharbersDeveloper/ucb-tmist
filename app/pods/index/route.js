@@ -48,10 +48,7 @@ export default Route.extend({
 
 			promiseArray = useableProposalIds.map(ele => {
 				return ajax.request(`/v0/GeneratePaper?proposal-id=${ele.id}
-				&account-id=${cookies.read('account_id')}`, {
-						method: 'POST',
-						data: {}
-					});
+				&account-id=${cookies.read('account_id')}`, { method: 'POST', data: {} });
 			});
 			return RSVP.Promise.all(promiseArray);
 

@@ -9,21 +9,20 @@
 				{{#bp-layout classNames="mr-4"}}
 					{{#bp-layout direction="col" 
 							local-class="keys" classNames="mr-2"}}
-						<span class="mb-1">潜力</span>
-						<span>预算</span>
-						{{!-- <span>总销售指标</span> --}}
+						<span class="mb-1">患者数量</span>
+						<span>销售指标</span>
 					{{/bp-layout}}
 					{{#bp-layout direction="col" local-class="values"}}
 						<span class="mb-1">
-							{{#if (bp-eq overallFilterData.hospitalConfig.potential '')}}
+							{{#if (bp-eq overallFilterData.hospitalConfig.bedNumber '')}}
 								-
 							{{else}}
-								￥{{format-number overallFilterData.hospitalConfig.potential}}
+								*{{format-number overallFilterData.hospitalConfig.bedNumber}}*
 							{{/if}}
 						</span>
 						<span>
-							{{#unless (bp-eq bi.budget '')}}
-								￥{{format-number bi.budget}}
+							{{#unless (bp-eq bi.totalSalesTarget '')}}
+								￥{{format-number bi.totalSalesTarget}}
 							{{else}}
 								-
 							{{/unless}}
@@ -34,7 +33,7 @@
 					{{#bp-layout direction="col" 
 							local-class="keys" classNames="mr-2"}}
 						<span class="mb-1">代表名称</span>
-						<span>会议名额(次)</span>
+						<span>预算分配</span>
 					{{/bp-layout}}
 					{{#bp-layout direction="col" local-class="values"}}
 						<span class="mb-1">
@@ -45,8 +44,8 @@
 							{{/unless}}
 						</span>
 						<span>
-							{{#unless (bp-eq bi.meetingPlaces '')}}
-								{{format-number bi.meetingPlaces}}
+							{{#unless (bp-eq bi.totalBudget '')}}
+								￥{{format-number bi.totalBudget}}
 							{{else}}
 								-
 							{{/unless}}

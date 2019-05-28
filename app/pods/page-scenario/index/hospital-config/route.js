@@ -11,7 +11,7 @@ export default Route.extend({
 			repConfs = pageScenarioModel.resourceConfRep,
 			salesConfigs = pageScenarioModel.salesConfigs,
 			currentController = this.controllerFor('page-scenario.index.hospital-config'),
-			businessController = this.controllerFor('page-scenario.index'),
+			// businessController = this.controllerFor('page-scenario.index'),
 			businessInputs = pageScenarioModel.businessInputs,
 			businessinput = null;
 
@@ -57,7 +57,6 @@ export default Route.extend({
 				}
 			})
 			.then(() => {
-				console.log(businessinput.get('goodsConfigInputs'));
 				return hash({
 					managerConf,
 					repConfs,

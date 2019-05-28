@@ -169,7 +169,7 @@ export default Controller.extend({
 	actions: {
 		changeSalesValue(value) {
 			this.set('salesGroupValue', value);
-			console.log(value);
+			// console.log(value);
 			if (value === 0) {
 				this.set('doubleCircleData', this.get('doubleCircleProduct'));
 				this.set('barLineData', this.get('barLineProduct'));

@@ -6,10 +6,9 @@ export default Component.extend({
 	tagName: 'span',
 	localClassNames: 'end-time',
 	endTime: computed('paper', function () {
-		console.log(paper);
 		let paper = this.get('paper'),
-			state = isEmpty(paper) ? 0 : paper.state,
-			endTime = isEmpty(paper) ? 0 : paper.endTime;
+			state = isEmpty(paper) ? 0 : paper.get('state'),
+			endTime = isEmpty(paper) ? 0 : paper.get('endTime');
 
 		if (isEmpty(paper) || state === 0 || endTime === 0) {
 			return '';
