@@ -3,8 +3,8 @@ import { inject as service } from '@ember/service';
 import ENV from 'ucb-tmist/config/environment';
 import { computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
-// import { A } from '@ember/array';
-// import rsvp from 'rsvp';
+import { A } from '@ember/array';
+import rsvp from 'rsvp';
 
 export default Controller.extend({
 	ajax: service(),
@@ -18,10 +18,13 @@ export default Controller.extend({
 		return false;
 	}),
 	allVerifySuccessful() {
+		let scenario = this.get('model.scenario');
+
 		this.set('warning', {
 			open: true,
 			title: `确认提交`,
-			detail: `您将提交本季度决策并输出执行报告，提交后将不可更改决策。`
+			detail: `您将提交本季度（${scenario.get('name')}）决策，
+				并进入下一个季度（2019Q2）决策。提交后不可再更改本季度（${scenario.get('name')}）决策`
 		});
 		this.set('confirmSubmit', true);
 		return;
@@ -134,7 +137,7 @@ export default Controller.extend({
 
 		// 判断是不是有代表没有分配工作
 		// 有代表未分配工作
-		if (allocateRepresentatives.length < representatives.length) {
+		if (allocateRepresentatives.length < representatives.get('length')) {
 			this.repNotAlloction(representativeIds, allocateRepresentatives);
 			return;
 		}
@@ -158,6 +161,109 @@ export default Controller.extend({
 		// this.verifyTotalValue(businessinputs, representatives);
 		this.verificationRepHasAllocation(businessinputs, representatives);
 	},
+	sendInput(state) {
+		const ajax = this.get('ajax'),
+			applicationAdapter = this.get('store').adapterFor('application'),
+			store = this.get('store'),
+			model = this.get('model'),
+			paper = model.paper,
+			scenario = model.scenario,
+			that = this;
+
+		//	正常逻辑
+		let version = `${applicationAdapter.get('namespace')}`,
+			paperId = paper.id,
+			paperinputs = paper.get('paperinputs').sortBy('time'),
+			paperinput = paperinputs.lastObject,
+			reDeploy = Number(localStorage.getItem('reDeploy')),
+			phase = 1,
+			promiseArray = A([]);
+
+		promiseArray = A([
+			store.peekAll('businessinput').save(),
+			// store.peekAll('managerinput').save(),
+			// store.peekAll('representativeinput').save()
+			store.peekAll('goodsConfigInput').save()
+		]);
+
+		rsvp.Promise.all(promiseArray)
+			.then(data => {
+				if (paper.state === 1 && reDeploy === 1 || paper.state !== 1) {
+					return store.createRecord('paperinput', {
+						paperId,
+						phase,
+						scenario: scenario,
+						time: new Date().getTime(),
+						businessinputs: data[0],
+						// managerinputs: data[1],
+						// representativeinputs: data[2]
+						goodsConfigInputs: data[1]
+					}).save();
+				}
+				paperinput.setProperties({
+					phase,
+					time: new Date().getTime(),
+					businessinputs: data[0],
+					// managerinputs: data[1],
+					// representativeinputs: data[2]
+					goodsConfigInputs: data[1]
+				});
+				return paperinput.save();
+			}).then(data => {
+				paper.get('paperinputs').pushObject(data);
+				if (state === 1) {
+					paper.set('state', state);
+				}
+				paper.set('endTime', new Date().getTime());
+
+				if (paper.state !== 1) {
+					paper.set('startTime', localStorage.getItem('startTime'));
+				}
+				return paper.save();
+
+			}).then(() => {
+				let notice = localStorage.getItem('notice');
+
+				localStorage.clear();
+				localStorage.setItem('notice', notice);
+				if (state === 1) {
+					this.set('warning', {
+						open: true,
+						title: `保存成功`,
+						detail: `保存成功。`
+					});
+					return;
+				}
+				return ajax.request(`${version}/CallRCalculate`, {
+					method: 'POST',
+					data: JSON.stringify({
+						'proposal-id': this.get('model').proposal.id,
+						'account-id': this.get('cookies').read('account_id')
+					})
+				}).then((response) => {
+					if (response.status === 'Success') {
+						return that.updatePaper(store, paperId, state, that);
+					}
+					return response;
+				}).then(() => {
+				}).catch(err => {
+					window.console.log('error');
+					window.console.log(err);
+				});
+			});
+	},
+	updatePaper(store, paperId, state, context) {
+		store.findRecord('paper', paperId, { reload: true })
+			.then(data => {
+				data.set('state', state);
+				return data.save();
+			}).then(() => {
+				this.set('loadingForSubmit', false);
+
+				context.transitionToRoute('page-result');
+				return null;
+			});
+	},
 	actions: {
 		submit() {
 			const judgeAuth = this.judgeOauth(),
@@ -172,90 +278,6 @@ export default Controller.extend({
 				return;
 			}
 			this.verificationBusinessinputs(businessinputs, representatives);
-
-			// let store = this.get('store'),
-			// 	representatives = store.peekAll('representative'),
-			// 	representativeIds = representatives.map(ele => ele.get('id')),
-			// 	// 验证businessinputs
-			// 	businessinputs = store.peekAll('businessinput').filter(ele => ele.get('isNew')),
-			// 	notFinishBusinessInputs = businessinputs.filter(ele => !ele.get('isFinish'));
-
-			// // 验证 businessinput 中存在的未输入
-			// if (notFinishBusinessInputs.length > 0) {
-			// 	// 找到未完成输入的第一个
-			// 	let firstNotFinishBI = notFinishBusinessInputs.get('firstObject'),
-			// 		hospitalName = firstNotFinishBI.get('destConfig.hospitalConfig.hospital.name'),
-			// 		detail = '';
-
-			// 	//	找到未完成输入中的是代表/资源
-			// 	if (isEmpty(firstNotFinishBI.get('resourceConfigId'))) {
-			// 		detail = `尚未对“${hospitalName}”进行代表分配，请为其分配代表。`;
-			// 	} else {
-			// 		detail = `尚未对“${hospitalName}”进行资源分配，请为其分配资源。`;
-			// 	}
-			// 	this.set('warning', {
-			// 		open: true,
-			// 		title: firstNotFinishBI.get('destConfig.hospitalConfig.hospital.name'),
-			// 		detail
-			// 	});
-			// 	return;
-			// 	// 验证是否有代表未被选择
-			// } else if (notFinishBusinessInputs.length === 0) {
-			// 	let businessinputRepresentatives = businessinputs.map(ele => ele.get('resourceConfig.representativeConfig.representative.id')),
-			// 		allocateRepresentatives = businessinputRepresentatives.uniq().filter(item => item),
-			// 		differentRepresentatives = null;
-
-			// 	// 判断是不是有代表没有分配工作
-			// 	if (allocateRepresentatives.length < 5) {
-			// 		differentRepresentatives = representativeIds.concat(allocateRepresentatives).filter(v => !representativeIds.includes(v) || !allocateRepresentatives.includes(v));
-			// 		let firstRepId = differentRepresentatives.get('firstObject');
-
-			// 		this.set('warning', {
-			// 			open: true,
-			// 			title: store.peekRecord('representative', firstRepId).get('name'),
-			// 			detail: `尚未对“${store.peekRecord('representative', firstRepId).get('name')}”分配工作，请为其分配。`
-			// 		});
-			// 		return;
-			// 	}
-			// 	//	如果没有则应该判断管理决策的输入情况
-			// 	this.transitionToRoute('page-result');
-
-			// }
-
-			//	正常逻辑
-			// let store = this.get('store'),
-			// 	paper = store.peekAll('paper').get('firstObject'),
-			// 	paperId = paper.id,
-			// 	phase = paper.get('paperinputs').get('length') + 1,
-			// 	promiseArray = A([
-			// 		store.peekAll('businessinput').save(),
-			// 		store.peekAll('managerinput').save(),
-			// 		store.peekAll('representativeinput').save()
-			// 	]);
-
-			// rsvp.Promise.all(promiseArray)
-			// 	.then(data => {
-			// 		return store.createRecord('paperinput', {
-			// 			paperId,
-			// 			phase,
-			// 			businessinputs: data[0],
-			// 			managerinputs: data[1],
-			// 			representativeinputs: data[2]
-
-			// 		}).save();
-			// 	}).then(data => {
-			// 		let tmpPaperinput = paper.get('paperinputs');
-
-			// 		tmpPaperinput.then(tmp => {
-			// 			tmp.pushObject(data);
-			// 			paper.save();
-			// 		}).then(() => {
-			// 			this.transitionToRoute('page-result');
-			// 		});
-
-			// 	});
-			// 临时逻辑
-			// this.transitionToRoute('page-result');
 		},
 		saveInputs() {
 			// this.set('confirmSubmit', false);
@@ -267,6 +289,12 @@ export default Controller.extend({
 			// 	return;
 			// }
 			// this.sendInput(1);
+		},
+		confirmSubmit() {
+			this.set('warning', { open: false });
+			this.set('loadingForSubmit', true);
+
+			// this.sendInput(3);
 		},
 		testResult() {
 			this.transitionToRoute('page-result');

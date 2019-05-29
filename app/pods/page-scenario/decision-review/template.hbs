@@ -8,19 +8,19 @@
 					{{#bp-dropdown widthSize="auto" 
 								local-class="dd-medicines dd-area" as |dd|}}
 						{{#dd.button}}
-							{{#if tmpGc.id}}
-								<p>{{tmpGc.productConfig.product.name}}</p>
+							{{#if tmpSeason.id}}
+								<p>{{tmpSeason.name}}</p>
 							{{else}}
-								请选择
+								当前周期
 							{{/if}}
 							{{bp-icon icon='down'}}
 						{{/dd.button}}
 						{{#dd.menu as |menu|}}
-							{{#each model.goodsConfigs as |gc|}}
-								{{#unless gc.productConfig.productType}}
-									{{#menu.option value=gc 
-												onClick=(action (mut tmpGc))}}
-										{{gc.productConfig.product.name}}
+							{{#each model.usableSeasons as |usableSeason|}}
+								{{#unless usableSeason.scenario.name}}
+									{{#menu.option value=usableSeason.scenario
+												onClick=(action (mut tmpSeason))}}
+										{{usableSeason.scenario.name}}
 									{{/menu.option}}
 								{{/unless}}
 							{{/each}}
@@ -36,11 +36,15 @@
 							{{#if tmpGc.id}}
 								<p>{{tmpGc.productConfig.product.name}}</p>
 							{{else}}
-								请选择
+								全部药品
 							{{/if}}
 							{{bp-icon icon='down'}}
 						{{/dd.button}}
 						{{#dd.menu as |menu|}}
+							{{#menu.option value=''
+								onClick=(action (mut tmpGc))}}
+								全部药品
+							{{/menu.option}}
 							{{#each model.goodsConfigs as |gc|}}
 								{{#unless gc.productConfig.productType}}
 									{{#menu.option value=gc 
@@ -54,85 +58,75 @@
 				{{/bp-layout}}
 				{{#bp-layout main="between" cross="center" 
 							local-class="choose-area"  classNames="px-4"}}
-					<span local-class="keys" class="mr-4">选择排序</span>
+					<span local-class="keys" class="mr-4">选择代表</span>
 					{{#bp-dropdown widthSize="auto" 
 								local-class="dd-sort dd-area" as |dd|}}
 						{{#dd.button}}
-							{{#if tmpSr.name}}
-								<p>{{tmpSr.name}}</p>
+							{{#if tmpRep.name}}
+								<p>{{tmpRep.name}}</p>
 							{{else}}
-								请选择
+								全部代表
 							{{/if}}
 							{{bp-icon icon='down'}}
 						{{/dd.button}}
 						{{#dd.menu as |menu|}}
-							{{#each sortRules as |sr|}}
-								{{#menu.option value=sr 
-												onClick=(action (mut tmpSr))}}
-									{{sr.name}}
+							{{#menu.option value=''
+								onClick=(action (mut tmpRep))}}
+								全部代表
+							{{/menu.option}}
+							{{#each model.resourceConfigRepresentatives as |rcr|}}
+								{{#menu.option value=rcr.representativeConfig.representative
+												onClick=(action (mut tmpRep))}}
+									{{rcr.representativeConfig.representative.name}}
 								{{/menu.option}}
 							{{/each}}
 						{{/dd.menu}}
 					{{/bp-dropdown}}
 				{{/bp-layout}}
 			{{/bp-layout}}
-			<table local-class="table-container" class="table">
+			{{business-review model=filterTableData}}
+			{{!-- <table local-class="table-container" class="table">
 				<thead>
-					<th>医院名称</th>
-					<th>医院等级</th>
-					<th>潜力</th>
+					<th class='text-left'>医院名称</th>
+					<th class="text-center">医院等级</th>
+					<th class="text-right">患者数量</th>
 					<th>上季度 销售额</th>
 					<th>代表</th>
 					<th>销售目标设定</th>
 					<th>预算费用</th>
 				</thead>
 				<tbody class="bg-white">
-					{{#if sortData.length}}
-						{{#each sortData as |dcs|}}
-							<tr>
-								<td>{{dcs.hospitalConfig.hospital.name}}</td>
-								<td>{{dcs.hospitalConfig.potential}}</td>
-								<td>{{dcs.hospitalConfig.sales}}</td>
-								<td>*</td>
-								<td>*</td>
-								<td>*</td>
-								<td>*</td>
-								<td>*</td>
-							</tr>
-						{{/each}}
-					{{else}}
-						{{#each model.businessinputs as |bi|}}
-							<tr>
-								<td>{{bi.destConfig.hospitalConfig.hospital.name}}</td>
-								<td>三甲*</td>
-								<td>{{format-number bi.destConfig.hospitalConfig.potential}}</td>
-								<td>{{format-number bi.destConfig.hospitalConfig.lastYearSales}}</td>
-								<td>
-									{{#unless bi.resourceConfig.representativeConfig.representative.name}}
-										-
-									{{else}}
-										{{bi.resourceConfig.representativeConfig.representative.name}}
-									{{/unless}}
-								</td>
-								<td>
-									{{#unless bi.salesTarget}}
-										-
-									{{else}}
-										{{bi.salesTarget}}
-									{{/unless}}
-								</td>
-								<td>
-									{{#unless bi.budget}}
-										-
-									{{else}}
-										{{bi.budget}}
-									{{/unless}}
-								</td>
-							</tr>
-						{{/each}}
-					{{/if}}
+					{{#each model.businessinputs as |bi|}}
+						<tr>
+							<td>{{bi.destConfig.hospitalConfig.hospital.name}}</td>
+							<td>三甲*</td>
+							<td>{{format-number bi.destConfig.hospitalConfig.potential}}</td>
+							<td>{{format-number bi.destConfig.hospitalConfig.lastYearSales}}</td>
+							<td>
+								{{#unless bi.resourceConfig.representativeConfig.representative.name}}
+									-
+								{{else}}
+									{{bi.resourceConfig.representativeConfig.representative.name}}
+								{{/unless}}
+							</td>
+							<td>
+								{{#unless bi.salesTarget}}
+									-
+								{{else}}
+									{{bi.salesTarget}}
+								{{/unless}}
+							</td>
+							<td>
+								{{#unless bi.budget}}
+									-
+								{{else}}
+									{{bi.budget}}
+								{{/unless}}
+							</td>
+						</tr>
+					{{/each}}
 				</tbody>
-			</table>
+			</table> --}}
 		{{/bp-layout}}
 	</div>
 {{/bp-layout}}
