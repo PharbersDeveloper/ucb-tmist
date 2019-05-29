@@ -9,6 +9,7 @@ export default Route.extend({
 			goodsConfigs = totalConfig.goodsConfigs,
 			seasons = A([]),
 			tmpData = A([]),
+			tmpHead = A([]),
 			lineColorTm = A(['#57D9A3', '#79E2F2', '#FFE380', '#8777D9 ']);
 
 		return paper.get('salesReports')
@@ -22,6 +23,11 @@ export default Route.extend({
 						return ele.scenario;
 					});
 
+				tmpHead = increaseSalesReports.map(ele => {
+					let name = ele.get('scenario.name');
+
+					return name.slice(0, 4) + name.slice(-4);
+				});
 				return hash({
 					productSalesReports: RSVP.Promise.all(promiseArray),
 					seasons: RSVP.Promise.all(seasonsPrimary)
@@ -32,8 +38,9 @@ export default Route.extend({
 				let promiseArray = A([]),
 					data = result.productSalesReports;
 
-				seasons = result.seasons.map(ele => ele.name);
-
+				seasons = tmpHead.map(ele => {
+					return ele;
+				});
 				// 获取基于周期的数据
 				tmpData = data.map((productSalesReports, index) => {
 					let shareData = this.eachArray(productSalesReports, 'share'),
@@ -62,6 +69,7 @@ export default Route.extend({
 			}).then(data => {
 
 				let promiseArray = data.map(ele => {
+					// console.log(ele.get('product.name'));
 					return ele.get('product');
 				});
 
@@ -69,9 +77,9 @@ export default Route.extend({
 			}).then(data => {
 				// 拼装基于产品的数据
 				let lineData = data.map((gc, index) => {
-
 					return {
-						name: data[index].name,
+						// name: data[index].name,
+						name: gc.get('name'),
 						date: seasons,
 						data: tmpData.map(item => item.shareData[index])
 					};

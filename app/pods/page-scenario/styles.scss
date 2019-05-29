@@ -1,7 +1,8 @@
 .page-scenario {
 	height: 100%;
 	overflow: auto;
-
+	width: 100%;
+	overflow-x: hidden;
 	.scenario-header {
 		flex: 0 0 76px;
 	}
