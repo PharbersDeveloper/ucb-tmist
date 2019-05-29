@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import { hash, all } from 'rsvp';
+import { hash } from 'rsvp';
 import { A } from '@ember/array';
 
 export default Route.extend({
@@ -13,9 +13,10 @@ export default Route.extend({
 	 */
 	isHaveBusinessInput(paper, destConfigs, selfGoodsConfigs) {
 		let state = paper.get('state'),
-			reDeploy = Number(localStorage.getItem('reDeploy')) === 1;
+			reDeploy = Number(localStorage.getItem('reDeploy')) === 1,
+			exitInEmberData = this.get('store').peekAll('businessinput');
 
-		if (state === 1 && !reDeploy) {
+		if (state === 1 && !reDeploy || exitInEmberData.get('length') > 0) {
 			return this.get('store').peekAll('businessinput');
 		}
 		return this.generateBusinessInputs(destConfigs, selfGoodsConfigs);
@@ -33,8 +34,11 @@ export default Route.extend({
 			let goodsConfigInputs = selfGoodsConfigs.map(item => {
 				return store.createRecord('goodsConfigInput', {
 					goodsConfig: item,
-					salesTarget: '',	// 销售目标设定
-					budget: ''
+					// salesTarget: '',	// 销售目标设定
+					// budget: ''	//预算设定
+					// TODO 测试，用后删除
+					salesTarget: 75000,	// 销售目标设定
+					budget: 42500	//预算设定
 				});
 			});
 
@@ -55,54 +59,24 @@ export default Route.extend({
 		return promiseArray;
 	},
 	model(params) {
-
 		const store = this.get('store'),
 			cookies = this.get('cookies'),
-			noticeModel = this.modelFor('page-notice'),
-			scenario = noticeModel.scenario,
+			pageIndexModel = this.modelFor('index'),
+			scenario = pageIndexModel.scenario,
 			scenarioId = scenario.get('id'),
 			proposalId = params['proposal_id'],
-			paper = noticeModel.detailPaper;
+			paper = pageIndexModel.detailPaper;
 
-		let proposal = noticeModel.detailProposal,
-			destConfigs = null,
-			goodsConfigs = null,
-			resourceConfRep = null,
-			resourceConfManager = null,
-			managerTotalTime = 0,
-			managerTotalKpi = 0,
+		let { detailProposal, destConfigs, goodsConfigs } = pageIndexModel,
+			proposal = null,
 			businessInputs = null,
 			salesReports = A([]),
 			lastSeasonHospitalSalesReports = A([]);
 
-		return store.findRecord('proposal', proposalId)
+		return detailProposal.get('proposal')
 			.then(data => {
 				proposal = data;
-				// 获取 resourceConfig -> 代表
-				return store.query('resourceConfig',
-					{
-						'scenario-id': scenarioId,
-						'resource-type': 1
-					});
-			})
-			.then(data => {
-				resourceConfRep = data;
-				// 获取 resourceConfig -> 经理
-				return store.queryRecord('resourceConfig',
-					{
-						'scenario-id': scenarioId,
-						'resource-type': 0
-					});
-			})
-			// 获取经理分配总时间/总点数
-			.then(data => {
-				resourceConfManager = data;
-				// 获取 goodsConfigs 为判断 businessinputs 做准备
-				return store.query('goodsConfig',
-					{ 'scenario-id': scenarioId });
-			}).then(data => {
-				goodsConfigs = data;
-				return proposal.get('salesReports');
+				return data.get('salesReports');
 			}).then(data => {
 				salesReports = data.sortBy('time');
 
@@ -110,22 +84,13 @@ export default Route.extend({
 
 				return salesReport.get('hospitalSalesReports');
 			}).then(data => {
-
 				lastSeasonHospitalSalesReports = data.sortBy('potential').reverse();
 
-				let promiseArray = lastSeasonHospitalSalesReports.map(ele => {
-					return ele.get('destConfig');
-				});
-
-				return all(promiseArray);
-				// 判断 管理决策是否存在
+				return destConfigs.map(ele => ele);
 			}).then(data => {
-
-				destConfigs = data;
-
 				let selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
 
-				businessInputs = this.isHaveBusinessInput(paper, destConfigs, selfGoodsConfigs);
+				businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs);
 
 				return hash({
 					proposal,
@@ -133,10 +98,8 @@ export default Route.extend({
 					paper,
 					scenario,
 					paperState: paper.get('state'),
-					resourceConfRep,
-					resourceConfManager,
-					managerTotalTime,
-					managerTotalKpi,
+					resourceConfRep: pageIndexModel.resourceConfigRepresentatives,
+					resourceConfManager: pageIndexModel.resourceConfigManager,
 					goodsConfigs,
 					destConfigs,
 					salesReports,

@@ -1,12 +1,11 @@
 import Controller from '@ember/controller';
-import { htmlSafe } from '@ember/template';
+import { alias } from '@ember/object/computed';
 import { computed } from '@ember/object';
+import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
 
 export default Controller.extend({
 	notice: localStorage.getItem('notice') !== 'false',
-	step: 1,
-	detail: htmlSafe(`<p class='m-0 model-desc'>平台介绍</p><p class='m-0 model-desc'>在平台中，您将作为区域销售经理</p>`),
 	neverShow: A(['不在显示']),
 	reports: computed('model.detailPaper', function () {
 		let paper = this.get('model.detailPaper'),
@@ -14,6 +13,56 @@ export default Controller.extend({
 
 		return inputs.sortBy('time').reverse();
 	}),
+	assignHospitals: alias('restManagerResource.assignHospitals'),
+	assignRepresentatives: alias('restManagerResource.assignRepresentatives'),
+	usedBudget: alias('restManagerResource.usedBudget'),
+
+	restManagerResource: computed('model.{paperinput}', function () {
+		const model = this.get('model'),
+			paperinput = model.paperinput,
+			businessInputs = model.businessInputs;
+
+		let usedSalesTarget = 0,
+			usedBudget = 0,
+			assignHospitalArray = A([]),
+			assignRepresentativeArray = A([]);
+
+		if (isEmpty(paperinput)) {
+			return {
+				assignHospitals: assignHospitalArray.get('length'),
+				assignRepresentatives: assignRepresentativeArray.get('length'),
+				usedBudget,
+				usedSalesTarget
+			};
+		}
+
+		businessInputs.forEach(bi => {
+			if (!isEmpty(bi.get('resourceConfig'))) {
+				assignHospitalArray.push(bi.get('resourceConfig'));
+			}
+			usedSalesTarget += Number(bi.get('totalSalesTarget'));
+			usedBudget += Number(bi.get('totalBudget'));
+		});
+		if (assignHospitalArray.get('length') !== 0) {
+			let businessinputRepresentatives = assignHospitalArray.map(ele => ele.get('resourceConfig.representativeConfig.representative.id'));
+
+			assignRepresentativeArray = businessinputRepresentatives.uniq().filter(item => item);
+		}
+		return {
+			assignHospitals: assignHospitalArray.get('length'),
+			assignRepresentatives: assignRepresentativeArray.get('length'),
+			usedBudget,
+			usedSalesTarget
+		};
+	}),
+	entryMission(proposalId) {
+		let now = new Date().getTime();
+
+		if (this.get('model').detailPaper.state !== 1) {
+			localStorage.setItem('paperStartTime', now);
+		}
+		this.transitionToRoute('page-scenario', proposalId);
+	},
 	actions: {
 		changeDetail(useableProposal, paper) {
 			this.set('model.detailProposal', useableProposal);
@@ -21,7 +70,8 @@ export default Controller.extend({
 		},
 		startDeploy(proposalId) {
 			localStorage.setItem('notice', false);
-			this.transitionToRoute('page-notice', proposalId);
+			this.entryMission(proposalId);
+			// this.transitionToRoute('page-notice', proposalId);
 		},
 		reDeploy() {
 			let proposalId = this.get('model').detailProposal.get('proposal.id');
@@ -29,35 +79,9 @@ export default Controller.extend({
 			this.set('reDeploy', false);
 			// reDeploy 为 1 的时候，代表用户选择`重新部署`
 			localStorage.setItem('reDeploy', 1);
-			this.transitionToRoute('page-notice', proposalId);
-		},
-		prevStep() {
-			let step = this.get('step') - 1;
+			this.entryMission(proposalId);
 
-			this.set('step', step);
-			if (step === 2) {
-				this.set('detail',
-					htmlSafe(`<p class='m-0 model-desc'>关卡流程介绍</p>
-				<p class='m-0 model-desc'>每个关卡都代表一个虚拟销售区域，有多周目、单周目，您需要，关卡完成后您将
-				得到一份测评报告</p>`));
-			} else {
-				this.set('detail',
-					htmlSafe(`<p class='m-0 model-desc'>平台介绍</p><p class='m-0 model-desc'>在平台中，您将作为区域销售经理</p>`));
-			}
-		},
-		submit() {
-			let step = this.get('step');
-
-			if (step === 1) {
-				this.set('detail',
-					htmlSafe(`<p class='m-0 model-desc'>关卡流程介绍</p>
-				<p class='m-0 model-desc'>每个关卡都代表一个虚拟销售区域，有多周目、单周目，您需要，关卡完成后您将
-				得到一份测评报告</p>`));
-			} else {
-				this.set('detail',
-					htmlSafe(`<p class='m-0 model-desc'>新的挑战即将开始，您准备好了吗？</p>`));
-			}
-			this.set('step', ++step);
+			// this.transitionToRoute('page-notice', proposalId);
 		},
 		closeNotice() {
 			this.set('notice', false);

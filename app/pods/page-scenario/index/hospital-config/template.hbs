@@ -59,10 +59,10 @@
 	classNames="m-0 px-4 bg-white "}}
 	药品相关资源分配
 {{/bp-layout}}
-<table local-class={{if tmpRc.id 'prod' 'prod disabled'}} class="table mb-2">
+<table local-class={{if tmpRc.id 'prod' 'prod disabled'}} class="table mb-2 bg-white">
 	<thead>
 		<tr>
-			<th class="border-0 pb-2 pl-2 text-left">产品名称</th>
+			<th class="border-0 pb-2 pl-4 text-left">产品名称</th>
 			<th class="border-0 pb-2 pl-2 text-center">治疗领域</th>
 			<th class="border-0 pb-2 pl-2 text-right">患者数量</th>
 			<th class="border-0 pb-2 pl-2 text-right">上季度销售额</th>
@@ -70,11 +70,11 @@
 			<th class="border-0 pb-2 pl-2 text-right">预算设定</th>
 		</tr>
 	</thead>
-	<tbody class="bg-white">
+	<tbody>
 		{{#each model.salesConfigs as |sc|}}
 			{{#if (bp-eq sc.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
 				<tr class="mx-0">
-					<td class="pl-2 border-0 text-left">{{sc.goodsConfig.productConfig.product.name}}</td>
+					<td class="pl-4 border-0 text-left">{{sc.goodsConfig.productConfig.product.name}}</td>
 					<td class="pl-2 border-0 text-center">
 						{{sc.goodsConfig.productConfig.treatmentArea}}
 					</td>
@@ -98,11 +98,10 @@
 								{{bp-input block=true widthSize="auto" 
 								value=goodsConfigInput.salesTarget
 								disabled=(not tmpRc.id)
-								local-class="input-prepend input-money"
-								classNames="mb-2"}}
-								<p class="mt-2 mb-0 text-center" local-class="percent">
+								local-class="input-prepend input-money"}}
+								{{!-- <p class="mt-2 mb-0 text-center" local-class="percent">
 									{{IndicatorAllocationPercent.percent}}%
-								</p>
+								</p> --}}
 							{{/if}}
 						{{/each}}
 					</td>
@@ -113,9 +112,9 @@
 									value=goodsConfigInput.budget
 									disabled=(not tmpRc.id)
 									local-class="input-prepend input-money"}}
-								<p class="mt-2 mb-0 text-center" local-class="percent">
+								{{!-- <p class="mt-2 mb-0 text-center" local-class="percent">
 									{{budgetPercent.percent}}%
-								</p>
+								</p> --}}
 							{{/if}}
 						{{/each}}
 					</td>

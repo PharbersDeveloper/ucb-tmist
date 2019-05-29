@@ -2,6 +2,11 @@
 	height: 100%;
 	overflow: auto;
 
+	h1.title {
+		@extend %title;
+		font-weight: 600;
+	}
+
 	&>div {
 		height: 100%;
 	}
@@ -10,51 +15,140 @@
 		@extend %header-medium;
 	}
 
-	.mission-list {
+	.mission-detail {
 		flex: 1;
 
-		.choosed {
-			border: 2px solid $b100;
+		.resource {
+			background-color: $n040;
 
-			&:global(.new-mission-active) {
-				border: 2px solid $p100;
+			h2 {
+				@extend %header-medium;
 			}
 
-			&:global(.done-mission-active) {
-				border: 2px solid $g200;
+			.container {
+				@extend %depth-z200;
+			}
+
+			.item {
+				.icon {
+					height: 32px;
+				}
+
+				p.desc {
+					@extend %p-secondary;
+				}
+
+				h4.title {
+					@extend %header-small;
+				}
+			}
+
+			.item-resource {
+				.icon {
+					flex: 0 0 32px;
+					height: 32px;
+					margin-right: $spacing-3;
+				}
+
+				.icon-right {
+					margin-right: 0;
+				}
+
+				.blank {
+					flex: 3;
+				}
+
+				.main-box {
+					flex: 3;
+
+					:global(.bp-progress) {
+						height: $spacing;
+					}
+
+					p {
+						@extend %p-small;
+					}
+
+					.circle {
+						width: 64px;
+						height: 64px;
+					}
+
+					.keys {
+						@extend %p-primary;
+					}
+
+					.values {
+						@extend %header-medium;
+					}
+				}
+
+				h4 {
+					@extend %p-secondary;
+				}
+
+				span.schedule {
+					@extend %header-medium;
+				}
 			}
 		}
 	}
 
-	.mission-desc {
+	.mission-report {
 		flex: 0 0 392px;
-		background-color: $n000;
-
-		.phase {
-			@extend %p-primary;
-		}
-
-		.desc {
-			@extend %p-secondary;
-		}
 
 		h4 {
-			font-size: 0;
-
-			span.title {
+			.title {
 				@extend %header-small;
 			}
 
-			span.times {
+			.times {
 				@extend %p-secondary;
 			}
-
 		}
 
-		p.historp-report {
-			@extend %p-small;
+		.text {
+			@extend %p-secondary;
+		}
+	}
+}
 
-			span.infos {}
+.modal-welcome {
+	background-color: rgba(9, 30, 66, 0.54);
+
+	@media (min-width: 576px) {
+		:global(.modal-dialog) {
+			max-width: 600px;
+		}
+	}
+
+	.content {
+		img {
+			flex: 0 0 128px;
+			width: 128px;
+			height: 128px;
+		}
+
+		.modal-content {
+			flex: 1;
+
+			h2.title {
+				@extend %header-large;
+			}
+
+			p.item {
+				@extend %p-primary;
+
+				.keys {
+					@extend %p-small;
+
+				}
+
+				.values {
+					@extend %header-medium;
+
+				}
+			}
 		}
 	}
 }

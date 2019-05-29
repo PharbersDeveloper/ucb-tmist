@@ -38,8 +38,7 @@ export default Component.extend({
 			sortable: false
 		}, {
 			label: '患者数量',
-			valuePath: 'patientNumber',
-			cellComponent: 'light-table-format-number'
+			valuePath: 'patientNumber'
 		}, {
 			label: '上季度销售额',
 			valuePath: 'sales',

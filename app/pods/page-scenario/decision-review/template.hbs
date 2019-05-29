@@ -36,11 +36,15 @@
 							{{#if tmpGc.id}}
 								<p>{{tmpGc.productConfig.product.name}}</p>
 							{{else}}
-								请选择
+								全部药品
 							{{/if}}
 							{{bp-icon icon='down'}}
 						{{/dd.button}}
 						{{#dd.menu as |menu|}}
+							{{#menu.option value=''
+								onClick=(action (mut tmpGc))}}
+								全部药品
+							{{/menu.option}}
 							{{#each model.goodsConfigs as |gc|}}
 								{{#unless gc.productConfig.productType}}
 									{{#menu.option value=gc 
@@ -61,7 +65,7 @@
 							{{#if tmpRep.name}}
 								<p>{{tmpRep.name}}</p>
 							{{else}}
-								请选择
+								全部代表
 							{{/if}}
 							{{bp-icon icon='down'}}
 						{{/dd.button}}

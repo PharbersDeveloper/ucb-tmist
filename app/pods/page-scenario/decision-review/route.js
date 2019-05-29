@@ -16,17 +16,18 @@ export default Route.extend({
 			tableData = A([]),
 			usableSeasons = A([]);
 
-		tableData = A([
-			{
-				hospitalName: '',
-				hospitalLevel: '',
-				patientNumber: '',
-				sales: '',
-				representative: '',
-				salesTarget: '',
-				budget: ''
-			}
-		]);
+		// tableData = A([
+		// 	{
+		// 		hospitalName: '',
+		// 		hospitalLevel: '',
+		// 		patientNumber: '',
+		// 		sales: '',
+		// 		representative: '',
+		// 		salesTarget: '',
+		// 		budget: '',
+		// 		goodsConfigsInputs: null
+		// 	}
+		// ]);
 		tableData = businessinputs.map(ele => {
 			let biHospitalId = ele.get('destConfig.hospitalConfig.hospital.id'),
 				sales = 0;
@@ -45,8 +46,11 @@ export default Route.extend({
 				patientNumber: ele.get('destConfig.hospitalConfig.hospital.name'),
 				sales: sales,
 				representative: isEmpty(ele.get('resourceConfig.representativeConfig.representative.name')) ? '-' : ele.get('resourceConfig.representativeConfig.representative.name'),
+				totalSalesTarget: isEmpty(ele.get('totalSalesTarget')) ? '-' : ele.get('totalSalesTarget'),
 				salesTarget: isEmpty(ele.get('totalSalesTarget')) ? '-' : ele.get('totalSalesTarget'),
-				budget: isEmpty(ele.get('totalBudget')) ? '-' : ele.get('totalBudget')
+				totalBudget: isEmpty(ele.get('totalBudget')) ? '-' : ele.get('totalBudget'),
+				budget: isEmpty(ele.get('totalBudget')) ? '-' : ele.get('totalBudget'),
+				goodsConfigInputs: ele.get('goodsConfigInputs')
 			};
 		});
 		return paper.get('paperinputs')
@@ -68,7 +72,7 @@ export default Route.extend({
 	},
 	setupController(controller, model) {
 		this._super(...arguments);
-		controller.set('tmpGc', model.goodsConfigs.get('firstObject'));
+		// controller.set('tmpGc', model.goodsConfigs.get('firstObject'));
 		controller.set('tmpSr', A([]));
 	}
 });

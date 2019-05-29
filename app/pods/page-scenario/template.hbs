@@ -47,10 +47,11 @@
 {{#bp-modal
 		open=warning.open 
 		position='center'
+		onSubmit=(action "confirmSubmit") 
  		onHidden=(action (mut warning.open) false) as |modal|}}
 	{{#modal.header}}
 		<h4 class="modal-title">
-			提交执行
+			{{warning.title}}
 		</h4>
 	{{/modal.header}}
 	{{#modal.body}}
@@ -59,7 +60,12 @@
 		</p>
 	{{/modal.body}}
 	{{#modal.footer}}
-		{{#bp-button type="primary" onClick=(action modal.close)}}好的{{/bp-button}}
+		{{#unless confirmSubmit}}
+			{{#bp-button type="primary" onClick=(action modal.close)}}好的{{/bp-button}}
+		{{else}}
+			{{#bp-button type="primary" onClick=(action modal.close)}}取消{{/bp-button}}
+			{{#bp-button type="primary" onClick=(action modal.submit)}}确定提交{{/bp-button}}
+		{{/unless}}
 		{{!-- {{#bp-button type="success" onClick=(action modal.submit)}}Save{{/bp-button}} --}}
 	{{/modal.footer}}
 {{/bp-modal}}
