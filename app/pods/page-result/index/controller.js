@@ -170,7 +170,7 @@ export default Controller.extend({
 		changeSalesValue(value) {
 			this.set('salesGroupValue', value);
 			if (value === 0) {
-				this.set('doubleCircleData', this.get('doubleCircleProduct'));
+				this.set('doubleCircleData', this.model.doubleCircleProduct);
 				this.set('barLineData', this.get('barLineProduct'));
 
 			} else if (value === 1) {
