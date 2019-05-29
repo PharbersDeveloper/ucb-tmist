@@ -69,10 +69,10 @@ export default Route.extend({
 					goodsConfigs: pageScenarioModel.goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0)
 				});
 			});
-	},
-	setupController(controller, model) {
-		this._super(...arguments);
-		// controller.set('tmpGc', model.goodsConfigs.get('firstObject'));
-		controller.set('tmpSr', A([]));
 	}
+	// setupController(controller, model) {
+	// 	this._super(...arguments);
+	// 	// controller.set('tmpGc', model.goodsConfigs.get('firstObject'));
+	// 	controller.set('tmpSr', A([]));
+	// }
 });

@@ -2,7 +2,7 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import ENV from 'ucb-tmist/config/environment';
 import { isEmpty } from '@ember/utils';
-import { A } from '@ember/array';
+// import { A } from '@ember/array';
 // import RSVP from 'rsvp';
 
 export default Route.extend({
