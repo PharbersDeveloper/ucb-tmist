@@ -92,6 +92,7 @@ export default Route.extend({
 		}).then(data => {
 			// data 代表两个时期
 			//data Q1-Q4 Q1中n个产品
+
 			let tmpData = data.slice(-2),
 				dealedData = tmpData.map(ele => {
 					return ele.filterBy('goodsConfig.productConfig.productType', 0);
@@ -104,6 +105,7 @@ export default Route.extend({
 
 			return [dealedData, dealedTableData];
 		}).then(data => {
+			//双扇形图数据
 			doubleCircleProduct = data[0].map((ele,index) => {
 				let circleData = ele.map(item => {
 					return {
@@ -112,22 +114,31 @@ export default Route.extend({
 					};
 				});
 
-				prodTableBody = this.generateTableBody(data[1], 'productName');
-
 				return {
 					seriesName:tmpHead.slice(-2)[index],
 					data: circleData
 				};
 			});
-		}).then(() => {
-			//	获取代表销售报告
+
+			//销售数据表格
+			prodTableBody = this.generateTableBody(data[1], 'productName');
+
+			//data[1] 过滤掉竞品的 4个时期的产品
+			return data[1];
+		}).then((data) => {
+			//获取代表销售报告
 			let promiseArray = this.generatePromiseArray(increaseSalesReports, 'representativeSalesReports');
 
+			representativeSalesReports = data[0].map(ele => {
+				return {
+					representativeName: ele.get('goodsConfig.productConfig.product.name'),
+					id: ele.get('goodsConfig.productConfig.product.name')
+				};
+			});
 			return rsvp.Promise.all(promiseArray);
 		}).then(data => {
-			//	拼接代表销售报告
-			representativeSalesReports = data[0];
-
+			//拼接代表销售报告
+			// representativeSalesReports = data[0];
 			repTableBody = this.generateTableBody(data, 'representativeName');
 			return null;
 		}).then(() => {

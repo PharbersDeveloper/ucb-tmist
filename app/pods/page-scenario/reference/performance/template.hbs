@@ -108,7 +108,7 @@
 								{{/menu.option}}
 								{{#each model.representativeSalesReports as |rsrs|}}
 									{{#menu.option value=rsrs
-												onClick=(action (mut tmpRsr))}}
+										onClick=(action (mut tmpRsr))}}
 										{{rsrs.representativeName}}
 									{{/menu.option}}
 								{{/each}}
