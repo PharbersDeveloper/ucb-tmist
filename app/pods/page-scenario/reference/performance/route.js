@@ -132,7 +132,7 @@ export default Route.extend({
 			representativeSalesReports = data[0].map(ele => {
 				return {
 					representativeName: ele.get('goodsConfig.productConfig.product.name'),
-					id: ele.get('goodsConfig.productConfig.product.name')
+					id: ele.get('goodsConfig.productConfig.product.id')
 				};
 			});
 			// return rsvp.Promise.all(promiseArray);
@@ -140,44 +140,41 @@ export default Route.extend({
 		}).then(data => {
 			let tmpSalesArr = A([]),
 				tmpSalesQuotaArr = A([]),
-				tmpQuotaAchievementArr = A([]);
+				tmpQuotaAchievementArr = A([]),
+				tmpSales = A([]),
+				tmpSalesQuota = A([]),
+				tmpQuotaAchievement = A([]);
 
 			data.forEach(ele => {
-				let arr = A([]),
+				let arr = A([]);
 
-					tmpSales = ele.map(item => {
-						tmpSalesArr.pushObject(item.get('sales'));
-						return {
-							name: '销售额',
-							date: tmpHead,
-							data: tmpSalesArr,
-							yAxisIndex: 1
-						};
-					}),
+				ele.forEach(item => {
+					tmpSalesArr.pushObject(item.get('sales'));
+					tmpSalesQuotaArr.pushObject(item.get('salesQuota'));
+					tmpQuotaAchievementArr.pushObject(item.get('quotaAchievement'));
+					tmpSales = {
+						name: '销售额',
+						date: tmpHead,
+						data: tmpSalesArr,
+						yAxisIndex: 1
+					};
+					tmpSalesQuota = {
+						name: '指标',
+						date: tmpHead,
+						data: tmpSalesQuotaArr,
+						yAxisIndex: 1
+					};
+					tmpQuotaAchievement = {
+						name: '指标达成率',
+						date: tmpHead,
+						data: tmpQuotaAchievementArr,
+						yAxisIndex: 0
+					};
+				});
 
-					tmpSalesQuota = ele.map(item => {
-						tmpSalesQuotaArr.pushObject(item.get('salesQuota'));
-						return {
-							name: '指标',
-							date: tmpHead,
-							data: tmpSalesQuotaArr,
-							yAxisIndex: 1
-						};
-					}),
-
-					tmpQuotaAchievement = ele.map(item => {
-						tmpQuotaAchievementArr.pushObject(item.get('quotaAchievement'));
-						return {
-							name: '指标达成率',
-							date: tmpHead,
-							data: tmpQuotaAchievementArr,
-							yAxisIndex: 0
-						};
-					});
-
-				arr.pushObject(tmpSales[0]);
-				arr.pushObject(tmpSalesQuota[0]);
-				arr.pushObject(tmpQuotaAchievement[0]);
+				arr.pushObject(tmpSales);
+				arr.pushObject(tmpSalesQuota);
+				arr.pushObject(tmpQuotaAchievement);
 				barLineData = arr;
 			});
 			//拼接代表销售报告
