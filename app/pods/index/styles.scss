@@ -18,6 +18,12 @@
 	.mission-detail {
 		flex: 1;
 
+		.header {
+			.left-body {
+				flex: 1;
+			}
+		}
+
 		.resource {
 			background-color: $n040;
 

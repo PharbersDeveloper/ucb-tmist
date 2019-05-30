@@ -1,8 +1,8 @@
 {{#bp-layout local-class="page-mission"}}
 	{{#bp-layout direction='col' local-class="mission-detail" classNames="p-4"}}
-		{{#bp-page-header classNames='mb-4' as |ph|}}
+		{{#bp-page-header local-class='header' classNames='mb-4' as |ph|}}
 			{{#ph.body as |body|}}
-				{{#body.left classNames='pb-4' as |left|}}
+				{{#body.left local-class='left-body' classNames='pb-4' as |left|}}
 					{{#left.item tagName='h1' local-class='title'}}
 						{{model.detailProposal.proposal.name}}
 					{{/left.item}}
@@ -14,17 +14,17 @@
 					{{/left.item}}
 				{{/body.left}}
 				{{#body.right}}
-					{{#if (bp-eq model.detailPaper.state 1)}}
+					{{#if (bp-not-eq model.detailPaper.state 1 4)}}
+						{{#bp-button type="primary" tagName='span' 
+							onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
+							开始部署
+						{{/bp-button}}
+					{{else}}
 						{{#bp-button tagName='span' classNames="mr-1" onClick=(action (mut reDeploy) true)}}
 							重新部署
 						{{/bp-button}}
 						{{#bp-button type="primary" tagName='span' onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
 							继续部署
-						{{/bp-button}}
-					{{else}}
-						{{#bp-button type="primary" tagName='span' 
-							onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
-							开始部署
 						{{/bp-button}}
 					{{/if}}
 				{{/body.right}}
@@ -76,24 +76,29 @@
 			{{#bp-layout direction="col" local-class='container' classNames="px-4 bg-white rounded"}}
 				{{#each model.goodsConfigs as |gc|}}
 					{{#if (bp-eq gc.productConfig.productType 0)}}
-						{{#bp-layout local-class="item-resource" classNames="my-4"}}
-							{{bp-icon size='large' icon='pill' 
-						local-class="icon"}}
-							{{#bp-layout direction="col" local-class="main-box"}}
-								{{#bp-layout main="between" classNames="mb-2"}}
-									<h4 class="m-0">{{gc.productConfig.product.name}}</h4>
-									<span local-class="schedule">
-										￥{{format-number model.resourceConfigManager.managerConfig.totalBusinessIndicators}}
-									</span>
+						{{#each goodsSalesTargets as |goodsSalesTarget|}}
+							{{#if (bp-eq gc.productConfig.product.id goodsSalesTarget.productConfig.product.id)}}
+								{{#bp-layout local-class="item-resource" classNames="my-4"}}
+									{{bp-icon size='large' icon='pill' 
+										local-class="icon"}}
+									{{#bp-layout direction="col" local-class="main-box"}}
+										{{#bp-layout main="between" classNames="mb-2"}}
+											<h4 class="m-0">{{gc.productConfig.product.name}}</h4>
+											<span local-class="schedule">
+												{{gc.productConfig.priceType}}{{goodsSalesTarget.salesTarget}}/{{gc.productConfig.priceType}}{{format-number model.resourceConfigManager.managerConfig.totalBusinessIndicators}}
+											</span>
+										{{/bp-layout}}
+										{{#bp-progress as |p|}}
+											{{p.bar value=goodsSalesTarget.salesTarget maxValue=model.resourceConfigManager.managerConfig.totalBusinessIndicators}}
+										{{/bp-progress}}
+									{{/bp-layout}}
+									<div local-class="blank"></div>
+									{{#if (bp-eq goodsSalesTarget.salesTarget model.resourceConfigRepresentatives.length)}}
+										{{bp-icon size='large' icon='check' local-class="icon icon-right"}}
+									{{/if}}
 								{{/bp-layout}}
-								{{#bp-progress as |p|}}
-									{{p.bar value=usedResource.assignedMedicines maxValue=model.resourceConfigManager.managerConfig.totalBusinessIndicators}}
-								{{/bp-progress}}
-							{{/bp-layout}}
-							<div local-class="blank"></div>
-							{{bp-icon size='large' icon='check' 
-						local-class="icon icon-right"}}
-						{{/bp-layout}}
+							{{/if}}
+						{{/each}}
 					{{/if}}
 				{{/each}}
 			{{/bp-layout}}

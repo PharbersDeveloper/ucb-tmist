@@ -54,10 +54,10 @@ export default Controller.extend({
 		},
 		reInput() {
 			let businessinput = this.get('businessinput'),
-				goodsConfigInputs = businessinput.get('goodsConfigInputs');
+				goodsInputs = businessinput.get('goodsinputs');
 
-			goodsConfigInputs.forEach(goodsConfigInput => {
-				goodsConfigInput.setProperties({
+			goodsInputs.forEach(goodsInput => {
+				goodsInput.setProperties({
 					salesTarget: '',	// 销售目标设定
 					budget: ''
 				});

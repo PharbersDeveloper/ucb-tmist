@@ -31,8 +31,8 @@ export default Route.extend({
 			store = this.get('store');
 
 		promiseArray = destConfigs.map(ele => {
-			let goodsConfigInputs = selfGoodsConfigs.map(item => {
-				return store.createRecord('goodsConfigInput', {
+			let goodsInputs = selfGoodsConfigs.map(item => {
+				return store.createRecord('goodsinput', {
 					goodsConfig: item,
 					// salesTarget: '',	// 销售目标设定
 					// budget: ''	//预算设定
@@ -51,7 +51,7 @@ export default Route.extend({
 				salesTarget: '',
 				budget: '',
 				goodsConfigs: selfGoodsConfigs,
-				goodsConfigInputs,
+				goodsinputs: goodsInputs,
 				meetingPlaces: '',
 				visitTime: ''
 			});
@@ -115,10 +115,17 @@ export default Route.extend({
 				});
 			});
 	},
-	afterModel() {
+	afterModel(model) {
 		let applicationController = this.controllerFor('application');
 
 		applicationController.set('testProgress', 2);
+		applicationController.setProperties({
+			proposal: model.proposal,
+			scenario: model.scenario,
+			paper: model.paper
+		});
+		// applicationController.set('proposal', model.proposal);
+
 	},
 	setupController(controller, model) {
 		this._super(...arguments);
