@@ -18,9 +18,9 @@ export default Controller.extend({
 		}
 		if (!isEmpty(tmpGc)) {
 			let tmpTableData = filterTableData.map(ele => {
-				let goodsConfigInputs = ele.goodsConfigInputs;
+				let goodsInputs = ele.goodsInputs;
 
-				goodsConfigInputs.forEach(item => {
+				goodsInputs.forEach(item => {
 					if (item.get('goodsConfig.id') === tmpGc.get('id')) {
 						ele.salesTarget = item.get('salesTarget');
 						ele.budget = item.get('budget');

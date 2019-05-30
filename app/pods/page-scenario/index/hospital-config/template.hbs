@@ -93,10 +93,10 @@
 						{{/each}}
 					</td>
 					<td class="pl-2 border-0 text-right">
-						{{#each model.goodsConfigInputs as |goodsConfigInput|}}
-							{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsConfigInput.goodsConfig.productConfig.product.id)}}
+						{{#each model.goodsInputs as |goodsInput|}}
+							{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsInput.goodsConfig.productConfig.product.id)}}
 								{{bp-input block=true widthSize="auto" 
-								value=goodsConfigInput.salesTarget
+								value=goodsInput.salesTarget
 								disabled=(not tmpRc.id)
 								local-class="input-prepend input-money"}}
 								{{!-- <p class="mt-2 mb-0 text-center" local-class="percent">
@@ -106,10 +106,10 @@
 						{{/each}}
 					</td>
 					<td class="pl-2 border-0 text-right">
-						{{#each model.goodsConfigInputs as |goodsConfigInput|}}
-							{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsConfigInput.goodsConfig.productConfig.product.id)}}
+						{{#each model.goodsInputs as |goodsInput|}}
+							{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsInput.goodsConfig.productConfig.product.id)}}
 								{{bp-input block=true widthSize="auto"
-									value=goodsConfigInput.budget
+									value=goodsInput.budget
 									disabled=(not tmpRc.id)
 									local-class="input-prepend input-money"}}
 								{{!-- <p class="mt-2 mb-0 text-center" local-class="percent">

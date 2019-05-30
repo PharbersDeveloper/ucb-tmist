@@ -78,13 +78,13 @@ export default Controller.extend({
 		});
 		// console.log(selfGoodsConfigs);
 		selfGoodsConfigs.forEach(goodsConfig => {
-			let goodsConfigInput = store.peekAll('goodsConfigInput'),
+			let goodsInputs = store.peekAll('goodsinput'),
 				currentProductId = goodsConfig.get('productConfig.product.id'),
-				singleGoodsConfigInputs = goodsConfigInput.filterBy('goodsConfig.productConfig.product.id', currentProductId),
+				singleGoodsInputs = goodsInputs.filterBy('goodsConfig.productConfig.product.id', currentProductId),
 				target = 0,
 				budget = 0;
 
-			singleGoodsConfigInputs.forEach(gci => {
+			singleGoodsInputs.forEach(gci => {
 				target += Number(gci.get('salesTarget'));
 				budget += Number(gci.get('budget'));
 			});

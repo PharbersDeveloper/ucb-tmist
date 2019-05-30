@@ -12,45 +12,38 @@ export default Controller.extend({
 	sendInput(state) {
 		const ajax = this.get('ajax'),
 			store = this.get('store'),
-			model = this.get('model'),
-			applicationAdapter = store.adapterFor('application'),
-			paper = model.detailPaper,
-			scenario = this.get('scenario');
+			{ paper, scenario, proposal } = this.getProperties('paper', 'scenario', 'proposal'),
+			applicationAdapter = store.adapterFor('application');
 
 		//	正常逻辑
 		let version = `${applicationAdapter.get('namespace')}`,
-			paperId = paper.id,
+			paperId = paper.get('id'),
 			paperinputs = paper.get('paperinputs').sortBy('time'),
 			paperinput = paperinputs.get('lastObject'),
 			reDeploy = Number(localStorage.getItem('reDeploy')),
-			phase = 1,
+			phase = scenario.get('phase'),
 			promiseArray = A([]);
 
 		promiseArray = A([
 			store.peekAll('businessinput').save()
-			// store.peekAll('managerinput').save(),
-			// store.peekAll('representativeinput').save()
 		]);
 
 		RSVP.Promise.all(promiseArray)
 			.then(data => {
-				if (paper.state === 1 && reDeploy === 1 || paper.state !== 1) {
+				//TODO paper.state !== 4(4需要与后端协商)
+				if (paper.state === 1 && reDeploy === 1 || paper.state !== 1 && paper.state !== 4) {
 					return store.createRecord('paperinput', {
 						paperId,
 						phase,
 						scenario: scenario,
 						time: new Date().getTime(),
 						businessinputs: data[0]
-						// managerinputs: data[1],
-						// representativeinputs: data[2]
 					}).save();
 				}
 				paperinput.setProperties({
 					phase,
 					time: new Date().getTime(),
 					businessinputs: data[0]
-					// managerinputs: data[1],
-					// representativeinputs: data[2]
 				});
 				return paperinput.save();
 			}).then(data => {
@@ -75,7 +68,7 @@ export default Controller.extend({
 				return ajax.request(`${version}/CallRCalculate`, {
 					method: 'POST',
 					data: JSON.stringify({
-						'proposal-id': this.get('model').proposal.id,
+						'proposal-id': proposal.get('id'),
 						'account-id': this.get('cookies').read('account_id')
 					})
 				}).then((response) => {
@@ -105,6 +98,12 @@ export default Controller.extend({
 
 		},
 		/**
+		 * 返回首页
+		 */
+		backToApplication() {
+
+		},
+		/**
 		 * 退出账号
 		 */
 		logout() {
@@ -127,7 +126,6 @@ export default Controller.extend({
 			let url = this.get('oauthService').get('redirectUri');
 
 			window.location = url;
-			// this.transitionToRoute('index');
 		},
 		saveInputEndMission() {
 			let judgeAuth = this.judgeOauth();
@@ -143,10 +141,14 @@ export default Controller.extend({
 
 		},
 		saveInputs() {
-			this.set('exitMission', false);
+			let scenario = this.get('scenario');
 
-			this.sendInput(1);
-			// this.transitionToRoute('index');
+			this.set('exitMission', false);
+			if (scenario.get('phase') === 1) {
+				// this.sendInput(1);
+				return null;
+			}
+			// this.sendInput(4);
 		}
 	}
 });
