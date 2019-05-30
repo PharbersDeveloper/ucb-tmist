@@ -62,6 +62,7 @@ export default Route.extend({
 			repTableBody = A([]),
 			// pieSeriesNameArr = A([]),
 			doubleCircleProduct = A([]),
+			barLineData = A([]),
 			hospTableBody = A([]);
 
 		// 拼接 产品销售报告数据
@@ -91,8 +92,6 @@ export default Route.extend({
 			return rsvp.Promise.all(promiseArray);
 		}).then(data => {
 			// data 代表两个时期
-			//data Q1-Q4 Q1中n个产品
-
 			let tmpData = data.slice(-2),
 				dealedData = tmpData.map(ele => {
 					return ele.filterBy('goodsConfig.productConfig.productType', 0);
@@ -127,18 +126,62 @@ export default Route.extend({
 			return data[1];
 		}).then((data) => {
 			//获取代表销售报告
-			let promiseArray = this.generatePromiseArray(increaseSalesReports, 'representativeSalesReports');
+			// let promiseArray = this.generatePromiseArray(increaseSalesReports, 'representativeSalesReports');
 
+			//产品销售趋势图 下拉框选择产品
 			representativeSalesReports = data[0].map(ele => {
 				return {
 					representativeName: ele.get('goodsConfig.productConfig.product.name'),
 					id: ele.get('goodsConfig.productConfig.product.name')
 				};
 			});
-			return rsvp.Promise.all(promiseArray);
+			// return rsvp.Promise.all(promiseArray);
+			return data;
 		}).then(data => {
+			let tmpSalesArr = A([]),
+				tmpSalesQuotaArr = A([]),
+				tmpQuotaAchievementArr = A([]);
+
+			data.forEach(ele => {
+				let arr = A([]),
+					tmpSales = ele.map(item => {
+						tmpSalesArr.pushObject(item.get('sales'));
+						return {
+							name: '销售额',
+							date: tmpHead,
+							data: tmpSalesArr,
+							yAxisIndex: 1
+						};
+					}),
+
+					tmpSalesQuota = ele.map(item => {
+						tmpSalesQuotaArr.pushObject(item.get('salesQuota'));
+						return {
+							name: '指标',
+							date: tmpHead,
+							data: tmpSalesQuotaArr,
+							yAxisIndex: 1
+						};
+					}),
+
+					tmpQuotaAchievement = ele.map(item => {
+						tmpQuotaAchievementArr.pushObject(item.get('quotaAchievement'));
+						return {
+							name: '指标达成率',
+							date: tmpHead,
+							data: tmpQuotaAchievementArr,
+							yAxisIndex: 0
+						};
+					});
+
+				arr.pushObject(tmpSales[0]);
+				arr.pushObject(tmpSalesQuota[0]);
+				arr.pushObject(tmpQuotaAchievement[0]);
+				barLineData = arr;
+			});
 			//拼接代表销售报告
 			// representativeSalesReports = data[0];
+
 			repTableBody = this.generateTableBody(data, 'representativeName');
 			return null;
 		}).then(() => {
@@ -164,12 +207,14 @@ export default Route.extend({
 					prodTableBody,
 					repTableBody,
 					hospTableBody,
-					doubleCircleProduct
+					doubleCircleProduct,
+					barLineData
 				});
 			});
 	},
 	setupController(controller, model) {
 		this._super(controller, model);
 		this.controller.set('doubleCircleData', model.doubleCircleProduct);
+		this.controller.set('barLineData', model.barLineData);
 	}
 });
