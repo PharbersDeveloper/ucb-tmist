@@ -49,7 +49,7 @@
 			{{/bp-layout}}
 			{{#bp-layout main="between" 
 						local-class="choose-container"
-						classNames="mb-4 bg-white"}}
+						classNames="bg-white"}}
 				{{#if (bp-eq salesGroupValue 1)}}
 					{{#bp-layout main="between" cross="center"
 							local-class="choose-area" 
@@ -148,6 +148,7 @@
 				{{/if}}
 			{{/bp-layout}}
 			<div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
+				{{log barLineData}}
 				{{bp-bar-line
 					eid="chartbarLine"
 					chartData=barLineData
@@ -162,8 +163,8 @@
 				{{/each}}
 				{{#bp-button}}导出数据{{/bp-button}}
 			{{/bp-layout}}
-			{{#bp-layout direction="col"}}
-				<div class="table-responsive">
+			{{#bp-layout direction="col" local-class='table-area'}}
+				<div class="table-responsive" local-class='table-content'>
 					<table local-class="table-container" class="table">
 						<thead>
 							<th>药品名称 </th>
@@ -186,7 +187,7 @@
 									<tr>
 										<td>{{trContent.name}}</td>
 										{{#each trContent.tableTr as |tdContent|}}
-											<td>￥{{format-number tdContent}}</td>
+											<td>{{format-number tdContent}}</td>
 										{{/each}}
 									</tr>
 								{{/if}}
