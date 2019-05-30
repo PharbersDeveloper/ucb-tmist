@@ -62,7 +62,9 @@ export default Route.extend({
 			repTableBody = A([]),
 			// pieSeriesNameArr = A([]),
 			doubleCircleProduct = A([]),
-			trendProdduct = A([]),
+			trendProduct = A([]),
+			doubleCircleRe= A([]),
+			trendRe = A([]),
 			dateArr = A([]),
 			hospTableBody = A([]);
 
@@ -137,19 +139,19 @@ export default Route.extend({
 					innerData2.push(item.get('quotaAchievement'));
 				});
 			});
-			trendProdduct[0] = {
+			trendProduct[0] = {
 				name: '销售额',
 				data: innerData0,
 				date: dateArr,
 				yAxisIndex: 1
 			};
-			trendProdduct[1] = {
+			trendProduct[1] = {
 				name: '指标',
 				data: innerData1,
 				date: dateArr,
 				yAxisIndex: 1
 			};
-			trendProdduct[2] = {
+			trendProduct[2] = {
 				name: '指标达成率',
 				data: innerData2,
 				date: dateArr,
@@ -174,9 +176,73 @@ export default Route.extend({
 			return rsvp.Promise.all(promiseArray);
 		}).then(data => {
 			//拼接代表销售报告
-			// representativeSalesReports = data[0];
-			repTableBody = this.generateTableBody(data, 'representativeName');
-			return null;
+			// data 代表两个时期
+			//data Q1-Q4 Q1中n个产品
+
+			let tmpData = data.slice(-2),
+				dealedData = tmpData.map(ele => {
+					return ele.filterBy('goodsConfig.productConfig.productType', 0);
+				}),
+				dealedTableData = data.map(ele => {
+					return ele.filterBy('goodsConfig.productConfig.productType', 0);
+				});
+
+			representativeSalesReports = data[0];
+
+			return [dealedData, dealedTableData];
+		}).then(data => {
+			//双扇形图数据
+			doubleCircleRe = data[0].map((ele,index) => {
+				let circleData = ele.map(item => {
+					return {
+						value: item.get('share'),
+						name: item.get('goodsConfig.productConfig.product.name')
+					};
+				});
+
+				return {
+					seriesName:tmpHead.slice(-2)[index],
+					data: circleData
+				};
+			});
+			window.console.log(doubleCircleRe);
+
+			//趋势图数据
+			let innerData0 = A([]),
+				innerData1 = A([]),
+				innerData2 = A([]);
+
+			data[1].forEach((ele) => {
+				ele.forEach(item => {
+					innerData0.push(item.get('sales'));
+					innerData1.push(item.get('salesQuota'));
+					innerData2.push(item.get('quotaAchievement'));
+				});
+			});
+			trendRe[0] = {
+				name: '销售额',
+				data: innerData0,
+				date: dateArr,
+				yAxisIndex: 1
+			};
+			trendRe[1] = {
+				name: '指标',
+				data: innerData1,
+				date: dateArr,
+				yAxisIndex: 1
+			};
+			trendRe[2] = {
+				name: '指标达成率',
+				data: innerData2,
+				date: dateArr,
+				yAxisIndex: 0
+			};
+
+			//销售数据表格
+			repTableBody = this.generateTableBody(data[1], 'productName');
+
+			//data[1] 过滤掉竞品的 4个时期的产品
+			return data[1];
 		}).then(() => {
 			//	获取医院销售报告
 			let promiseArray = this.generatePromiseArray(increaseSalesReports, 'hospitalSalesReports');
@@ -201,14 +267,16 @@ export default Route.extend({
 					repTableBody,
 					hospTableBody,
 					doubleCircleProduct,
-					trendProdduct
+					trendProduct,
+					doubleCircleRe,
+					trendRe
 				});
 			});
 	},
 	setupController(controller, model) {
 		this._super(controller, model);
 		this.controller.set('doubleCircleData', model.doubleCircleProduct);
-		this.controller.set('barLineData', model.trendProdduct);
+		this.controller.set('barLineData', model.trendProduct);
 
 	}
 });
