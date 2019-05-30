@@ -4,18 +4,21 @@ import { A } from '@ember/array';
 
 export default Route.extend({
 	generateTableBody(seasonData, nameKey) {
+		//seasonData Q1-Q4 Q1中有n个产品
 		let totalData = A([]),
 			reportsLength = 0,
-			tmpTableBody = A([]);
+			tmpTableBody = A([]),
+			tmpTableBodyLast = A([]);
 
 		seasonData.forEach(item => {
 			// 当前季度下的 one -> many **SalesReports()
 			reportsLength = item.get('length');
+			tmpTableBodyLast = item;
 			tmpTableBody = item.map(ele => {
-				totalData.push(
-					[ele.get('sales'), ele.get('salesQuota')]);
+				totalData.push([ele.get('sales'), ele.get('salesQuota')]);
 				return {
-					name: ele.get(nameKey),
+					tmpName: nameKey,
+					name: ele.get('goodsConfig.productConfig.product.name'),
 					productName: ele.get('productName'),
 					potential: ele.get('potential')
 				};
@@ -23,7 +26,9 @@ export default Route.extend({
 		});
 		tmpTableBody.map((ele, index) => {
 			let seasonNum = totalData.length / reportsLength,
-				tmpTableTr = [];
+				tmpTableTr = tmpTableBodyLast.map((item) => {
+					return ['贡献率', item.get('salesGrowth'), item.get('quotaAchievement'), '同比增长', '环比增长', '销售额贡献率', 'YTD销售额'];
+				});
 
 			for (let i = 1; i <= seasonNum; i++) {
 				tmpTableTr.push(totalData[index + (i - 1) * reportsLength][0]);
@@ -61,43 +66,53 @@ export default Route.extend({
 
 		// 拼接 产品销售报告数据
 		return salesReports.then(data => {
-			let promiseArray = A([]);
+			let promiseArray = A([]),
+				lastQName = '',
+				tmpTableHead = A(['指标贡献率', '指标增长率', '指标达成率', '销售额同比增长', '销售额环比增长', '销售额贡献率', 'YTD销售额']);
 
 			increaseSalesReports = data.sortBy('time');
 
 			tmpHead = increaseSalesReports.map(ele => {
 				let name = ele.get('scenario.name');
 
+				lastQName = ele.get('scenario.name');
 				return name.slice(0, 4) + name.slice(-4);
 			});
-			tmpHead.forEach(ele => {
-				tableHead.push(ele + `\n销售额`);
+			tmpTableHead.forEach(ele => {
+				tableHead.push(ele + ' \n ' + lastQName);
 			});
 			tmpHead.forEach(ele => {
-				tableHead.push(ele + '\n销售指标');
+				tableHead.push('销售指标 \n ' + ele);
 			});
-
+			tmpHead.forEach(ele => {
+				tableHead.push('销售额 \n ' + ele);
+			});
 			promiseArray = this.generatePromiseArray(increaseSalesReports, 'productSalesReports');
 			return rsvp.Promise.all(promiseArray);
 		}).then(data => {
 			// data 代表两个时期
+			//data Q1-Q4 Q1中n个产品
 			let tmpData = data.slice(-2),
 				dealedData = tmpData.map(ele => {
+					return ele.filterBy('goodsConfig.productConfig.productType', 0);
+				}),
+				dealedTableData = data.map(ele => {
 					return ele.filterBy('goodsConfig.productConfig.productType', 0);
 				});
 
 			productSalesReports = data[0];
-			prodTableBody = this.generateTableBody(data, 'productName');
 
-			return dealedData;
+			return [dealedData, dealedTableData];
 		}).then(data => {
-			doubleCircleProduct = data.map((ele,index) => {
+			doubleCircleProduct = data[0].map((ele,index) => {
 				let circleData = ele.map(item => {
 					return {
 						value: item.get('share'),
 						name: item.get('goodsConfig.productConfig.product.name')
 					};
 				});
+
+				prodTableBody = this.generateTableBody(data[1], 'productName');
 
 				return {
 					seriesName:tmpHead.slice(-2)[index],

@@ -7,7 +7,7 @@
 					{{model.proposal.name}}
 				{{/left.item}}
 				{{#left.item}}
-					{{model.scenario.name}}
+					{{model.scenario.name}} 关卡进度 {{model.scenario.phase}} / {{model.proposal.totalPhase}}
 				{{/left.item}}
 			{{/body.left}}
 			{{#body.right}}
@@ -47,10 +47,11 @@
 {{#bp-modal
 		open=warning.open 
 		position='center'
+		onSubmit=(action "confirmSubmit") 
  		onHidden=(action (mut warning.open) false) as |modal|}}
 	{{#modal.header}}
 		<h4 class="modal-title">
-			提交执行
+			{{warning.title}}
 		</h4>
 	{{/modal.header}}
 	{{#modal.body}}
@@ -59,8 +60,12 @@
 		</p>
 	{{/modal.body}}
 	{{#modal.footer}}
-		{{#bp-button type="primary" onClick=(action modal.close)}}好的{{/bp-button}}
-		{{!-- {{#bp-button type="danger"}}Delete{{/bp-button}} --}}
+		{{#unless confirmSubmit}}
+			{{#bp-button type="primary" onClick=(action modal.close)}}好的{{/bp-button}}
+		{{else}}
+			{{#bp-button type="primary" onClick=(action modal.close)}}取消{{/bp-button}}
+			{{#bp-button type="primary" onClick=(action modal.submit)}}确定提交{{/bp-button}}
+		{{/unless}}
 		{{!-- {{#bp-button type="success" onClick=(action modal.submit)}}Save{{/bp-button}} --}}
 	{{/modal.footer}}
 {{/bp-modal}}

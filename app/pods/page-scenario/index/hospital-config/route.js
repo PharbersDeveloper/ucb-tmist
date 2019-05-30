@@ -10,6 +10,7 @@ export default Route.extend({
 			managerConf = pageScenarioModel.resourceConfManager,
 			repConfs = pageScenarioModel.resourceConfRep,
 			salesConfigs = pageScenarioModel.salesConfigs,
+			scenario = pageScenarioModel.scenario,
 			currentController = this.controllerFor('page-scenario.index.hospital-config'),
 			// businessController = this.controllerFor('page-scenario.index'),
 			businessInputs = pageScenarioModel.businessInputs,
@@ -19,13 +20,6 @@ export default Route.extend({
 		 * 当前的业务决策实例
 		 */
 		businessinput = businessInputs.filterBy('destConfig.id', dCId).get('firstObject');
-
-		// businessInputs.forEach(ele => {
-		// 	if (ele.get('destConfig.id') === dCId) {
-		// 		businessinput = ele;
-		// 	}
-		// });
-		// console.log(businessinput);
 
 		/**
 		 * 获取总业务指标/总预算/总名额
@@ -58,6 +52,8 @@ export default Route.extend({
 			})
 			.then(() => {
 				return hash({
+					scenario,
+					notFirstPhase: scenario.get('phase') !== 1,
 					managerConf,
 					repConfs,
 					destConfig: store.peekRecord('destConfig', dCId),
