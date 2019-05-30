@@ -144,6 +144,7 @@ export default Route.extend({
 
 			data.forEach(ele => {
 				let arr = A([]),
+
 					tmpSales = ele.map(item => {
 						tmpSalesArr.pushObject(item.get('sales'));
 						return {
