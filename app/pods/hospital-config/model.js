@@ -7,6 +7,7 @@ export default DS.Model.extend({
 	potential: DS.attr('number'),
 	lastYearSales: DS.attr('number'),
 	spaceBelongs: DS.attr('string'),
+	selfCostRatio: DS.attr('number'),		// 自费比例
 	abilityToPay: DS.attr('string'),
 	accessStatus: DS.attr('string'),
 	hospital: DS.belongsTo('hospital'),

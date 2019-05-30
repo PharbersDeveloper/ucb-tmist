@@ -1,8 +1,8 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
-	name: DS.attr('string'),
 	describe: DS.attr('string'),
-	regionConfig: DS.belongsTo('regionConfig'),
+	name: DS.attr('string'),
+	cities: DS.hasMany('city'),
 	images: DS.hasMany('image')
 });
