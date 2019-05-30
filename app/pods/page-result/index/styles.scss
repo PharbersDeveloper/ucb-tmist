@@ -6,7 +6,9 @@ h2.title {
 .nav {
 	flex: 0 0 270px;
 	list-style: none;
-
+	&.reference-content {
+		width: 100%;
+	}
 	li {
 		height: 4*$spacing;
 		@extend %header-small;
@@ -24,10 +26,10 @@ h2.title {
 
 .content {
 	flex: 1;
-
+	width: 80%;
 	.report {
 		flex: 1;
-
+		width: 100%;
 		&.product {
 			.chart {
 				height: 332px;
@@ -46,18 +48,26 @@ h2.title {
 				flex: 1;
 			}
 		}
-
+		.table-area {
+			background: #fff;
+			.table-content {
+				margin: 0 24px;
+				width: auto;
+			}
+		}
 		.table-container {
 			thead {
-				background-color: transparent;
+				background-color: #fff;
 
 				th {
 					padding-left: $spacing-2;
 					border: 0;
 					@extend %p-small;
-
+					text-align: left !important;
+					width: fit-content;
+					min-width: 122px;
 					&:first-child {
-						min-width: 50px;
+						min-width: 144px;
 					}
 				}
 			}
