@@ -171,7 +171,7 @@ export default Controller.extend({
 			this.set('salesGroupValue', value);
 			if (value === 0) {
 				this.set('doubleCircleData', this.model.doubleCircleProduct);
-				this.set('barLineData', this.get('barLineProduct'));
+				this.set('barLineData', this.model.trendProdduct);
 
 			} else if (value === 1) {
 				this.set('doubleCircleData', this.get('doubleCircleRepresentative'));

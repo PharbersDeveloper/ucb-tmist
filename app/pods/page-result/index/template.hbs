@@ -49,7 +49,7 @@
 			{{/bp-layout}}
 			{{#bp-layout main="between" 
 						local-class="choose-container"
-						classNames="mb-4 bg-white"}}
+						classNames="bg-white"}}
 				{{#if (bp-eq salesGroupValue 1)}}
 					{{#bp-layout main="between" cross="center"
 							local-class="choose-area" 
@@ -148,6 +148,7 @@
 				{{/if}}
 			{{/bp-layout}}
 			<div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
+				{{log barLineData}}
 				{{bp-bar-line
 					eid="chartbarLine"
 					chartData=barLineData
