@@ -162,8 +162,8 @@
 				{{/each}}
 				{{#bp-button}}导出数据{{/bp-button}}
 			{{/bp-layout}}
-			{{#bp-layout direction="col"}}
-				<div class="table-responsive">
+			{{#bp-layout direction="col" local-class='table-area'}}
+				<div class="table-responsive" local-class='table-content'>
 					<table local-class="table-container" class="table">
 						<thead>
 							<th>药品名称 </th>
@@ -186,7 +186,7 @@
 									<tr>
 										<td>{{trContent.name}}</td>
 										{{#each trContent.tableTr as |tdContent|}}
-											<td>￥{{format-number tdContent}}</td>
+											<td>{{format-number tdContent}}</td>
 										{{/each}}
 									</tr>
 								{{/if}}
