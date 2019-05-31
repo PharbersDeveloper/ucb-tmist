@@ -16,11 +16,11 @@ export default Controller.extend({
 	assignHospitals: alias('restManagerResource.assignHospitals'),
 	assignRepresentatives: alias('restManagerResource.assignRepresentatives'),
 	usedBudget: alias('restManagerResource.usedBudget'),
+	goodsSalesTargets: alias('restManagerResource.goodsSalesTargets'),
 
 	restManagerResource: computed('model.{paperinput}', function () {
 		const model = this.get('model'),
-			paperinput = model.paperinput,
-			businessInputs = model.businessInputs;
+			{ paperinput, businessInputs, selfProductConfigs } = model;
 
 		let usedSalesTarget = 0,
 			usedBudget = 0,
@@ -32,7 +32,15 @@ export default Controller.extend({
 				assignHospitals: assignHospitalArray.get('length'),
 				assignRepresentatives: assignRepresentativeArray.get('length'),
 				usedBudget,
-				usedSalesTarget
+				usedSalesTarget,
+				goodsSalesTargets: selfProductConfigs.map(ele => {
+					console.log(ele.get('product.id'));
+					return {
+						productConfig: ele,
+						salesTarget: 0,
+						budget: 0
+					};
+				})
 			};
 		}
 
@@ -52,7 +60,8 @@ export default Controller.extend({
 			assignHospitals: assignHospitalArray.get('length'),
 			assignRepresentatives: assignRepresentativeArray.get('length'),
 			usedBudget,
-			usedSalesTarget
+			usedSalesTarget,
+			goodsSalesTargets: []
 		};
 	}),
 	entryMission(proposalId) {
