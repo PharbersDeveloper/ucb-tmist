@@ -171,15 +171,15 @@ export default Controller.extend({
 			this.set('salesGroupValue', value);
 			if (value === 0) {
 				this.set('doubleCircleData', this.model.doubleCircleProduct);
-				this.set('barLineData', this.model.trendProdduct);
+				this.set('barLineData', this.model.trendProduct);
 
 			} else if (value === 1) {
-				this.set('doubleCircleData', this.get('doubleCircleRepresentative'));
-				this.set('barLineData', this.get('barLineRepresentative'));
+				this.set('doubleCircleData', this.model.doubleCircleRe);
+				this.set('barLineData', this.model.trendRe);
 
 			} else {
-				this.set('doubleCircleData', this.get('doubleCircleHospital'));
-				this.set('barLineData', this.get('barLineHospital'));
+				this.set('doubleCircleData', this.model.doubleCircleRe);
+				this.set('barLineData', this.model.trendRe);
 
 			}
 		}
