@@ -7,15 +7,15 @@ import { A } from '@ember/array';
 export default DS.Model.extend({
 	destConfigId: DS.attr('string'),	// 待删除
 	resourceConfigId: DS.attr('string'),
-	total: computed('goodsConfigInputs.@each.{salesTarget,budget}', 'resourceConfigId', function () {
-		let goodsConfigInputs = this.get('goodsConfigInputs'),
+	total: computed('goodsinputs.@each.{salesTarget,budget}', 'resourceConfigId', function () {
+		let goodsInputs = this.get('goodsinputs'),
 			totalSalesTarget = 0,
 			totalBudget = 0,
 			isFinish = A([]);
 
-		goodsConfigInputs.forEach(goodsConfigInput => {
-			let salesTarget = goodsConfigInput.get('salesTarget'),
-				budget = goodsConfigInput.get('budget');
+		goodsInputs.forEach(goodsInput => {
+			let salesTarget = goodsInput.get('salesTarget'),
+				budget = goodsInput.get('budget');
 
 			totalSalesTarget += Number(salesTarget);
 			totalBudget += Number(budget);
@@ -34,5 +34,5 @@ export default DS.Model.extend({
 	destConfig: DS.belongsTo(),
 	resourceConfig: DS.belongsTo(),
 	goodsConfigs: DS.hasMany(),
-	goodsConfigInputs: DS.hasMany()
+	goodsinputs: DS.hasMany()
 });

@@ -58,7 +58,7 @@ export default Route.extend({
 					repConfs,
 					destConfig: store.peekRecord('destConfig', dCId),
 					businessinput,
-					goodsConfigInputs: businessinput.get('goodsConfigInputs'),
+					goodsInputs: businessinput.get('goodsinputs'),
 					businessInputs,
 					salesConfigs
 				});

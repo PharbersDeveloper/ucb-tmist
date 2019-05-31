@@ -27,26 +27,26 @@ export default Controller.extend({
 				])
 			}
 		]));
-		this.set('barLineData', A([
-			{
-				name: '销售额',
-				date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-				data: [782.0, 874.9, 787.0, 23.2, 25.6, 4135.6, 162.2, 4160],
-				yAxisIndex: 1
-			},
-			{
-				name: '指标',
-				date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-				data: [3983, 3407, 2432, 965, 1177, 20.0, 263.4, 334.3],
-				yAxisIndex: 1
-			},
-			{
-				name: '指标达成率',
-				date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-				data: [45.0, 52.2, 20.3, 34.4, 23.0, 12.5, 22.0, 6.2],
-				yAxisIndex: 0
-			}
-		]));
+		// this.set('barLineData', A([
+		// 	{
+		// 		name: '销售额',
+		// 		date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
+		// 		data: [782.0, 874.9, 787.0, 23.2, 25.6, 4135.6, 162.2, 4160],
+		// 		yAxisIndex: 1
+		// 	},
+		// 	{
+		// 		name: '指标',
+		// 		date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
+		// 		data: [3983, 3407, 2432, 965, 1177, 20.0, 263.4, 334.3],
+		// 		yAxisIndex: 1
+		// 	},
+		// 	{
+		// 		name: '指标达成率',
+		// 		date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
+		// 		data: [45.0, 52.2, 20.3, 34.4, 23.0, 12.5, 22.0, 6.2],
+		// 		yAxisIndex: 0
+		// 	}
+		// ]));
 	},
 	// 临时mock数据
 	// doubleCircleProduct: A([
@@ -171,16 +171,16 @@ export default Controller.extend({
 			this.set('salesGroupValue', value);
 			// console.log(value);
 			if (value === 0) {
-				this.set('doubleCircleData', this.get('doubleCircleProduct'));
-				this.set('barLineData', this.get('barLineProduct'));
+				this.set('doubleCircleData', this.get('doubleCircleData'));
+				this.set('barLineData', this.get('barLineData'));
 
 			} else if (value === 1) {
-				this.set('doubleCircleData', this.get('doubleCircleRepresentative'));
-				this.set('barLineData', this.get('barLineRepresentative'));
+				this.set('doubleCircleData1', this.get('doubleCircleRepresentative'));
+				this.set('barLineData1', this.get('barLineRepresentative'));
 
 			} else {
-				this.set('doubleCircleData', this.get('doubleCircleHospital'));
-				this.set('barLineData', this.get('barLineHospital'));
+				this.set('doubleCircleData1', this.get('doubleCircleHospital'));
+				this.set('barLineData1', this.get('barLineHospital'));
 
 			}
 		}

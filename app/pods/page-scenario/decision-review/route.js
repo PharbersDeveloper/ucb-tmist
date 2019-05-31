@@ -50,7 +50,7 @@ export default Route.extend({
 				salesTarget: isEmpty(ele.get('totalSalesTarget')) ? '-' : ele.get('totalSalesTarget'),
 				totalBudget: isEmpty(ele.get('totalBudget')) ? '-' : ele.get('totalBudget'),
 				budget: isEmpty(ele.get('totalBudget')) ? '-' : ele.get('totalBudget'),
-				goodsConfigInputs: ele.get('goodsConfigInputs')
+				goodsInputs: ele.get('goodsinputs')
 			};
 		});
 		return paper.get('paperinputs')
