@@ -1,3 +1,4 @@
+import { sort } from '@ember/object/computed';
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import Table from 'ember-light-table';
@@ -13,7 +14,7 @@ export default Component.extend({
 	}).readOnly(),
 	sort: '',
 	dir: 'asc',
-	sortedModel: computed.sort('model', 'sortBy').readOnly(),
+	sortedModel: sort('model', 'sortBy').readOnly(),
 	sortBy: computed('dir', 'sort', function () {
 		return [`${this.get('sort')}:${this.get('dir')}`];
 	}).readOnly(),
