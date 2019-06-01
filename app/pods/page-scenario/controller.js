@@ -3,8 +3,8 @@ import { inject as service } from '@ember/service';
 import ENV from 'ucb-tmist/config/environment';
 import { computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
-import { A } from '@ember/array';
-import { all } from 'rsvp';
+// import { A } from '@ember/array';
+// import { all } from 'rsvp';
 
 export default Controller.extend({
 	ajax: service(),
@@ -173,19 +173,24 @@ export default Controller.extend({
 		let version = `${applicationAdapter.get('namespace')}`,
 			paperId = paper.id,
 			paperinputs = paper.get('paperinputs').sortBy('time'),
-			paperinput = paperinputs.lastObject,
+			paperinput = paperinputs.get('lastObject'),
 			reDeploy = Number(localStorage.getItem('reDeploy')),
 			phase = scenario.get('phase'),
 			businessinputs = store.peekAll('businessinput'),
-			promiseArray = A([]);
+			goodsinputs = store.peekAll('goodsinput');
+		// promiseArray = A([]);
 
-		promiseArray = businessinputs.map(ele => {
-			return ele.get('goodsinputs').save();
-		});
-		all(promiseArray)
+
+		// promiseArray = businessinputs.map(ele => {
+		// 	return ele.get('goodsinputs');
+		// });
+		// all(promiseArray)
+		goodsinputs.save()
 			.then(data => {
-				businessinputs.forEach((ele, index) => {
-					ele.set('goodsinputs', data[index]);
+				businessinputs.forEach(ele => {
+					let currentGoodsinputs = data.filterBy('destConfigId', ele.get('destConfig.id'));
+
+					ele.set('goodsinputs', currentGoodsinputs);
 				});
 
 				return businessinputs.save();
@@ -196,7 +201,10 @@ export default Controller.extend({
 				// 当前周期是未开始(0)/有已经做完的周期，新的周期还未开始(2)/所有周期都已经结束(3)
 				// 或者 [1,4].indexOf(paper.state)<0 关卡内没有一个周期是做完的(1)
 				//	关卡内有做完的周期但是新的周期还未做完(4)
-				if (reDeploy === 1 || [0, 2, 3].indexOf(paper.state) >= 0) {
+				console.log(paper.get('state'));
+				// eslint-disable-next-line no-debugger
+				debugger;
+				if (reDeploy === 1 || [0, 2, 3].indexOf(paper.get('state')) >= 0) {
 					return store.createRecord('paperinput', {
 						paperId,
 						phase,
@@ -205,8 +213,8 @@ export default Controller.extend({
 						businessinputs: data
 					}).save();
 				}
+
 				paperinput.setProperties({
-					phase,
 					time: new Date().getTime(),
 					businessinputs: data
 				});
@@ -293,10 +301,10 @@ export default Controller.extend({
 			}
 
 			if (scenario.get('phase') === 1) {
-				// this.sendInput(1);
+				this.sendInput(1);
 				return;
 			}
-			// this.sendInput(4);
+			this.sendInput(4);
 		},
 		confirmSubmit() {
 			const model = this.get('model'),
@@ -305,10 +313,10 @@ export default Controller.extend({
 			this.set('warning', { open: false });
 			this.set('loadingForSubmit', true);
 			if (scenario.get('phase') < proposal.get('totalPhase')) {
-				// this.sendInput(2);
+				this.sendInput(2);
 				return;
 			}
-			// this.sendInput(3);
+			this.sendInput(3);
 		},
 		testResult() {
 			this.transitionToRoute('page-result');

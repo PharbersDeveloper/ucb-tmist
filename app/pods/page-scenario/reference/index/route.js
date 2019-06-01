@@ -24,7 +24,9 @@ export default Route.extend({
 					});
 
 				tmpHead = increaseSalesReports.map(ele => {
-					let name = ele.get('scenario.name');
+					console.log(ele.get('scenario.id'));
+					console.log(ele.get('scenario').get('name'));
+					let name = ele.get('scenario.name') || '';
 
 					return name.slice(0, 4) + name.slice(-4);
 				});

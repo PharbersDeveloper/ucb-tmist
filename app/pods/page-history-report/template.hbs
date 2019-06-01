@@ -1,0 +1,33 @@
+{{#bp-layout direction='col' local-class='history-report' classNames='p-4'}}
+	{{#link-to "index" local-class='back' classNames='mb-3'}}
+		返回
+	{{/link-to}}
+	{{#bp-layout direction='col'}}
+		{{!-- <h2>历史成果</h2> --}}
+		{{#bp-page-header local-class='header' classNames='mb-4' as |ph|}}
+			{{#ph.body as |body|}}
+				{{#body.left local-class='left-body' classNames='pb-4' as |left|}}
+					{{#left.item tagName='h1' local-class='title' classNames='m-0'}}
+						历史成果
+					{{/left.item}}
+				{{/body.left}}
+			{{/ph.body}}
+		{{/bp-page-header}}
+		{{#bp-layout local-class='list-header' classNames='px-4 border-bottom'}}
+			<p class="my-2 text-center">完成时间</p>
+			<p class="my-2 text-center">等级</p>
+			<p class="my-2 text-center"></p>
+		{{/bp-layout}}
+		{{#each model.assessmentReports as |assessmentReport|}}
+			{{#bp-layout local-class='list-body' classNames='px-4'}}
+				<p class="my-2 text-center">{{bp-string-slice assessmentReport.time 0}}</p>
+				<p class="my-2 text-center">*等级</p>
+				{{#link-to "page-report" assessmentReport tagName='p' classNames='my-2' }}
+					查看
+				{{/link-to}}
+			{{/bp-layout}}
+		{{else}}
+			暂无历史成果
+		{{/each}}
+	{{/bp-layout}}
+{{/bp-layout}}

@@ -114,12 +114,12 @@
 					{{format-number total.usedSalesTarget}} /
 					￥{{format-number model.resourceConfManager.managerConfig.totalBusinessIndicators}}
 				</p>
-				<div local-class='circle-container'>
+				{{!-- <div local-class='circle-container'>
 					{{bp-circle-double
 						eid="totalBusinessIndicators"
 						circleData=indicatorsData
 						circleSize=circleSize}}
-				</div>
+				</div> --}}
 				{{!-- {{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
 					{{p.bar value=total.usedSalesTarget maxValue=model.resourceConfManager.managerConfig.totalBusinessIndicators}}
 				{{/bp-progress}}
@@ -130,7 +130,7 @@
 							{{model.salesConfigs.firstObject.goodsConfig.productConfig.product.name}}
 						</span>
 					{{/bp-layout}}
-				{{/bp-layout}}  --}}
+				{{/bp-layout}} --}}
 			</div>
 		</div>
 		<div local-class="item" class="mx-2">

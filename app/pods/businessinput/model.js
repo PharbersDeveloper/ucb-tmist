@@ -33,6 +33,6 @@ export default DS.Model.extend({
 	isFinish: alias('total.isFinish'),	// 是否填写完毕 true-> 完毕
 	destConfig: DS.belongsTo(),
 	resourceConfig: DS.belongsTo(),
-	goodsConfigs: DS.hasMany(),
+	// goodsConfigs: DS.hasMany(),
 	goodsinputs: DS.hasMany()
 });

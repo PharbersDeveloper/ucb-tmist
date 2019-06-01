@@ -39,23 +39,23 @@ export default Controller.extend({
 			warning = { open: false, title: '', detail: '' };
 
 		switch (true) {
-		case illegal:
-			warning.open = true;
-			warning.title = '非法值警告';
-			warning.detail = '请输入数字！';
-			return warning;
-		case overTotalBusinessIndicators:
-			warning.open = true;
-			warning.title = '总业务指标超额';
-			warning.detail = '您的销售额指标设定总值已超出业务总指标限制，请重新分配。';
-			return warning;
-		case overTotalBudgets:
-			warning.open = true;
-			warning.title = '总预算超额';
-			warning.detail = '您的预算设定总值已超出总预算限制，请重新分配。';
-			return warning;
-		default:
-			return warning;
+			case illegal:
+				warning.open = true;
+				warning.title = '非法值警告';
+				warning.detail = '请输入数字！';
+				return warning;
+			case overTotalBusinessIndicators:
+				warning.open = true;
+				warning.title = '总业务指标超额';
+				warning.detail = '您的销售额指标设定总值已超出业务总指标限制，请重新分配。';
+				return warning;
+			case overTotalBudgets:
+				warning.open = true;
+				warning.title = '总预算超额';
+				warning.detail = '您的预算设定总值已超出总预算限制，请重新分配。';
+				return warning;
+			default:
+				return warning;
 		}
 	}),
 	total: computed('model.businessInputs.@each.{total}', function () {
@@ -90,10 +90,12 @@ export default Controller.extend({
 			});
 			indicatorsData.push({
 				value: target,
+				id: goodsConfig.get('productConfig.product.id'),
 				name: goodsConfig.get('productConfig.product.name')
 			});
 			budgetData.push({
 				value: budget,
+				id: goodsConfig.get('productConfig.product.id'),
 				name: goodsConfig.get('productConfig.product.name')
 			});
 		});
@@ -101,7 +103,8 @@ export default Controller.extend({
 		return {
 			usedSalesTarget,
 			usedBudget,
-			indicatorsData: A([{ seriesName: '', data: indicatorsData }]),
+			// indicatorsData: A([{ seriesName: '', data: indicatorsData }]),
+			indicatorsData,
 			budgetData: A([{ seriesName: '', data: budgetData }]),
 			verify: verifyService.verifyInput(businessInputs, resourceConfigManager)
 		};
