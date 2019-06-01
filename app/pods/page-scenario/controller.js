@@ -201,9 +201,6 @@ export default Controller.extend({
 				// 当前周期是未开始(0)/有已经做完的周期，新的周期还未开始(2)/所有周期都已经结束(3)
 				// 或者 [1,4].indexOf(paper.state)<0 关卡内没有一个周期是做完的(1)
 				//	关卡内有做完的周期但是新的周期还未做完(4)
-				console.log(paper.get('state'));
-				// eslint-disable-next-line no-debugger
-				debugger;
 				if (reDeploy === 1 || [0, 2, 3].indexOf(paper.get('state')) >= 0) {
 					return store.createRecord('paperinput', {
 						paperId,
@@ -244,23 +241,26 @@ export default Controller.extend({
 					});
 					return;
 				}
-				return ajax.request(`${version}/CallRCalculate`, {
-					method: 'POST',
-					data: JSON.stringify({
-						'proposal-id': this.get('model').proposal.id,
-						'account-id': this.get('cookies').read('account_id')
-					})
-				}).then((response) => {
-					if (response.status === 'Success') {
-						return that.updatePaper(store, paperId, state, that);
-					}
-					return response;
-				}).then(() => {
-				}).catch(err => {
-					window.console.log('error');
-					window.console.log(err);
-				});
+				// TODO 无R计算的逻辑
+				// return ajax.request(`${version}/CallRCalculate`, {
+				// 	method: 'POST',
+				// 	data: JSON.stringify({
+				// 		'proposal-id': this.get('model').proposal.id,
+				// 		'account-id': this.get('cookies').read('account_id')
+				// 	})
+				// }).then((response) => {
+				// 	if (response.status === 'Success') {
+				// 		return that.updatePaper(store, paperId, state, that);
+				// 	}
+				// 	return response;
+			}).then(() => {
+				this.transitionToRoute('page-result');
+
+			}).catch(err => {
+				window.console.log('error');
+				window.console.log(err);
 			});
+		// });
 	},
 	updatePaper(store, paperId, state, context) {
 		store.findRecord('paper', paperId, { reload: true })

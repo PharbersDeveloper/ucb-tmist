@@ -63,7 +63,7 @@ export default Route.extend({
 			// pieSeriesNameArr = A([]),
 			doubleCircleProduct = A([]),
 			trendProduct = A([]),
-			doubleCircleRe= A([]),
+			doubleCircleRe = A([]),
 			trendRe = A([]),
 			dateArr = A([]),
 			hospTableBody = A([]);
@@ -113,7 +113,7 @@ export default Route.extend({
 			return [dealedData, dealedTableData];
 		}).then(data => {
 			//双扇形图数据
-			doubleCircleProduct = data[0].map((ele,index) => {
+			doubleCircleProduct = data[0].map((ele, index) => {
 				let circleData = ele.map(item => {
 					return {
 						value: item.get('share'),
@@ -122,7 +122,7 @@ export default Route.extend({
 				});
 
 				return {
-					seriesName:tmpHead.slice(-2)[index],
+					seriesName: tmpHead.slice(-2)[index],
 					data: circleData
 				};
 			});
@@ -192,7 +192,7 @@ export default Route.extend({
 			return [dealedData, dealedTableData];
 		}).then(data => {
 			//双扇形图数据
-			doubleCircleRe = data[0].map((ele,index) => {
+			doubleCircleRe = data[0].map((ele, index) => {
 				let circleData = ele.map(item => {
 					return {
 						value: item.get('share'),
@@ -201,7 +201,7 @@ export default Route.extend({
 				});
 
 				return {
-					seriesName:tmpHead.slice(-2)[index],
+					seriesName: tmpHead.slice(-2)[index],
 					data: circleData
 				};
 			});
