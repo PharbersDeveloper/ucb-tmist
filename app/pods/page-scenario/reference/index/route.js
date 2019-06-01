@@ -20,16 +20,9 @@ export default Route.extend({
 						return ele.get('productSalesReports');
 					}),
 					seasonsPrimary = increaseSalesReports.map(ele => {
-						return ele.scenario;
+						return ele.get('scenario');
 					});
 
-				tmpHead = increaseSalesReports.map(ele => {
-					console.log(ele.get('scenario.id'));
-					console.log(ele.get('scenario').get('name'));
-					let name = ele.get('scenario.name') || '';
-
-					return name.slice(0, 4) + name.slice(-4);
-				});
 				return hash({
 					productSalesReports: RSVP.Promise.all(promiseArray),
 					seasons: RSVP.Promise.all(seasonsPrimary)
@@ -40,8 +33,10 @@ export default Route.extend({
 				let promiseArray = A([]),
 					data = result.productSalesReports;
 
-				seasons = tmpHead.map(ele => {
-					return ele;
+				tmpHead = result.seasons.map(ele => {
+					let name = ele.get('name') || '';
+
+					return name.slice(0, 4) + name.slice(-4);
 				});
 				// 获取基于周期的数据
 				tmpData = data.map((productSalesReports, index) => {
@@ -71,7 +66,6 @@ export default Route.extend({
 			}).then(data => {
 
 				let promiseArray = data.map(ele => {
-					// console.log(ele.get('product.name'));
 					return ele.get('product');
 				});
 
@@ -82,7 +76,7 @@ export default Route.extend({
 					return {
 						// name: data[index].name,
 						name: gc.get('name'),
-						date: seasons,
+						date: tmpHead,
 						data: tmpData.map(item => item.shareData[index])
 					};
 				});
