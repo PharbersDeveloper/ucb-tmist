@@ -1,0 +1,132 @@
+{{#bp-layout direction="col" local-class="review-container" }}
+	<div local-class="situation business" class="mt-4">
+		{{#bp-layout direction="col" classNames="bg-white"}}
+			{{#bp-layout main="between" local-class="choose-container"}}
+				{{#bp-layout main="between" cross="center" 
+							local-class="choose-area" classNames="px-4"}}
+					<span local-class="keys" class="mr-4">选择周期</span>
+					{{#bp-dropdown widthSize="auto" 
+								local-class="dd-medicines dd-area" as |dd|}}
+						{{#dd.button}}
+							{{#if tmpSeason.id}}
+								<p>{{tmpSeason.name}}</p>
+							{{else}}
+								当前周期
+							{{/if}}
+							{{bp-icon icon='down'}}
+						{{/dd.button}}
+						{{#dd.menu as |menu|}}
+							{{#each model.usableSeasons as |usableSeason|}}
+								{{#unless usableSeason.scenario.name}}
+									{{#menu.option value=usableSeason.scenario
+												onClick=(action (mut tmpSeason))}}
+										{{usableSeason.scenario.name}}
+									{{/menu.option}}
+								{{/unless}}
+							{{/each}}
+						{{/dd.menu}}
+					{{/bp-dropdown}}
+				{{/bp-layout}}
+				{{#bp-layout main="between" cross="center" 
+							local-class="choose-area" classNames="px-4"}}
+					<span local-class="keys" class="mr-4">选择药品</span>
+					{{#bp-dropdown widthSize="auto" 
+								local-class="dd-medicines dd-area" as |dd|}}
+						{{#dd.button}}
+							{{#if tmpGc.id}}
+								<p>{{tmpGc.productConfig.product.name}}</p>
+							{{else}}
+								全部药品
+							{{/if}}
+							{{bp-icon icon='down'}}
+						{{/dd.button}}
+						{{#dd.menu as |menu|}}
+							{{#menu.option value=''
+								onClick=(action (mut tmpGc))}}
+								全部药品
+							{{/menu.option}}
+							{{#each model.goodsConfigs as |gc|}}
+								{{#unless gc.productConfig.productType}}
+									{{#menu.option value=gc 
+												onClick=(action (mut tmpGc))}}
+										{{gc.productConfig.product.name}}
+									{{/menu.option}}
+								{{/unless}}
+							{{/each}}
+						{{/dd.menu}}
+					{{/bp-dropdown}}
+				{{/bp-layout}}
+				{{#bp-layout main="between" cross="center" 
+							local-class="choose-area"  classNames="px-4"}}
+					<span local-class="keys" class="mr-4">选择代表</span>
+					{{#bp-dropdown widthSize="auto" 
+								local-class="dd-sort dd-area" as |dd|}}
+						{{#dd.button}}
+							{{#if tmpRep.name}}
+								<p>{{tmpRep.name}}</p>
+							{{else}}
+								全部代表
+							{{/if}}
+							{{bp-icon icon='down'}}
+						{{/dd.button}}
+						{{#dd.menu as |menu|}}
+							{{#menu.option value=''
+								onClick=(action (mut tmpRep))}}
+								全部代表
+							{{/menu.option}}
+							{{#each model.resourceConfigRepresentatives as |rcr|}}
+								{{#menu.option value=rcr.representativeConfig.representative
+												onClick=(action (mut tmpRep))}}
+									{{rcr.representativeConfig.representative.name}}
+								{{/menu.option}}
+							{{/each}}
+						{{/dd.menu}}
+					{{/bp-dropdown}}
+				{{/bp-layout}}
+			{{/bp-layout}}
+			{{business-review model=filterTableData}}
+			{{!-- <table local-class="table-container" class="table">
+				<thead>
+					<th class='text-left'>医院名称</th>
+					<th class="text-center">医院等级</th>
+					<th class="text-right">患者数量</th>
+					<th>上季度 销售额</th>
+					<th>代表</th>
+					<th>销售目标设定</th>
+					<th>预算费用</th>
+				</thead>
+				<tbody class="bg-white">
+					{{#each model.businessinputs as |bi|}}
+						<tr>
+							<td>{{bi.destConfig.hospitalConfig.hospital.name}}</td>
+							<td>三甲*</td>
+							<td>{{format-number bi.destConfig.hospitalConfig.potential}}</td>
+							<td>{{format-number bi.destConfig.hospitalConfig.lastYearSales}}</td>
+							<td>
+								{{#unless bi.resourceConfig.representativeConfig.representative.name}}
+									-
+								{{else}}
+									{{bi.resourceConfig.representativeConfig.representative.name}}
+								{{/unless}}
+							</td>
+							<td>
+								{{#unless bi.salesTarget}}
+									-
+								{{else}}
+									{{bi.salesTarget}}
+								{{/unless}}
+							</td>
+							<td>
+								{{#unless bi.budget}}
+									-
+								{{else}}
+									{{bi.budget}}
+								{{/unless}}
+							</td>
+						</tr>
+					{{/each}}
+				</tbody>
+			</table> --}}
+		{{/bp-layout}}
+	</div>
+{{/bp-layout}}

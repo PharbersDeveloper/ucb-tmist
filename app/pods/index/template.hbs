@@ -1,1 +1,321 @@
-{{outlet}}
+{{!--{{#bp-layout local-class="page-mission"}}
+	{{!-- {{#bp-layout direction='col' local-class="mission-detail" classNames="p-4"}}
+		{{#bp-page-header local-class='header' classNames='mb-4' as |ph|}}
+			{{#ph.body as |body|}}
+				{{#body.left local-class='left-body' classNames='pb-4' as |left|}}
+					{{#left.item tagName='h1' local-class='title'}}
+						{{model.detailProposal.proposal.name}}
+					{{/left.item}}
+					{{#left.item classNames='mb-0'}}
+						{{#bp-layout cross="center"}}
+							{{mission-state model.detailPaper.state}}
+							{{show-endtime model.detailPaper}}
+						{{/bp-layout}}
+					{{/left.item}}
+				{{/body.left}}
+				{{#body.right}}
+					{{#if (bp-not-eq model.detailPaper.state 1 4)}}
+						{{#bp-button type="primary" tagName='span' 
+							onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
+							开始部署
+						{{/bp-button}}
+					{{else}}
+						{{#bp-button tagName='span' classNames="mr-1" onClick=(action (mut reDeploy) true)}}
+							重新部署
+						{{/bp-button}}
+						{{#bp-button type="primary" tagName='span' onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
+							继续部署
+						{{/bp-button}}
+					{{/if}}
+				{{/body.right}}
+			{{/ph.body}}
+		{{/bp-page-header}}
+		<div local-class="resource" class="mb-2 p-3 rounded">
+			{{#bp-layout cross='center' tagName='h2' classNames='mb-2'}}
+				{{bp-icon icon="mission-1"}}
+				<span class="ml-2">合理分配资源完成业务目标</span>
+			{{/bp-layout}}
+			{{#bp-layout direction="col" local-class='container' classNames="px-4 bg-white rounded"}}
+				{{#bp-layout local-class="item-resource" cross='center' classNames="my-4"}}
+					{{bp-icon size='large' icon='office-building' 
+						local-class="icon"}}
+					{{#bp-layout local-class="main-box"}}
+						<span local-class='keys' class="mr-2">为医院分配代表</span>
+						<span local-class='values'>{{assignHospitals}}/{{model.destConfigs.length}}</span>
+					{{/bp-layout}}
+					<div local-class="blank"></div>
+					<div local-class='icon icon-right'>
+						{{#if (bp-eq assignHospitals model.destConfigs.length)}}
+							{{bp-icon size='large' icon='check' 
+						local-class="icon icon-right"}}
+						{{/if}}
+					</div>
+				{{/bp-layout}}
+				{{#bp-layout local-class="item-resource" cross='center' classNames="my-4"}}
+					{{bp-icon size='large' icon='people' 
+						local-class="icon"}}
+					{{#bp-layout local-class="main-box"}}
+						<span local-class='keys' class="mr-2">指派代表去医院</span>
+						<span local-class='values'>{{assignRepresentatives}}/{{model.resourceConfigRepresentatives.length}}</span>
+					{{/bp-layout}}
+					<div local-class="blank"></div>
+					<div local-class='icon icon-right'>
+						{{#if (bp-eq assignRepresentatives model.resourceConfigRepresentatives.length)}}
+							{{bp-icon size='large' icon='check' 
+						local-class="icon icon-right"}}
+						{{/if}}
+					</div>
+				{{/bp-layout}}
+			{{/bp-layout}}
+		</div>
+		<div local-class="resource" class="mb-4 p-3 rounded">
+			{{#bp-layout cross='center' tagName='h2' classNames='mb-2'}}
+				{{bp-icon icon="mission-2"}}
+				<span class="ml-2">完成业务总指标</span>
+			{{/bp-layout}}
+			{{#bp-layout direction="col" local-class='container' classNames="px-4 bg-white rounded"}}
+				{{#each model.goodsConfigs as |gc|}}
+					{{#if (bp-eq gc.productConfig.productType 0)}}
+						{{#each goodsSalesTargets as |goodsSalesTarget|}}
+							{{#if (bp-eq gc.productConfig.product.id goodsSalesTarget.productConfig.product.id)}}
+								{{#bp-layout local-class="item-resource" classNames="my-4"}}
+									{{bp-icon size='large' icon='pill' 
+										local-class="icon"}}
+									{{#bp-layout direction="col" local-class="main-box"}}
+										{{#bp-layout main="between" classNames="mb-2"}}
+											<h4 class="m-0">{{gc.productConfig.product.name}}</h4>
+											<span local-class="schedule">
+												{{gc.productConfig.priceType}}{{goodsSalesTarget.salesTarget}}/{{gc.productConfig.priceType}}{{format-number model.resourceConfigManager.managerConfig.totalBusinessIndicators}}
+											</span>
+										{{/bp-layout}}
+										{{#bp-progress as |p|}}
+											{{p.bar value=goodsSalesTarget.salesTarget maxValue=model.resourceConfigManager.managerConfig.totalBusinessIndicators}}
+										{{/bp-progress}}
+									{{/bp-layout}}
+									<div local-class="blank"></div>
+									{{#if (bp-eq goodsSalesTarget.salesTarget model.resourceConfigRepresentatives.length)}}
+										{{bp-icon size='large' icon='check' local-class="icon icon-right"}}
+									{{/if}}
+								{{/bp-layout}}
+							{{/if}}
+						{{/each}}
+					{{/if}}
+				{{/each}}
+			{{/bp-layout}}
+		</div>
+		<div local-class="resource" class="mb-4 p-3 rounded">
+			{{#bp-layout cross='center' tagName='h2' classNames='mb-2'}}
+				{{bp-icon icon="mission-3"}}
+				<span class="ml-2">合理支配预算</span>
+			{{/bp-layout}}
+			{{#bp-layout direction="col" local-class='container' classNames="px-4 bg-white rounded"}}
+				{{#bp-layout local-class="item-resource" classNames="my-4"}}
+					{{bp-icon size='large' icon='china-money' 
+						local-class="icon"}}
+					{{#bp-layout direction="col" local-class="main-box"}}
+						{{#bp-layout main="between" classNames="mb-2"}}
+							<h4 class="m-0">总预算</h4>
+							<span local-class="schedule">
+								￥{{format-number usedBudget}}/￥{{format-number model.resourceConfigManager.managerConfig.totalBudgets}}
+							</span>
+						{{/bp-layout}}
+						{{#bp-progress as |p|}}
+							{{p.bar value=usedBudget maxValue=model.resourceConfigManager.managerConfig.totalBudgets}}
+						{{/bp-progress}}
+					{{/bp-layout}}
+					<div local-class="blank"></div>
+					<div local-class='icon icon-right'>
+						{{#if (bp-eq usedBudget model.resourceConfigManager.managerConfig.totalBudgets)}}
+							{{bp-icon size='large' icon='check' 
+						local-class="icon icon-right"}}
+						{{/if}}
+					</div>
+				{{/bp-layout}}
+			{{/bp-layout}}
+		</div>
+	{{/bp-layout}}
+	{{#if (bp-eq model.useableProposals.length 0)}}
+		{{#bp-layout direction="col" local-class="mission-report" classNames="p-4 bg-white"}}
+			暂无任务
+		{{/bp-layout}}
+	{{else}}
+		{{#bp-layout direction="col" local-class="mission-report" classNames="p-4 bg-white"}}
+			{{#bp-layout tagName="h4" main="between" classNames="mb-4"}}
+				<span local-class="title">历史成果</span>
+				<span local-class="times">共完成{{model.detailPaper.assessmentReports.length}}次</span>
+			{{/bp-layout}}
+			{{#each model.detailPaper.assessmentReports as |assessmentReport index|}}
+				{{#bp-layout tagName="p" main="between" cross="center" 
+				local-class="historp-report" classNames="px-2 py-3 m-0"
+				classNames=(if (bp-eq index 0) "mt-4 mb-0 px-2 py-3" "m-0 px-2 py-3")}}
+					{{#bp-layout tagName="span" local-class="infos"}}
+						<span class="mr-3">{{bp-increment-property index}}</span>
+						<span class="mr-4"> <span local-class="level" class="mr-1">S</span>级*</span>
+						<span>{{bp-string-slice assessmentReport.time 0}}</span>
+					{{/bp-layout}}
+					{{#link-to "page-report" assessmentReport}}
+						查看
+					{{/link-to}}
+				{{/bp-layout}}
+			{{else}}
+				<p local-class='text' class="mt-2">还没有完成过该任务</p>
+			{{/each}}
+		{{/bp-layout}}
+	{{/if}}
+{{/bp-layout}} --}}
+{{#bp-layout main='center' cross='center' local-class="page-mission"}}
+	<div local-class='main-container' class="rounded bg-white">
+		{{#bp-layout cross="center" classNames='mb-4'}}
+			{{mission-state model.detailPaper.state}}
+			{{show-endtime model.detailPaper}}
+		{{/bp-layout}}
+		<h1 local-class='title' class="mb-4">
+			您好！<br>
+			欢迎参与优时比区域周期计划测试
+		</h1>
+		<p local-class='desc' class="mb-3 pt-3">
+			本次测试是区域管理周期测试，系统模拟了1位地区经理在工作中所面对的生意情况。<br>
+			您需要根据他所面临的情况，帮助他完成3个季度的区域管理周期计划。<br>
+			您的周期计划目标是达成地区总销售指标，促进地区业绩增长。
+		</p>
+		<p local-class='desc' class="mb-2">
+			您将参与管理
+		</p>
+		<p local-class='item' class="pb-4">
+			<span local-class='values'></span>
+			<span local-class='keys' class="mr-4">个地区</span>
+			<span local-class='values'>{{model.destConfigs.length}}</span>
+			<span local-class='keys' class="mr-4">家医院</span>
+			<span local-class='values'>{{model.resourceConfigRepresentatives.length}}</span>
+			<span local-class='keys' class="mr-4">名代表</span>
+			<span local-class='values'>{{model.selfProductConfigs.length}}</span>
+			<span local-class='keys' class="mr-4">个本公司产品</span>
+		</p>
+		{{#bp-layout main='between' cross='center' classNames='mt-3'}}
+			{{#link-to "page-history-report" model.detailPaper}}
+				查看历史成果
+			{{/link-to}}
+			<p class="m-0">
+				{{#if (bp-not-eq model.detailPaper.state 1 4)}}
+					{{#bp-button type="primary" tagName='span' 
+							onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
+						开始部署
+					{{/bp-button}}
+				{{else}}
+					{{#bp-button tagName='span' classNames="mr-1" onClick=(action (mut reDeploy) true)}}
+						重新部署
+					{{/bp-button}}
+					{{#bp-button type="primary" tagName='span' onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
+						继续部署
+					{{/bp-button}}
+				{{/if}}
+			</p>
+		{{/bp-layout}}
+	</div>
+{{/bp-layout}}
+{{#bp-modal
+		open=notice 
+		position='center'
+		local-class='modal-welcome'
+		backdropClose=false
+		onHidden=(action (mut notice) false) as |modal|}}
+	{{#modal.header tagName='h2'}}
+		任务介绍（{{model.scenario.name}}）
+	{{/modal.header}}
+	{{#modal.body classNames="p-4"}}
+		<h3 local-class='title' class="mb-4">
+			请仔细阅读“参考信息”并通过“业务决策”完成以下任务
+		</h3>
+		{{#bp-layout cross='center' classNames='mb-3'}}
+			{{bp-icon icon="mission-1"}}
+			<h4 local-class='title' class="ml-2 mb-0">
+				完成区域划分
+				<span>(只需在首个季度完成)</span></h4>
+		{{/bp-layout}}
+		<p local-class='content' class="mb-4">
+			为所有医院分配代表，请确保每个代表都有负责的目标医院
+		</p>
+		{{#bp-layout cross='center' classNames='mb-3'}}
+			{{bp-icon icon="mission-2"}}
+			<h4 local-class='title' class="ml-2 mb-0">
+				分配业务指标
+			</h4>
+		{{/bp-layout}}
+		{{#bp-layout direction='col' local-class='content' }}
+			{{#each model.goodsConfigs as |gc|}}
+				{{#if (bp-eq gc.productConfig.productType 0)}}
+					{{#bp-layout cross='center' classNames='mb-3'}}
+						{{bp-icon icon='pill'}}
+						<span local-class='keys' class="ml-2 mr-4">{{gc.productConfig.product.name}}</span>
+						<span local-class='values'>
+							{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |managerGoodsConfig|}}
+								{{#if (bp-eq managerGoodsConfig.goodsConfig.productConfig.product.id gc.productConfig.product.id)}}
+									{{gc.productConfig.priceType}}{{managerGoodsConfig.goodsSalesTarget}}
+								{{/if}}
+							{{/each}}
+						</span>
+					{{/bp-layout}}
+					{{!-- {{#bp-layout local-class="item-resource" classNames="my-4"}}
+									{{bp-icon size='large' icon='pill' 
+										local-class="icon"}}
+									{{#bp-layout direction="col" local-class="main-box"}}
+										{{#bp-layout main="between" classNames="mb-2"}}
+											<h4 class="m-0">{{gc.productConfig.product.name}}</h4>
+											<span local-class="schedule">
+												{{gc.productConfig.priceType}}{{goodsSalesTarget.salesTarget}}/{{gc.productConfig.priceType}}{{format-number model.resourceConfigManager.managerConfig.totalBusinessIndicators}}
+											</span>
+										{{/bp-layout}}
+										{{#bp-progress as |p|}}
+											{{p.bar value=goodsSalesTarget.salesTarget maxValue=model.resourceConfigManager.managerConfig.totalBusinessIndicators}}
+										{{/bp-progress}}
+									{{/bp-layout}}
+									<div local-class="blank"></div>
+									{{#if (bp-eq goodsSalesTarget.salesTarget model.resourceConfigRepresentatives.length)}}
+										{{bp-icon size='large' icon='check' local-class="icon icon-right"}}
+									{{/if}}
+								{{/bp-layout}} --}}
+				{{/if}}
+			{{/each}}
+		{{/bp-layout}}
+		{{#bp-layout cross='center' classNames='mb-3'}}
+			{{bp-icon icon="mission-3"}}
+			<h4 local-class='title' class="ml-2 mb-0">
+				分配预算
+			</h4>
+		{{/bp-layout}}
+		{{#bp-layout direction='col' local-class='content'}}
+			{{#each model.goodsConfigs as |gc|}}
+				{{#if (bp-eq gc.productConfig.productType 0)}}
+					{{#bp-layout cross='center' classNames='mb-3'}}
+						{{bp-icon icon='pill'}}
+						<span local-class='keys' class="ml-2 mr-4">{{gc.productConfig.product.name}}</span>
+						<span local-class='values'>
+							{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |managerGoodsConfig|}}
+								{{#if (bp-eq managerGoodsConfig.goodsConfig.productConfig.product.id gc.productConfig.product.id)}}
+									{{gc.productConfig.priceType}}{{managerGoodsConfig.goodsSalesBudgets}}
+								{{/if}}
+							{{/each}}
+						</span>
+					{{/bp-layout}}
+				{{/if}}
+			{{/each}}
+		{{/bp-layout}}
+	{{/modal.body}}
+{{/bp-modal}}
+{{#bp-modal
+		open=reDeploy 
+		position='center'
+		onHidden=(action (mut reDeploy) false) as |modal|}}
+	{{#modal.header closeButton=false}}
+		<h4 class="modal-title">
+			重新部署
+		</h4>
+	{{/modal.header}}
+	{{#modal.body}}
+		重新开始将清空您上次尚未完成的决策记录，是否继续？
+	{{/modal.body}}
+	{{#modal.footer}}
+		{{#bp-button type="link" onClick=(action modal.close)}}取消{{/bp-button}}
+		{{#bp-button type="primary" onClick=(action 'reDeploy')}}重新部署{{/bp-button}}
+	{{/modal.footer}}
+{{/bp-modal}}

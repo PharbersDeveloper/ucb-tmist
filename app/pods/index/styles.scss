@@ -1,0 +1,76 @@
+.page-mission {
+	height: 100%;
+	overflow: auto;
+
+	h1.title {
+		@extend %title;
+		font-weight: 600;
+		letter-spacing: 1px;
+	}
+
+	.main-container {
+		padding: 40px;
+		width: 53%;
+		@extend %depth-z200;
+
+		a {
+			@extend %p-primary;
+			color: #3172E0;
+		}
+
+		p.desc {
+			@extend %p-primary;
+			letter-spacing: 1px;
+		}
+
+		p.item {
+			@extend %p-primary;
+
+			.keys {
+				@extend %p-small;
+
+			}
+
+			.values {
+				@extend %header-medium;
+
+			}
+		}
+	}
+}
+
+.modal-welcome {
+	background-color: rgba(9, 30, 66, 0.54);
+
+	@media (min-width: 576px) {
+		:global(.modal-dialog) {
+			max-width: 600px;
+		}
+	}
+
+	h3.title {
+		@extend %header-medium;
+	}
+
+	h4.title {
+		@extend %header-small;
+
+		span {
+			@extend %p-small;
+		}
+	}
+
+	.content {
+		margin-left: 32px;
+		@extend %p-primary;
+	}
+
+	.keys {
+		@extend %p-secondary;
+		min-width: 42px;
+	}
+
+	.values {
+		@extend %header-small;
+	}
+}

@@ -1,0 +1,7 @@
+.rep-info {
+	height: 72px;
+
+	h3 {
+		@extend %header-small;
+	}
+}

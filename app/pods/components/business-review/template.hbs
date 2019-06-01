@@ -1,0 +1,21 @@
+{{#light-table table 
+	height='570px'
+	local-class='table'
+	classNames='px-4'
+	as |t|}}
+	{{t.head
+		onColumnClick=(action 'onColumnClick')
+		iconSortable='fa fa-sort'
+	    iconAscending='fa fa-sort-asc'
+	  	iconDescending='fa fa-sort-desc'
+		local-class='thead'
+		fixed=true
+  }}
+	{{#t.body
+    canSelect=false
+    onScrolledToBottom=(action 'onScrolledToBottom')
+	local-class='tbody'
+    as |body|
+  }}
+	{{/t.body}}
+{{/light-table}}

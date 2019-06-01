@@ -1,0 +1,17 @@
+{{#bp-layout direction="col" local-class="reference-container" }}
+	{{#bp-layout main="center" classNames="py-4" local-class="reference-tabs" }}
+		{{#bp-button-group value=groupValue type="radio" onChange=(action (mut groupValue)) as |bg|}}
+			{{#bg.button type="default" value='index' 
+				onClick=(action 'linkToRoute' 'index')}}产品竞品信息{{/bg.button}}
+			{{#bg.button type="default" value='hospital' 
+				onClick=(action 'linkToRoute' 'hospital')}}城市医院信息{{/bg.button}}
+			{{#bg.button type="default" value="member"
+				onClick=(action 'linkToRoute' 'member')}}代表信息{{/bg.button}}
+			{{#bg.button type="default" value="performance"
+			onClick=(action 'linkToRoute' 'performance')}}业绩表现{{/bg.button}}
+		{{/bp-button-group}}
+	{{/bp-layout}}
+	<div local-class="reference-content">
+		{{outlet}}
+	</div>
+{{/bp-layout}}
