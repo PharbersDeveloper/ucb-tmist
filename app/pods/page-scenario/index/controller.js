@@ -90,10 +90,14 @@ export default Controller.extend({
 			});
 			indicatorsData.push({
 				value: target,
+				total: 1500000,
+				id: goodsConfig.get('productConfig.product.id'),
 				name: goodsConfig.get('productConfig.product.name')
 			});
 			budgetData.push({
 				value: budget,
+				total: 85000,
+				id: goodsConfig.get('productConfig.product.id'),
 				name: goodsConfig.get('productConfig.product.name')
 			});
 		});
@@ -101,7 +105,8 @@ export default Controller.extend({
 		return {
 			usedSalesTarget,
 			usedBudget,
-			indicatorsData: A([{ seriesName: '', data: indicatorsData }]),
+			// indicatorsData: A([{ seriesName: '', data: indicatorsData }]),
+			indicatorsData,
 			budgetData: A([{ seriesName: '', data: budgetData }]),
 			verify: verifyService.verifyInput(businessInputs, resourceConfigManager)
 		};

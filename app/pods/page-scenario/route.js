@@ -1,38 +1,42 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import { hash } from 'rsvp';
+import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
+import { hash } from 'rsvp';
 
 export default Route.extend({
 	cookies: service(),
 	/**
 	 * 判断是否有 businessinput
+	 * @param  {model} scenario
 	 * @param  {model} paper
 	 * @param  {model} destConfigs
 	 * @param  {model} selfGoodsConfigs
 	 */
-	isHaveBusinessInput(paper, destConfigs, selfGoodsConfigs) {
+	isHaveBusinessInput(paper, destConfigs, selfGoodsConfigs, lastSeasonHospitalSalesReports = []) {
 		let state = paper.get('state'),
 			reDeploy = Number(localStorage.getItem('reDeploy')) === 1,
 			exitInEmberData = this.get('store').peekAll('businessinput');
 
-		if (state === 1 && !reDeploy || exitInEmberData.get('length') > 0) {
+		//	[1,4].indexOf(state)>=0
+		if ([1, 4].indexOf(state) >= 0 && !reDeploy || exitInEmberData.get('length') > 0) {
 			return this.get('store').peekAll('businessinput');
 		}
-		return this.generateBusinessInputs(destConfigs, selfGoodsConfigs);
+		return this.generateBusinessInputs(destConfigs, selfGoodsConfigs, lastSeasonHospitalSalesReports);
 	},
 	/**
 	 * 生成 businessinputs
 	 * @param  {model} destConfigs
 	 * @param  {model} selfGoodsConfigs
 	 */
-	generateBusinessInputs(destConfigs, selfGoodsConfigs) {
+	generateBusinessInputs(destConfigs, selfGoodsConfigs, lastSeasonHospitalSalesReports) {
 		let promiseArray = A([]),
 			store = this.get('store');
 
 		promiseArray = destConfigs.map(ele => {
 			let goodsInputs = selfGoodsConfigs.map(item => {
 				return store.createRecord('goodsinput', {
+					destConfigId: ele.get('id'),
 					goodsConfig: item,
 					// salesTarget: '',	// 销售目标设定
 					// budget: ''	//预算设定
@@ -42,18 +46,37 @@ export default Route.extend({
 				});
 			});
 
-			return store.createRecord('businessinput', {
-				destConfig: ele,
-				destConfigId: ele.id,
-				representativeId: '',
-				resourceConfigId: '',
-				resourceConfig: null,
-				salesTarget: '',
-				budget: '',
-				goodsConfigs: selfGoodsConfigs,
-				goodsinputs: goodsInputs,
-				meetingPlaces: '',
-				visitTime: ''
+			if (isEmpty(lastSeasonHospitalSalesReports)) {
+				return store.createRecord('businessinput', {
+					destConfig: ele,
+					destConfigId: ele.id,
+					representativeId: '',
+					resourceConfigId: '',
+					resourceConfig: null,
+					salesTarget: '',
+					budget: '',
+					// goodsConfigs: selfGoodsConfigs,
+					goodsinputs: goodsInputs,
+					meetingPlaces: '',
+					visitTime: ''
+				});
+			}
+			lastSeasonHospitalSalesReports.forEach(element => {
+				if (element.get('destConfig.hospitalConfig.hospital.id') === ele.get('hospitalConfig.hospital.id')) {
+					return store.createRecord('businessinput', {
+						destConfig: ele,
+						destConfigId: ele.id,
+						representativeId: element.get('resourceConfig.representativeConfig.representative.id'),
+						resourceConfigId: element.get('resourceConfig.id'),
+						resourceConfig: element.get('resourceConfig'),
+						salesTarget: '',
+						budget: '',
+						// goodsConfigs: selfGoodsConfigs,
+						goodsinputs: goodsInputs,
+						meetingPlaces: '',
+						visitTime: ''
+					});
+				}
 			});
 		});
 		return promiseArray;
@@ -79,7 +102,6 @@ export default Route.extend({
 				return data.get('salesReports');
 			}).then(data => {
 				salesReports = data.sortBy('time');
-
 				let salesReport = salesReports.get('lastObject');
 
 				return salesReport.get('hospitalSalesReports');
@@ -90,7 +112,11 @@ export default Route.extend({
 			}).then(data => {
 				let selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
 
-				businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs);
+				if (scenario.get('phase') > 1) {
+					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs, lastSeasonHospitalSalesReports);
+				} else {
+					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs);
+				}
 
 				return hash({
 					proposal,

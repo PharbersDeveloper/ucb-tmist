@@ -34,7 +34,6 @@ export default Controller.extend({
 				usedBudget,
 				usedSalesTarget,
 				goodsSalesTargets: selfProductConfigs.map(ele => {
-					console.log(ele.get('product.id'));
 					return {
 						productConfig: ele,
 						salesTarget: 0,
@@ -73,10 +72,6 @@ export default Controller.extend({
 		this.transitionToRoute('page-scenario', proposalId);
 	},
 	actions: {
-		changeDetail(useableProposal, paper) {
-			this.set('model.detailProposal', useableProposal);
-			this.set('model.detailPaper', paper);
-		},
 		startDeploy(proposalId) {
 			localStorage.setItem('notice', false);
 			this.entryMission(proposalId);

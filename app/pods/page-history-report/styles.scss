@@ -1,0 +1,21 @@
+.back {
+	@extend %p-small;
+}
+
+h1.title {
+	@extend %title;
+}
+
+.list-header {
+	p {
+		flex: 1;
+		@extend %p-small;
+	}
+}
+
+.list-body {
+	p {
+		flex: 1;
+		@extend %p-primary;
+	}
+}
