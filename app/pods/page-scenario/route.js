@@ -110,14 +110,14 @@ export default Route.extend({
 
 				return destConfigs.map(ele => ele);
 			}).then(data => {
-				let selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
+				let selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0),
+					competeGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 1);
 
 				if (scenario.get('phase') > 1) {
 					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs, lastSeasonHospitalSalesReports);
 				} else {
 					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs);
 				}
-
 				return hash({
 					proposal,
 					businessInputs,
@@ -127,6 +127,8 @@ export default Route.extend({
 					resourceConfRep: pageIndexModel.resourceConfigRepresentatives,
 					resourceConfManager: pageIndexModel.resourceConfigManager,
 					goodsConfigs,
+					selfGoodsConfigs,
+					competeGoodsConfigs,
 					destConfigs,
 					salesReports,
 					lastSeasonHospitalSalesReports,
@@ -150,11 +152,13 @@ export default Route.extend({
 			scenario: model.scenario,
 			paper: model.paper
 		});
-		// applicationController.set('proposal', model.proposal);
-
 	},
 	setupController(controller, model) {
 		this._super(...arguments);
 		controller.set('businessInputs', model.businessInputs);
+
+		if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
+			controller.set('notice', true);
+		}
 	}
 });

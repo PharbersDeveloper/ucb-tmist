@@ -2,48 +2,53 @@
 	height: calc(100% - 25px);
 
 	.overviews {
-		flex: 0 0 170px;
+		// flex: 0 0 170px;
 
 		.item {
 			flex: 1;
 			background-color: $n000;
 
-			h2 {
+			h3 {
 				@extend %header-medium;
+				height: 54px;
 			}
 
 			.info {
 				@extend %header-large;
 			}
 
-			.circle-container {
-				height: 268px;
+			.keys {
+				@extend %p-secondary;
 			}
 
-			:global(.bp-progress) {
-				height: $spacing;
-
-				:global(.bp-progress-bar) {
-					background-color: $b200;
-				}
+			.values {
+				@extend %header-medium;
 			}
 
 			.progress {
-				&:global(.bp-progress .bp-progress-bar) {
-					background-color: $n500;
+				height: $spacing;
+				background-color: #F4F5F7;
+			}
+
+			.progress:first-child {
+				.bar {
+					background-color: #79F2C0;
+					;
 				}
 			}
 
-			.legend {
-				.circle {
-					width: 8px;
-					height: 8px;
-					border-radius: 50%;
-					background-color: $b200;
+			.progress:nth-child(2) {
+				.bar {
+					background-color: #79E2F2;
+					;
 				}
+			}
 
-				.values {
-					@extend %p-secondary;
+			.progress:nth-child(3) {
+
+				.bar {
+					background-color: #998DD9;
+					;
 				}
 			}
 		}
@@ -97,7 +102,7 @@
 	}
 
 	.hospitals {
-		flex: 1;
+		// flex: 1;
 
 		.hospitals-configs {
 			flex: 0 0 368px;

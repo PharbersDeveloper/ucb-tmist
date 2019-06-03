@@ -4,14 +4,15 @@ import { isEmpty } from '@ember/utils';
 
 export default Route.extend({
 	model(params) {
-		let dCId = params['destConfig_id'],
-			store = this.get('store'),
+		const store = this.get('store'),
 			pageScenarioModel = this.modelFor('page-scenario'),
 			managerConf = pageScenarioModel.resourceConfManager,
 			repConfs = pageScenarioModel.resourceConfRep,
 			salesConfigs = pageScenarioModel.salesConfigs,
 			scenario = pageScenarioModel.scenario,
-			currentController = this.controllerFor('page-scenario.index.hospital-config'),
+			currentController = this.controllerFor('page-scenario.business.hospitalConfig');
+
+		let dCId = params['destConfig_id'],
 			// businessController = this.controllerFor('page-scenario.index'),
 			businessInputs = pageScenarioModel.businessInputs,
 			businessinput = null;
