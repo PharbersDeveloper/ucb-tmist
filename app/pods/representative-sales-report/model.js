@@ -9,5 +9,6 @@ export default DS.Model.extend({
 	representativeName: DS.attr('string'),
 	productName: DS.attr('string'),
 	destConfig: DS.belongsTo(),
-	goodsConfig: DS.belongsTo()
+	goodsConfig: DS.belongsTo(),
+	resourceConfig: DS.belongsTo()
 });
