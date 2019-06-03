@@ -150,6 +150,8 @@ export default Route.extend({
 				return hash({
 					paper,
 					goodsConfigs,
+					selfGoodsConfigs: pageScenarioModel.selfGoodsConfigs,
+					competeGoodsConfigs: pageScenarioModel.competeGoodsConfigs,
 					destConfigs: pageScenarioModel.destConfigs,
 					salesConfigs: pageScenarioModel.salesConfigs,
 					resourceConfRep: pageScenarioModel.resourceConfRep,
