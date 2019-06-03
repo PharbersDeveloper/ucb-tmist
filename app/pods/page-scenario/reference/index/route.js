@@ -4,7 +4,7 @@ import RSVP, { hash } from 'rsvp';
 
 export default Route.extend({
 	model() {
-		let totalConfig = this.modelFor('page-scenario.reference'),
+		let totalConfig = this.modelFor('page-scenario.index'),
 			paper = totalConfig.paper,
 			goodsConfigs = totalConfig.goodsConfigs,
 			seasons = A([]),
