@@ -42,6 +42,8 @@ export default Route.extend({
 		return tmpTableBody;
 	},
 	generatePromiseArray(reports, key) {
+		window.console.log(reports);
+		
 		let promiseArray = A([]);
 
 		promiseArray = reports.map(ele => {
@@ -50,8 +52,11 @@ export default Route.extend({
 		return promiseArray;
 	},
 	model() {
-		let store = this.get('store'),
-			salesReports = store.peekAll('paper').get('firstObject').get('salesReports'),
+		const store = this.get('store'),
+			scenarioId = this.modelFor('index').scenario.id;
+
+		let	salesReports = store.peekAll('paper').get('firstObject').get('salesReports'),
+			// scenario = store.peekRecord('scenario', scenarioId),
 			increaseSalesReports = A([]),
 			tmpHead = A([]),
 			productSalesReports = A([]),
@@ -66,20 +71,59 @@ export default Route.extend({
 			doubleCircleRe = A([]),
 			trendRe = A([]),
 			dateArr = A([]),
-			hospTableBody = A([]);
+			hospTableBody = A([]),
+			goodsConfigs = store.query('goodsConfig', { 'scenario-id': scenarioId }),
+			resourceConfigs = store.query('resourceConfig', { 'scenario-id': scenarioId });
 
+		// window.console.log(scenario);
+		// return scenario.then(data => {
+		// 	window.console.log(data);
+		// 	window.console.log(data.name);
+		// 	debugger
+		// 	return goodsConfigs;
+		// }).then(data => {
+		return goodsConfigs.then(data => {
+			// let a = A([]);
+
+			// let tmp = data.map(ele => {
+			// 	return ele.get('productConfig');
+			// });
+
+			let promiseArray = this.generatePromiseArray(data, 'productConfig.product');
+
+			// return rsvp.Promise.all([resourceConfigs, promiseArray]);
+			promiseArray.unshift(resourceConfigs);
+			return rsvp.Promise.all(promiseArray);
+		}).then(data => {
+			// let tmp = data.map(ele => {
+			// 	return ele.get('representativeConfig');
+			// });
+			let promiseArray = this.generatePromiseArray(data[0], 'representativeConfig.representative');
+
+			promiseArray.unshift(salesReports);
+			return rsvp.Promise.all(promiseArray);
+			// return [resourceConfigs, rsvp.Promise.all(promiseArray)];
+			// return rsvp.Promise.all([salesReports, promiseArray]);
+			// return [salesReports, rsvp.Promise.all(promiseArray)];
+		}).then(data => {
 		// 拼接 产品销售报告数据
-		return salesReports.then(data => {
 			let promiseArray = A([]),
 				lastQName = '',
 				tmpTableHead = A(['指标贡献率', '指标增长率', '指标达成率', '销售额同比增长', '销售额环比增长', '销售额贡献率', 'YTD销售额']);
 
-			increaseSalesReports = data.sortBy('time');
-
+			increaseSalesReports = data[0].sortBy('time');
 			tmpHead = increaseSalesReports.map(ele => {
-				let name = ele.get('scenario.name');
+				let scenario = ele.get('scenario'),
+					name = '';
 
-				lastQName = ele.get('scenario.name');
+				scenario.then(res => {
+					name = res.name;
+					lastQName = res.name;
+				});
+				// let name = ele.get('scenario.name');
+				// window.console.log(ele.scenario.get('name'));
+
+				// lastQName = ele.get('scenario.name');
 				return name.slice(0, 4) + name.slice(-4);
 			});
 			tmpTableHead.forEach(ele => {
@@ -102,6 +146,11 @@ export default Route.extend({
 
 			let tmpData = data.slice(-2),
 				dealedData = tmpData.map(ele => {
+					debugger
+					window.console.log(ele);
+					window.console.log(ele.goodsConfig);
+					window.console.log(ele.filterBy('goodsConfig.productConfig.productType', 0));
+					
 					return ele.filterBy('goodsConfig.productConfig.productType', 0);
 				}),
 				dealedTableData = data.map(ele => {
@@ -115,6 +164,8 @@ export default Route.extend({
 			//双扇形图数据
 			doubleCircleProduct = data[0].map((ele, index) => {
 				let circleData = ele.map(item => {
+					window.console.log(item);
+					window.console.log(item.get('goodsConfig.id'));
 					return {
 						value: item.get('share'),
 						name: item.get('goodsConfig.productConfig.product.name')
@@ -194,9 +245,12 @@ export default Route.extend({
 			//双扇形图数据
 			doubleCircleRe = data[0].map((ele, index) => {
 				let circleData = ele.map(item => {
+					window.console.log(item);
+					window.console.log(item.get('resourceConfig.id'));
+					window.console.log(item.get('resourceConfig.representativeConfig.id'));
 					return {
 						value: item.get('share'),
-						name: item.get('goodsConfig.productConfig.product.name')
+						name: item.get('resourceConfig.representativeConfig.representative.name')
 					};
 				});
 

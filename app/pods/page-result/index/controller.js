@@ -172,15 +172,15 @@ export default Controller.extend({
 			if (value === 0) {
 				this.set('doubleCircleData', this.model.doubleCircleProduct);
 				this.set('barLineData', this.model.trendProduct);
-
 			} else if (value === 1) {
+				this.set('doubleCircleData', this.model.doubleCircleProduct);
+				this.set('barLineData', this.model.trendProduct);
+			} else if (value === 2) {
 				this.set('doubleCircleData', this.model.doubleCircleRe);
 				this.set('barLineData', this.model.trendRe);
-
-			} else {
+			} else if (value === 3) {
 				this.set('doubleCircleData', this.model.doubleCircleRe);
 				this.set('barLineData', this.model.trendRe);
-
 			}
 		}
 	}
