@@ -73,7 +73,7 @@ export default Controller.extend({
 	},
 	actions: {
 		startDeploy(proposalId) {
-			localStorage.setItem('notice', false);
+			// localStorage.setItem('notice', false);
 			this.entryMission(proposalId);
 			// this.transitionToRoute('page-notice', proposalId);
 		},
