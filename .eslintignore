@@ -2,9 +2,12 @@
 /blueprints/*/files/
 /vendor/
 
+<<<<<<< HEAD
 # route.js
 /app/router.js
 
+=======
+>>>>>>> 3fd60c6... message
 # compiled output
 /dist/
 /tmp/
@@ -17,6 +20,11 @@
 
 # ember-try
 /.node_modules.ember-try/
+<<<<<<< HEAD
 
 # test
 /tests/
+=======
+/bower.json.ember-try
+/package.json.ember-try
+>>>>>>> 3fd60c6... message

@@ -107,30 +107,40 @@
 	{{#bp-layout main="between" local-class="overviews" classNames='mb-4'}}
 		<div local-class="item">
 			{{#bp-layout tagName="h2" cross="center" classNames="px-4 py-3"}}
-				总业务指标
+				药品销售额指标
 			{{/bp-layout}}
 			<div class="p-4">
-				<p local-class="info" class="mb-4">
+				{{!-- <p local-class="info" class="mb-4">
 					{{format-number total.usedSalesTarget}} /
 					￥{{format-number model.resourceConfManager.managerConfig.totalBusinessIndicators}}
-				</p>
-				<div local-class='circle-container'>
+				</p> --}}
+				{{!-- <div local-class='circle-container'>
 					{{bp-circle-double
 						eid="totalBusinessIndicators"
 						circleData=indicatorsData
 						circleSize=circleSize}}
-				</div>
-				{{!-- {{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
-					{{p.bar value=total.usedSalesTarget maxValue=model.resourceConfManager.managerConfig.totalBusinessIndicators}}
-				{{/bp-progress}}
-				{{#bp-layout tagName="p" cross="center" local-class="legend" classNames="m-0"}}
-					{{#bp-layout tagName="span" cross="center"}}
-						<span local-class="circle" class="mr-2"></span>
-						<span local-class="values">
-							{{model.salesConfigs.firstObject.goodsConfig.productConfig.product.name}}
+				</div> --}}
+				{{#each indicatorsData as |indicator|}}
+					{{#bp-layout main='between'}}
+						<span local-class='keys'>
+							{{indicator.name}}
+						</span>
+						<span local-class='values'>
+							{{indicator.value}}*/{{indicator.total}}
 						</span>
 					{{/bp-layout}}
-				{{/bp-layout}}  --}}
+					{{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
+						{{p.bar value=indicator.value maxValue=indicator.total}}
+					{{/bp-progress}}
+					{{!-- {{#bp-layout tagName="p" cross="center" local-class="legend" classNames="m-0"}}
+						{{#bp-layout tagName="span" cross="center"}}
+							<span local-class="circle" class="mr-2"></span>
+							<span local-class="values">
+								{{indicator.name}}
+							</span>
+						{{/bp-layout}}
+					{{/bp-layout}} --}}
+				{{/each}}
 			</div>
 		</div>
 		<div local-class="item" class="mx-2">

@@ -83,7 +83,7 @@ export default Route.extend({
 			if (isEmpty(data)) {
 				paperinput = data;
 			} else {
-				paperinput = data.lastObject;
+				paperinput = data.get('lastObject');
 			}
 			return store.query('goodsConfig',
 				{ 'scenario-id': scenarioId });

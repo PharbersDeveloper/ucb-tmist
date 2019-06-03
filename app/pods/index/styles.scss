@@ -5,116 +5,36 @@
 	h1.title {
 		@extend %title;
 		font-weight: 600;
+		letter-spacing: 1px;
 	}
 
-	&>div {
-		height: 100%;
-	}
+	.main-container {
+		padding: 40px;
+		width: 53%;
+		@extend %depth-z200;
 
-	h3 {
-		@extend %header-medium;
-	}
-
-	.mission-detail {
-		flex: 1;
-
-		.header {
-			.left-body {
-				flex: 1;
-			}
+		a {
+			@extend %p-primary;
+			color: #3172E0;
 		}
 
-		.resource {
-			background-color: $n040;
+		p.desc {
+			@extend %p-primary;
+			letter-spacing: 1px;
+		}
 
-			h2 {
+		p.item {
+			@extend %p-primary;
+
+			.keys {
+				@extend %p-small;
+
+			}
+
+			.values {
 				@extend %header-medium;
+
 			}
-
-			.container {
-				@extend %depth-z200;
-			}
-
-			.item {
-				.icon {
-					height: 32px;
-				}
-
-				p.desc {
-					@extend %p-secondary;
-				}
-
-				h4.title {
-					@extend %header-small;
-				}
-			}
-
-			.item-resource {
-				.icon {
-					flex: 0 0 32px;
-					height: 32px;
-					margin-right: $spacing-3;
-				}
-
-				.icon-right {
-					margin-right: 0;
-				}
-
-				.blank {
-					flex: 3;
-				}
-
-				.main-box {
-					flex: 3;
-
-					:global(.bp-progress) {
-						height: $spacing;
-					}
-
-					p {
-						@extend %p-small;
-					}
-
-					.circle {
-						width: 64px;
-						height: 64px;
-					}
-
-					.keys {
-						@extend %p-primary;
-					}
-
-					.values {
-						@extend %header-medium;
-					}
-				}
-
-				h4 {
-					@extend %p-secondary;
-				}
-
-				span.schedule {
-					@extend %header-medium;
-				}
-			}
-		}
-	}
-
-	.mission-report {
-		flex: 0 0 392px;
-
-		h4 {
-			.title {
-				@extend %header-small;
-			}
-
-			.times {
-				@extend %p-secondary;
-			}
-		}
-
-		.text {
-			@extend %p-secondary;
 		}
 	}
 }
@@ -128,33 +48,29 @@
 		}
 	}
 
+	h3.title {
+		@extend %header-medium;
+	}
+
+	h4.title {
+		@extend %header-small;
+
+		span {
+			@extend %p-small;
+		}
+	}
+
 	.content {
-		img {
-			flex: 0 0 128px;
-			width: 128px;
-			height: 128px;
-		}
+		margin-left: 32px;
+		@extend %p-primary;
+	}
 
-		.modal-content {
-			flex: 1;
+	.keys {
+		@extend %p-secondary;
+		min-width: 42px;
+	}
 
-			h2.title {
-				@extend %header-large;
-			}
-
-			p.item {
-				@extend %p-primary;
-
-				.keys {
-					@extend %p-small;
-
-				}
-
-				.values {
-					@extend %header-medium;
-
-				}
-			}
-		}
+	.values {
+		@extend %header-small;
 	}
 }

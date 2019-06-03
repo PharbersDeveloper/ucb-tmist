@@ -12,22 +12,10 @@ export default Route.extend({
 			resourceConfigRepresentatives = pageScenarioModel.resourceConfRep,
 			store = this.get('store');
 
-		let businessinputs = store.peekAll('businessinput').filter(ele => ele.get('isNew')),
+		let businessinputs = store.peekAll('businessinput'),
 			tableData = A([]),
 			usableSeasons = A([]);
 
-		// tableData = A([
-		// 	{
-		// 		hospitalName: '',
-		// 		hospitalLevel: '',
-		// 		patientNumber: '',
-		// 		sales: '',
-		// 		representative: '',
-		// 		salesTarget: '',
-		// 		budget: '',
-		// 		goodsConfigsInputs: null
-		// 	}
-		// ]);
 		tableData = businessinputs.map(ele => {
 			let biHospitalId = ele.get('destConfig.hospitalConfig.hospital.id'),
 				sales = 0;

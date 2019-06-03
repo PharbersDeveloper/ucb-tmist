@@ -11,22 +11,22 @@ export default Controller.extend({
 		this.set('totalProduct', { id: 'totalProduct', productName: '全部选择' });
 		this.set('totalRepresentatives', { id: 'totalRepresentatives', representativeName: '全部选择' });
 		this.set('totalHospitals', { id: 'totalHospitals', hospitalName: '全部选择' });
-		this.set('doubleCircleData', A([
-			{
-				seriesName: '2018Q1', data: A([
-					{ value: 61089, name: 'Kosovo' },
-					{ value: 38922, name: 'Cyprus' },
-					{ value: 23204, name: 'Ireland' }
-				])
-			},
-			{
-				seriesName: '2018Q2', data: A([
-					{ value: 60954, name: 'Kosovo' },
-					{ value: 48258, name: 'Cyprus' },
-					{ value: 63933, name: 'Ireland' }
-				])
-			}
-		]));
+		// this.set('doubleCircleData', A([
+		// 	{
+		// 		seriesName: '2018Q1', data: A([
+		// 			{ value: 61089, name: 'Kosovo' },
+		// 			{ value: 38922, name: 'Cyprus' },
+		// 			{ value: 23204, name: 'Ireland' }
+		// 		])
+		// 	},
+		// 	{
+		// 		seriesName: '2018Q2', data: A([
+		// 			{ value: 60954, name: 'Kosovo' },
+		// 			{ value: 48258, name: 'Cyprus' },
+		// 			{ value: 63933, name: 'Ireland' }
+		// 		])
+		// 	}
+		// ]));
 		// this.set('barLineData', A([
 		// 	{
 		// 		name: '销售额',
@@ -169,18 +169,17 @@ export default Controller.extend({
 	actions: {
 		changeSalesValue(value) {
 			this.set('salesGroupValue', value);
-			// console.log(value);
 			if (value === 0) {
-				this.set('doubleCircleData', this.get('doubleCircleData'));
-				this.set('barLineData', this.get('barLineData'));
+				this.set('doubleCircleData', this.get('proDoubleCircleProduct'));
+				this.set('barLineData', this.get('proBarLineData'));
 
-			} else if (value === 1) {
-				this.set('doubleCircleData1', this.get('doubleCircleRepresentative'));
-				this.set('barLineData1', this.get('barLineRepresentative'));
+			} else if (value === 3) {
+				this.set('doubleCircleData', this.get('hospDoubleCircleProduct'));
+				this.set('barLineData', this.get('hospBarLineData'));
 
 			} else {
-				this.set('doubleCircleData1', this.get('doubleCircleHospital'));
-				this.set('barLineData1', this.get('barLineHospital'));
+				this.set('doubleCircleData', this.get('repDoubleCircleProduct'));
+				this.set('barLineData', this.get('repBarLineData'));
 
 			}
 		}
