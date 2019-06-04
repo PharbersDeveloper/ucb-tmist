@@ -10,10 +10,10 @@ export default Route.extend({
 	 * 判断是否有 businessinput
 	 * @param  {model} scenario
 	 * @param  {model} paper
-	 * @param  {model} destConfigs
+	 * @param  {model} destConfigHospitals
 	 * @param  {model} selfGoodsConfigs
 	 */
-	isHaveBusinessInput(paper, destConfigs, selfGoodsConfigs, lastSeasonHospitalSalesReports = []) {
+	isHaveBusinessInput(paper, destConfigHospitals, selfGoodsConfigs, lastSeasonHospitalSalesReports = []) {
 		let state = paper.get('state'),
 			reDeploy = Number(localStorage.getItem('reDeploy')) === 1,
 			exitInEmberData = this.get('store').peekAll('businessinput');
@@ -22,18 +22,18 @@ export default Route.extend({
 		if ([1, 4].indexOf(state) >= 0 && !reDeploy || exitInEmberData.get('length') > 0) {
 			return this.get('store').peekAll('businessinput');
 		}
-		return this.generateBusinessInputs(destConfigs, selfGoodsConfigs, lastSeasonHospitalSalesReports);
+		return this.generateBusinessInputs(destConfigHospitals, selfGoodsConfigs, lastSeasonHospitalSalesReports);
 	},
 	/**
 	 * 生成 businessinputs
-	 * @param  {model} destConfigs
+	 * @param  {model} destConfigHospitals
 	 * @param  {model} selfGoodsConfigs
 	 */
-	generateBusinessInputs(destConfigs, selfGoodsConfigs, lastSeasonHospitalSalesReports) {
+	generateBusinessInputs(destConfigHospitals, selfGoodsConfigs, lastSeasonHospitalSalesReports) {
 		let promiseArray = A([]),
 			store = this.get('store');
 
-		promiseArray = destConfigs.map(ele => {
+		promiseArray = destConfigHospitals.map(ele => {
 			let goodsInputs = selfGoodsConfigs.map(item => {
 				return store.createRecord('goodsinput', {
 					destConfigId: ele.get('id'),
@@ -90,7 +90,7 @@ export default Route.extend({
 			proposalId = params['proposal_id'],
 			paper = pageIndexModel.detailPaper;
 
-		let { detailProposal, destConfigs, goodsConfigs } = pageIndexModel,
+		let { detailProposal, destConfigs, destConfigHospitals, destConfigRegions, goodsConfigs } = pageIndexModel,
 			proposal = null,
 			businessInputs = null,
 			salesReports = A([]),
@@ -108,7 +108,7 @@ export default Route.extend({
 			}).then(data => {
 				lastSeasonHospitalSalesReports = data.sortBy('potential').reverse();
 
-				return destConfigs.map(ele => ele);
+				return destConfigHospitals.map(ele => ele);
 			}).then(data => {
 				let selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0),
 					competeGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 1);
@@ -130,6 +130,8 @@ export default Route.extend({
 					selfGoodsConfigs,
 					competeGoodsConfigs,
 					destConfigs,
+					destConfigHospitals,
+					destConfigRegions,
 					salesReports,
 					lastSeasonHospitalSalesReports,
 					resourceConfig: store.query('resourceConfig',

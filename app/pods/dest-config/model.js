@@ -5,5 +5,5 @@ export default DS.Model.extend({
 	destType: DS.attr('number'),
 	destId: DS.attr('string'),
 	hospitalConfig: DS.belongsTo('hospitalConfig'),
-	regionConfig: DS.belongsTo('regionConfig')
+	regionConfig: DS.belongsTo()
 });
