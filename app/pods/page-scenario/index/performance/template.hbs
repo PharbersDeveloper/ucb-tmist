@@ -196,10 +196,12 @@
 				<div class="table-responsive" local-class='table-content'>
 					<table local-class="table-container" class="table">
 						<thead>
-							<th>药品名称 </th>
-							{{#each model.tableHead as |tcontent|}}
-								<th class="text-center">{{tcontent}}</th>
-							{{/each}}
+							<tr>
+								<th>药品名称 </th>
+								{{#each model.tableHead as |tcontent|}}
+									<th class="text-center">{{tcontent}}</th>
+								{{/each}}
+							</tr>
 						</thead>
 						<tbody class="bg-white">
 							{{#each model.prodTableBody as |trContent|}}
