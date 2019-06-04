@@ -71,10 +71,6 @@
 								{{bp-icon icon='down'}}
 							{{/dd.button}}
 							{{#dd.menu as |menu|}}
-								{{#menu.option value=totalRepresentatives
-									onClick=(action (mut tmpRsr))}}
-									全部选择
-								{{/menu.option}}
 								{{#each model.representativeSalesReports as |rsrs|}}
 									{{#menu.option value=rsrs
 												onClick=(action (mut tmpRsr))}}
@@ -102,10 +98,6 @@
 								{{bp-icon icon='down'}}
 							{{/dd.button}}
 							{{#dd.menu as |menu|}}
-								{{#menu.option value=totalRepresentatives
-									onClick=(action (mut tmpRsr))}}
-									全部选择
-								{{/menu.option}}
 								{{#each model.representativeSalesReports as |rsrs|}}
 									{{#menu.option value=rsrs
 										onClick=(action (mut tmpRsr))}}
@@ -139,7 +131,7 @@
 							{{/menu.option}}
 							{{#each model.representativeSalesReports as |rsrs|}}
 								{{#menu.option value=rsrs
-									onClick=(action (mut tmpRsr.proId))}}
+									onClick=(action (mut tmpRsr))}}
 									{{rsrs.productName}}
 								{{/menu.option}}
 							{{/each}}
