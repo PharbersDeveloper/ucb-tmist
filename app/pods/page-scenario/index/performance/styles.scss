@@ -56,6 +56,12 @@ h2.title {
 			}
 		}
 		.table-container {
+			th:first-child, td:first-child{
+				position:sticky;
+				left:0px;
+				background-color: #fff;
+			}
+
 			thead {
 				background-color: #fff;
 				

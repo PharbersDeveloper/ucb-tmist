@@ -71,10 +71,6 @@
 								{{bp-icon icon='down'}}
 							{{/dd.button}}
 							{{#dd.menu as |menu|}}
-								{{#menu.option value=totalRepresentatives
-									onClick=(action (mut tmpRsr))}}
-									全部选择
-								{{/menu.option}}
 								{{#each model.representativeSalesReports as |rsrs|}}
 									{{#menu.option value=rsrs
 												onClick=(action (mut tmpRsr))}}
@@ -89,7 +85,7 @@
 							local-class="choose-area" 
 							classNames="px-4"}}
 						<span local-class="keys" class="mr-4">
-							选择医院
+							选择代表
 						</span>
 						{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
@@ -102,10 +98,6 @@
 								{{bp-icon icon='down'}}
 							{{/dd.button}}
 							{{#dd.menu as |menu|}}
-								{{#menu.option value=totalRepresentatives
-									onClick=(action (mut tmpRsr))}}
-									全部选择
-								{{/menu.option}}
 								{{#each model.representativeSalesReports as |rsrs|}}
 									{{#menu.option value=rsrs
 										onClick=(action (mut tmpRsr))}}
@@ -125,8 +117,8 @@
 					{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
 						{{#dd.button}}
-							{{#if tmpRsr.id}}
-								<p>{{tmpRsr.representativeName}}</p>
+							{{#if tmpRsr.proId}}
+								<p>{{tmpRsr.productName}}</p>
 							{{else}}
 								全部选择
 							{{/if}}
@@ -134,13 +126,13 @@
 						{{/dd.button}}
 						{{#dd.menu as |menu|}}
 							{{#menu.option value=totalRepresentatives
-								onClick=(action (mut tmpRsr))}}
+								onClick=(action (mut tmpRsr.proId))}}
 								全部选择
 							{{/menu.option}}
 							{{#each model.representativeSalesReports as |rsrs|}}
 								{{#menu.option value=rsrs
 									onClick=(action (mut tmpRsr))}}
-									{{rsrs.representativeName}}
+									{{rsrs.productName}}
 								{{/menu.option}}
 							{{/each}}
 						{{/dd.menu}}
@@ -196,10 +188,12 @@
 				<div class="table-responsive" local-class='table-content'>
 					<table local-class="table-container" class="table">
 						<thead>
-							<th>药品名称 </th>
-							{{#each model.tableHead as |tcontent|}}
-								<th class="text-center">{{tcontent}}</th>
-							{{/each}}
+							<tr>
+								<th>药品名称 </th>
+								{{#each model.tableHead as |tcontent|}}
+									<th class="text-center">{{tcontent}}</th>
+								{{/each}}
+							</tr>
 						</thead>
 						<tbody class="bg-white">
 							{{#each model.prodTableBody as |trContent|}}

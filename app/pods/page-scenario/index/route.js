@@ -23,6 +23,8 @@ export default Route.extend({
 
 		let seasons = A([]),
 			tmpData = A([]),
+			tmpRepData = A([]),
+			tmpHospData = A([]),
 			tmpHead = A([]),
 			lineColorTm = A(['#57D9A3', '#79E2F2', '#FFE380', '#8777D9 ']);
 
@@ -35,17 +37,30 @@ export default Route.extend({
 					}),
 					seasonsPrimary = increaseSalesReports.map(ele => {
 						return ele.get('scenario');
+					}),
+					repPromiseArray = increaseSalesReports.map(ele => {
+						return ele.get('representativeSalesReports');
+					}),
+					hospPromiseArray = increaseSalesReports.map(ele => {
+						return ele.get('hospitalSalesReports');
 					});
+
 
 				return hash({
 					productSalesReports: RSVP.Promise.all(promiseArray),
-					seasons: RSVP.Promise.all(seasonsPrimary)
+					seasons: RSVP.Promise.all(seasonsPrimary),
+					representativeSalesReports: RSVP.Promise.all(repPromiseArray),
+					hospitalSalesReports: RSVP.Promise.all(hospPromiseArray)
 				});
 
 
 			}).then(result => {
 				let promiseArray = A([]),
-					data = result.productSalesReports;
+					repPromiseArray = A([]),
+					hospPromiseArray = A([]),
+					data = result.productSalesReports,
+					repData = result.representativeSalesReports,
+					hospData = result.hospitalSalesReports;
 
 				tmpHead = result.seasons.map(ele => {
 					let name = ele.get('name') || '';
@@ -66,22 +81,65 @@ export default Route.extend({
 						productNames
 					};
 				});
-				return RSVP.Promise.all(promiseArray);
-			}).then(data => {
-				let promiseArray = data.map(ele => {
-					return ele.get('productConfig');
-				});
+				tmpRepData = repData.map((representativeSalesReports, index) => {
+					let resourceConfigIds = representativeSalesReports.map(ele => ele.get('resourceConfig'));
 
-				return RSVP.Promise.all(promiseArray);
-			}).then(data => {
-				let promiseArray = data.map(ele => {
-					return ele.get('product');
+					repPromiseArray = resourceConfigIds;
+					return {
+						resourceConfigIds
+					};
 				});
+				tmpHospData = hospData.map((hospitalSalesReports, index) => {
+					let destConfigIds = hospitalSalesReports.map(ele => ele.get('destConfig'));
 
-				return RSVP.Promise.all(promiseArray);
+					hospPromiseArray = destConfigIds;
+					return {
+						destConfigIds
+					};
+				});
+				// return RSVP.Promise.all(promiseArray);
+				return hash({
+					goodsConfigIds: RSVP.Promise.all(promiseArray),
+					resourceConfigIds: RSVP.Promise.all(repPromiseArray),
+					destConfigIds: RSVP.Promise.all(hospPromiseArray)
+				});
+			}).then(data => {
+				let promiseArray = data.goodsConfigIds.map(ele => {
+						return ele.get('productConfig');
+					}),
+					repPromiseArray = data.resourceConfigIds.map(ele => {
+						return ele.get('representativeConfig');
+					}),
+					hospPromiseArray = data.destConfigIds.map(ele => {
+						return ele.get('hospitalConfig');
+					});
+
+				// return RSVP.Promise.all(promiseArray);
+				return hash({
+					productConfig: RSVP.Promise.all(promiseArray),
+					representativeConfig: RSVP.Promise.all(repPromiseArray),
+					hospitalConfig: RSVP.Promise.all(hospPromiseArray)
+				});
+			}).then(data => {
+				let promiseArray = data.productConfig.map(ele => {
+						return ele.get('product');
+					}),
+					repPromiseArray = data.representativeConfig.map(ele => {
+						return ele.get('representative');
+					}),
+					hospPromiseArray = data.hospitalConfig.map(ele => {
+						return ele.get('hospital');
+					});
+
+				// return RSVP.Promise.all(promiseArray);
+				return hash({
+					productConfig: RSVP.Promise.all(promiseArray),
+					representativeConfig: RSVP.Promise.all(repPromiseArray),
+					hospitalConfig: RSVP.Promise.all(hospPromiseArray)
+				});
 			}).then(data => {
 				// 拼装基于产品的数据
-				let lineData = data.map((gc, index) => {
+				let lineData = data.productConfig.map((gc, index) => {
 					return {
 						name: gc.get('name'),
 						date: tmpHead,
