@@ -261,10 +261,6 @@ export default Route.extend({
 				arr.pushObject(tmpQuotaAchievement);
 				hospBarLineData = arr;
 			});
-			//拼接代表销售报告
-			// representativeSalesReports = data[0];
-
-			// repTableBody = this.generateTableBody(data, 'representativeName');
 			return null;
 			//*************************************************************************************************************//
 		}).then(() => {
@@ -300,10 +296,9 @@ export default Route.extend({
 			//销售数据表格
 			hospTableBody = this.generateTableBody(data[1], 'hospitalName');
 
-			//data[1] 过滤掉竞品的 4个时期的产品
 			return data[1];
 		}).then((data) => {
-			//产品销售趋势图 下拉框选择产品
+			//下拉框选择产品
 			representativeSalesReports = data[0].map(ele => {
 				return {
 					representativeName: ele.get('resourceConfig.representativeConfig.representative.name'),
@@ -312,7 +307,6 @@ export default Route.extend({
 					id: ele.get('resourceConfig.representativeConfig.representative.name')
 				};
 			});
-			// return rsvp.Promise.all(promiseArray);
 			return data;
 		}).then(data => {
 			let tmpSalesArr = A([]),
@@ -352,12 +346,8 @@ export default Route.extend({
 				arr.pushObject(tmpSales);
 				arr.pushObject(tmpSalesQuota);
 				arr.pushObject(tmpQuotaAchievement);
-				hospBarLineData = arr;
+				repBarLineData = arr;
 			});
-			//拼接代表销售报告
-			// representativeSalesReports = data[0];
-
-			// repTableBody = this.generateTableBody(data, 'representativeName');
 			return null;
 		})
 			//*************************************************************************************************************//
