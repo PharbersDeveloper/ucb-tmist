@@ -12,7 +12,7 @@ export default Route.extend({
 			firstDestConfig.get('id'));
 	},
 	model() {
-		let pageScenarioModel = this.modelFor('page-scenario'),
+		const pageScenarioModel = this.modelFor('page-scenario'),
 			destConfigs = pageScenarioModel.destConfigs,
 			goodsConfigs = pageScenarioModel.goodsConfigs,
 			businessInputs = pageScenarioModel.businessInputs,
@@ -25,6 +25,7 @@ export default Route.extend({
 			businessInputs: businessInputs,
 			resourceConfManager: pageScenarioModel.resourceConfManager,
 			goodsConfigs,
+			selfGoodsConfigs: pageScenarioModel.selfGoodsConfigs,
 			destConfigs,
 			resourceConfRep,
 			salesConfigs: pageScenarioModel.salesConfigs

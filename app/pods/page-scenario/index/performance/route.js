@@ -15,7 +15,7 @@ export default Route.extend({
 			reportsLength = item.get('length');
 			tmpTableBodyLast = item;
 			tmpTableBody = item.map(ele => {
-				totalData.push([ele.get('sales'), ele.get('salesQuota')]);
+				totalData.push([ele.get('salesQuota'), ele.get('sales')]);
 				return {
 					tmpName: nameKey,
 					name: ele.get('goodsConfig.productConfig.product.name'),
@@ -69,7 +69,6 @@ export default Route.extend({
 			proBarLineData = A([]),
 			hospTableBody = A([]);
 
-		// 拼接 产品销售报告数据
 		return salesReports.then(data => {
 			let promiseArray = A([]),
 				lastQName = '',
@@ -92,10 +91,10 @@ export default Route.extend({
 			tmpHead.forEach(ele => {
 				tableHead.push('销售额 \n ' + ele);
 			});
+			// 获取产品销售报告数据
 			promiseArray = this.generatePromiseArray(increaseSalesReports, 'productSalesReports');
 			return rsvp.Promise.all(promiseArray);
 		}).then(data => {
-			// data 代表两个时期
 			let tmpData = data.slice(-2),
 				dealedData = tmpData.map(ele => {
 					return ele.filterBy('goodsConfig.productConfig.productType', 0);
@@ -104,15 +103,13 @@ export default Route.extend({
 					return ele.filterBy('goodsConfig.productConfig.productType', 0);
 				});
 
-			productSalesReports = data[0];
-
 			return [dealedData, dealedTableData];
 		}).then(data => {
-			//双扇形图数据
+			//产品-双扇形图数据
 			proDoubleCircleProduct = data[0].map((ele, index) => {
 				let circleData = ele.map(item => {
 					return {
-						value: item.get('share'),
+						value: item.get('sales'),
 						name: item.get('goodsConfig.productConfig.product.name')
 					};
 				});
@@ -122,26 +119,10 @@ export default Route.extend({
 					data: circleData
 				};
 			});
-
-			//销售数据表格
+			//产品-销售数据表格
 			prodTableBody = this.generateTableBody(data[1], 'productName');
-
-			//data[1] 过滤掉竞品的 4个时期的产品
 			return data[1];
 		}).then((data) => {
-			//获取代表销售报告
-			// let promiseArray = this.generatePromiseArray(increaseSalesReports, 'representativeSalesReports');
-
-			//产品销售趋势图 下拉框选择产品
-			representativeSalesReports = data[0].map(ele => {
-				return {
-					representativeName: ele.get('goodsConfig.productConfig.product.name'),
-					id: ele.get('goodsConfig.productConfig.product.id')
-				};
-			});
-			// return rsvp.Promise.all(promiseArray);
-			return data;
-		}).then(data => {
 			let tmpSalesArr = A([]),
 				tmpSalesQuotaArr = A([]),
 				tmpQuotaAchievementArr = A([]),
@@ -149,6 +130,14 @@ export default Route.extend({
 				tmpSalesQuota = A([]),
 				tmpQuotaAchievement = A([]);
 
+			//产品-下拉框选择产品
+			representativeSalesReports = data[0].map(ele => {
+				return {
+					representativeName: ele.get('goodsConfig.productConfig.product.name'),
+					id: ele.get('goodsConfig.productConfig.product.id')
+				};
+			});
+			//产品-折线柱状图
 			data.forEach(ele => {
 				let arr = A([]);
 
@@ -181,10 +170,6 @@ export default Route.extend({
 				arr.pushObject(tmpQuotaAchievement);
 				proBarLineData = arr;
 			});
-			//拼接代表销售报告
-			// representativeSalesReports = data[0];
-
-			// repTableBody = this.generateTableBody(data, 'representativeName');
 			return null;
 			//*************************************************************************************************************//
 		}).then(() => {
@@ -288,7 +273,6 @@ export default Route.extend({
 
 			return rsvp.Promise.all(promiseArray);
 		}).then(data => {
-			// data 代表两个时期
 			let tmpData = data.slice(-2),
 				dealedData = tmpData.map(ele => {
 					return ele.filterBy('goodsConfig.productConfig.productType', 0);
@@ -297,8 +281,6 @@ export default Route.extend({
 					return ele.filterBy('goodsConfig.productConfig.productType', 0);
 				});
 
-			productSalesReports = data[0];
-
 			return [dealedData, dealedTableData];
 		}).then(data => {
 			//双扇形图数据
@@ -306,7 +288,7 @@ export default Route.extend({
 				let circleData = ele.map(item => {
 					return {
 						value: item.get('share'),
-						name: item.get('representativeConfig.representative.name')
+						name: item.get('resourceConfig.representativeConfig.representative.name')
 					};
 				});
 
@@ -324,8 +306,10 @@ export default Route.extend({
 			//产品销售趋势图 下拉框选择产品
 			representativeSalesReports = data[0].map(ele => {
 				return {
-					representativeName: ele.get('goodsConfig.productConfig.product.name'),
-					id: ele.get('goodsConfig.productConfig.product.id')
+					representativeName: ele.get('resourceConfig.representativeConfig.representative.name'),
+					productName: ele.get('goodsConfig.productConfig.product.name'),
+					proId: ele.get('goodsConfig.productConfig.product.name'),
+					id: ele.get('resourceConfig.representativeConfig.representative.name')
 				};
 			});
 			// return rsvp.Promise.all(promiseArray);

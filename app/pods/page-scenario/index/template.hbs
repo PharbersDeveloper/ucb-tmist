@@ -3,7 +3,7 @@
 		{{#bp-button-group value=groupValue type="radio" onChange=(action (mut groupValue)) as |bg|}}
 			{{#bg.button type="default" value='index' 
 				onClick=(action 'linkToRoute' 'index')}}产品竞品信息{{/bg.button}}
-			{{#bg.button type="default" value='hospital' 
+			{{#bg.button type="default" value='city-hospital' 
 				onClick=(action 'linkToRoute' 'city-hospital')}}城市医院信息{{/bg.button}}
 			{{#bg.button type="default" value="member"
 				onClick=(action 'linkToRoute' 'member')}}代表信息{{/bg.button}}
@@ -29,11 +29,14 @@
 		classNames="m-0 px-4 bg-white"}}
 					<p local-class="main" class="m-0">药品详细信息</p>
 					<p local-class="overview" class="m-0">
-						<span class="mr-4">公司产品数量：3*</span>
-						<span>竞品产品数量：3*</span>
+						<span class="mr-4">公司产品数量：{{model.selfGoodsConfigs.length}}</span>
+						<span>竞品产品数量：{{model.competeGoodsConfigs.length}}</span>
 					</p>
 				{{/bp-layout}}
-				{{#each model.goodsConfigs as |item|}}
+				{{#each model.selfGoodsConfigs as |item|}}
+					{{product-info goods=item}}
+				{{/each}}
+				{{#each model.competeGoodsConfigs as |item|}}
 					{{product-info goods=item}}
 				{{/each}}
 			</div>

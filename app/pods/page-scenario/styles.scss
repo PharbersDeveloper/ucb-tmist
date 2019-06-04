@@ -3,11 +3,48 @@
 	overflow: auto;
 	width: 100%;
 	overflow-x: hidden;
+
 	.scenario-header {
 		flex: 0 0 76px;
 	}
 
 	.tabs-container {
 		flex: 1;
+	}
+}
+
+.modal-welcome {
+	background-color: rgba(9, 30, 66, 0.54);
+
+	@media (min-width: 576px) {
+		:global(.modal-dialog) {
+			max-width: 600px;
+		}
+	}
+
+	h3.title {
+		@extend %header-medium;
+	}
+
+	h4.title {
+		@extend %header-small;
+
+		span {
+			@extend %p-small;
+		}
+	}
+
+	.content {
+		margin-left: 32px;
+		@extend %p-primary;
+	}
+
+	.keys {
+		@extend %p-secondary;
+		min-width: 42px;
+	}
+
+	.values {
+		@extend %header-small;
 	}
 }

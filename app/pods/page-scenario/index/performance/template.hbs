@@ -89,7 +89,7 @@
 							local-class="choose-area" 
 							classNames="px-4"}}
 						<span local-class="keys" class="mr-4">
-							选择医院
+							选择代表
 						</span>
 						{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
@@ -125,8 +125,8 @@
 					{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
 						{{#dd.button}}
-							{{#if tmpRsr.id}}
-								<p>{{tmpRsr.representativeName}}</p>
+							{{#if tmpRsr.proId}}
+								<p>{{tmpRsr.productName}}</p>
 							{{else}}
 								全部选择
 							{{/if}}
@@ -134,13 +134,13 @@
 						{{/dd.button}}
 						{{#dd.menu as |menu|}}
 							{{#menu.option value=totalRepresentatives
-								onClick=(action (mut tmpRsr))}}
+								onClick=(action (mut tmpRsr.proId))}}
 								全部选择
 							{{/menu.option}}
 							{{#each model.representativeSalesReports as |rsrs|}}
 								{{#menu.option value=rsrs
-									onClick=(action (mut tmpRsr))}}
-									{{rsrs.representativeName}}
+									onClick=(action (mut tmpRsr.proId))}}
+									{{rsrs.productName}}
 								{{/menu.option}}
 							{{/each}}
 						{{/dd.menu}}

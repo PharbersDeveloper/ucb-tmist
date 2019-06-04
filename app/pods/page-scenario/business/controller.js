@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { alias } from '@ember/object/computed';
 import { computed } from '@ember/object';
+import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
 
 export default Controller.extend({
@@ -60,15 +61,15 @@ export default Controller.extend({
 	}),
 	total: computed('model.businessInputs.@each.{total}', function () {
 		const store = this.get('store'),
-			resourceConfigManager = this.get('model.resourceConfManager');
+			model = this.model,
+			selfGoodsConfigs = model.selfGoodsConfigs,
+			resourceConfigManager = model.resourceConfManager;
 
 		let verifyService = this.get('verify'),
 			businessInputs = this.get('businessInputs'),
-			newBusinessInputs = businessInputs.filter(ele => ele.get('isNew')),
+			newBusinessInputs = businessInputs,
 			usedSalesTarget = 0,
 			usedBudget = 0,
-			goodsConfigs = this.get('model.goodsConfigs'),
-			selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0),
 			indicatorsData = A([]),
 			budgetData = A([]);
 
@@ -83,6 +84,11 @@ export default Controller.extend({
 				singleGoodsInputs = goodsInputs.filterBy('goodsConfig.productConfig.product.id', currentProductId),
 				target = 0,
 				budget = 0;
+			// currentManagerGoodsConfig = resourceConfigManager.get('managerConfig.managerGoodsConfigs').findBy('goodsConfig.id', goodsConfig.id);
+
+			// console.log(resourceConfigManager.get('managerConfig.managerGoodsConfigs'));
+			// console.warn(currentManagerGoodsConfig.goodsSalesTarget);
+			// console.warn(currentManagerGoodsConfig.goodsSalesBudgets);
 
 			singleGoodsInputs.forEach(gci => {
 				target += Number(gci.get('salesTarget'));
@@ -107,10 +113,17 @@ export default Controller.extend({
 			usedBudget,
 			// indicatorsData: A([{ seriesName: '', data: indicatorsData }]),
 			indicatorsData,
-			budgetData: A([{ seriesName: '', data: budgetData }]),
+			// budgetData: A([{ seriesName: '', data: budgetData }]),
+			budgetData,
 			verify: verifyService.verifyInput(businessInputs, resourceConfigManager)
 		};
 	}),
+	findModelValue(model = {}, key) {
+		if (isEmpty(model) || isEmpty(key)) {
+			return 0;
+		}
+
+	},
 	init() {
 		this._super(...arguments);
 		this.set('currentHospState', {

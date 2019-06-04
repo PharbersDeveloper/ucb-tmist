@@ -10,18 +10,18 @@
 			{{#bp-button onClick=(action "endMission")}}结束任务{{/bp-button}}
 		{{else if (bp-eq testProgress 2)}}
 			<span local-class="button-area">
-				{{#bp-button type="subtle"  classNames="mr-3"
+				{{!-- {{#bp-button type="subtle"  classNames="mr-3"
 					onClick=(action (mut rules) true)}}
 					规则介绍
-				{{/bp-button}}
+				{{/bp-button}} --}}
 				{{#bp-button onClick=(action "saveInputEndMission")}}结束任务{{/bp-button}}
 			</span>
 		{{else if (bp-eq testProgress 3)}}
 			<span local-class="button-area">
-				{{#bp-button type="subtle"  classNames="mr-3"
+				{{!-- {{#bp-button type="subtle"  classNames="mr-3"
 					onClick=(action (mut rules) true)}}
 					规则介绍
-				{{/bp-button}}
+				{{/bp-button}} --}}
 				{{#bp-button onClick=(action "resultPageEndMission")}}结束任务{{/bp-button}}
 			</span>
 		{{else}}
@@ -45,7 +45,7 @@
 <section local-class={{if showNavbar 'container' 'container-height'}}>
 	{{outlet}}
 </section>
-{{#bp-modal
+{{!-- {{#bp-modal
 		open=rules 
 		position='center'
 		onHidden=(action (mut rules) false) as |modal|}}
@@ -66,7 +66,7 @@
 			4.每一周期决策提交后将不可再修改，当期决策可在“决策回顾”中查看。
 		</p>
 	{{/modal.body}}
-{{/bp-modal}}
+{{/bp-modal}} --}}
 {{#bp-modal
 		open=exitMission 
 		position='center'
