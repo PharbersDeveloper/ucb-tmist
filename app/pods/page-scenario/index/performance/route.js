@@ -130,9 +130,9 @@ export default Route.extend({
 				tmpQuotaAchievement = A([]);
 
 			//产品-下拉框选择产品
-			representativeSalesReports = data[0].map(ele => {
+			productSalesReports = data[0].map(ele => {
 				return {
-					representativeName: ele.get('goodsConfig.productConfig.product.name'),
+					productName: ele.get('goodsConfig.productConfig.product.name'),
 					id: ele.get('goodsConfig.productConfig.product.id')
 				};
 			});
@@ -185,8 +185,6 @@ export default Route.extend({
 				dealedTableData = data.map(ele => {
 					return ele.filterBy('goodsConfig.productConfig.productType', 0);
 				});
-
-			productSalesReports = data[0];
 
 			return [dealedData, dealedTableData];
 		}).then(data => {
@@ -301,8 +299,6 @@ export default Route.extend({
 			representativeSalesReports = data[0].map(ele => {
 				return {
 					representativeName: ele.get('resourceConfig.representativeConfig.representative.name'),
-					productName: ele.get('goodsConfig.productConfig.product.name'),
-					proId: ele.get('goodsConfig.productConfig.product.name'),
 					id: ele.get('resourceConfig.representativeConfig.representative.name')
 				};
 			});
@@ -348,31 +344,29 @@ export default Route.extend({
 				repBarLineData = arr;
 			});
 			return null;
-		})
-			//*************************************************************************************************************//
-			.then(() => {
-				return rsvp.hash({
-					// 任一周期下的产品是相同的
-					productSalesReports,
-					proDoubleCircleProduct,
-					proBarLineData,
-					prodTableBody,
+		}).then(() => {
+			return rsvp.hash({
+				// 任一周期下的产品是相同的
+				productSalesReports,
+				proDoubleCircleProduct,
+				proBarLineData,
+				prodTableBody,
 
-					hospitalSalesReports,
-					hospDoubleCircleProduct,
-					hospBarLineData,
-					hospTableBody,
+				hospitalSalesReports,
+				hospDoubleCircleProduct,
+				hospBarLineData,
+				hospTableBody,
 
-					salesReports,
-					tableHead,
+				salesReports,
+				tableHead,
 
-					repTableBody,
-					representativeSalesReports,
-					repDoubleCircleProduct,
-					repBarLineData
+				repTableBody,
+				representativeSalesReports,
+				repDoubleCircleProduct,
+				repBarLineData
 
-				});
 			});
+		});
 	},
 	setupController(controller, model) {
 		this._super(controller, model);
