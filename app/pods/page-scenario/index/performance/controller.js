@@ -172,16 +172,20 @@ export default Controller.extend({
 			if (value === 0) {
 				this.set('doubleCircleData', this.get('proDoubleCircleProduct'));
 				this.set('barLineData', this.get('proBarLineData'));
-
+			} else if (value === 1) {
+				this.set('doubleCircleData', this.get('regDoubleCircleProduct'));
+				this.set('barLineData', this.get('regBarLineData'));
+			} else if (value === 2) {
+				this.set('doubleCircleData', this.get('repDoubleCircleProduct'));
+				this.set('barLineData', this.get('repBarLineData'));
 			} else if (value === 3) {
 				this.set('doubleCircleData', this.get('hospDoubleCircleProduct'));
 				this.set('barLineData', this.get('hospBarLineData'));
-
-			} else {
-				this.set('doubleCircleData', this.get('repDoubleCircleProduct'));
-				this.set('barLineData', this.get('repBarLineData'));
-
 			}
+			//  else {
+			// 	this.set('doubleCircleData', this.get('repDoubleCircleProduct'));
+			// 	this.set('barLineData', this.get('repBarLineData'));
+			// }
 		}
 	}
 });
