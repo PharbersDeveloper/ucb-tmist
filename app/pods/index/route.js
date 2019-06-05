@@ -99,6 +99,16 @@ export default Route.extend({
 				scenario,
 				destConfigs: store.query('destConfig',
 					{ 'scenario-id': scenarioId }),
+				destConfigHospitals: store.query('destConfig',
+					{
+						'scenario-id': scenarioId,
+						'dest-type': 1
+					}),
+				destConfigRegions: store.query('destConfig',
+					{
+						'scenario-id': scenarioId,
+						'dest-type': 0
+					}),
 				goodsConfigs,
 				selfProductConfigs: data.filterBy('productType', 0),
 				resourceConfigRepresentatives: store.query('resourceConfig',

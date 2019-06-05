@@ -4,6 +4,7 @@ import { computed } from '@ember/object';
 export default DS.Model.extend({
 	time: DS.attr('number'),
 	scenario: DS.belongsTo(),
+	citySalesReports: DS.hasMany('citySalesReport'),
 	hospitalSalesReports: DS.hasMany('hospitalSalesReport'),
 	productSalesReports: DS.hasMany('productSalesReport'),
 	representativeSalesReports: DS.hasMany('representativeSalesReport'),

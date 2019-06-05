@@ -1,10 +1,72 @@
 import Controller from '@ember/controller';
 import { A } from '@ember/array';
+import { computed } from '@ember/object';
+import { isEmpty } from '@ember/utils';
 
 export default Controller.extend({
 	salesGroupValue: 0,
 	circlePie: A([0, 90]),
 	pageContent: A(['产品', '地区', '代表', '医院']),
+	barLineData: computed('productChooseProduct.id', 'regionChooseCity.id', function () {
+		let { productChooseProduct, regionChooseCity, model, salesGroupValue } = this,
+			{ formatSelfProductSalesReports, formatCitySalesReports } = model;
+
+		if (salesGroupValue === 0) {
+
+			if (isEmpty(productChooseProduct)) {
+				return model.barLineDataProduct;
+			}
+			return model.barLineDataProduct.map(ele => {
+				let total = {
+					sales: A([]),
+					salesQuota: A([]),
+					quotaAchievement: A([])
+				};
+
+				formatSelfProductSalesReports.forEach(item => {
+					let currentProduct = item.productReports.findBy('goodsConfig.goodsId', productChooseProduct.goodsId);
+
+					total.sales.push(currentProduct.report.sales);
+					total.salesQuota.push(currentProduct.report.salesQuota);
+					total.quotaAchievement.push(Number(currentProduct.report.quotaAchievement.toFixed(2)));
+				});
+				return {
+					key: ele.key,
+					name: ele.name,
+					date: ele.date,
+					yAxisIndex: ele.yAxisIndex,
+					data: total[ele.key]
+				};
+			});
+		} else if (salesGroupValue === 1) {
+			if (isEmpty(regionChooseCity)) {
+				return model.barLineDataCity;
+			}
+			return model.barLineDataCity.map(ele => {
+				let total = {
+					sales: A([]),
+					salesQuota: A([]),
+					quotaAchievement: A([])
+				};
+
+				formatCitySalesReports.forEach(item => {
+					let currentItem = item.cityReports.findBy('city.id', regionChooseCity.id);
+
+					total.sales.push(currentItem.report.sales);
+					total.salesQuota.push(currentItem.report.salesQuota);
+					total.quotaAchievement.push(Number(currentItem.report.quotaAchievement.toFixed(2)));
+				});
+				return {
+					key: ele.key,
+					name: ele.name,
+					date: ele.date,
+					yAxisIndex: ele.yAxisIndex,
+					data: total[ele.key]
+				};
+			});
+		}
+
+	}),
 	init() {
 		this._super(...arguments);
 		// 初始化 全部选择 的一些数据
@@ -27,44 +89,28 @@ export default Controller.extend({
 				])
 			}
 		]));
-		this.set('barLineData', A([
-			{
-				name: '销售额',
-				date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-				data: [782.0, 874.9, 787.0, 23.2, 25.6, 4135.6, 162.2, 4160],
-				yAxisIndex: 1
-			},
-			{
-				name: '指标',
-				date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-				data: [3983, 3407, 2432, 965, 1177, 20.0, 263.4, 334.3],
-				yAxisIndex: 1
-			},
-			{
-				name: '指标达成率',
-				date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-				data: [45.0, 52.2, 20.3, 34.4, 23.0, 12.5, 22.0, 6.2],
-				yAxisIndex: 0
-			}
-		]));
+		// this.set('barLineData', A([
+		// 	{
+		// 		name: '销售额',
+		// 		date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
+		// 		data: [782.0, 874.9, 787.0, 23.2, 25.6, 4135.6, 162.2, 4160],
+		// 		yAxisIndex: 1
+		// 	},
+		// 	{
+		// 		name: '指标',
+		// 		date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
+		// 		data: [3983, 3407, 2432, 965, 1177, 20.0, 263.4, 334.3],
+		// 		yAxisIndex: 1
+		// 	},
+		// 	{
+		// 		name: '指标达成率',
+		// 		date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
+		// 		data: [45.0, 52.2, 20.3, 34.4, 23.0, 12.5, 22.0, 6.2],
+		// 		yAxisIndex: 0
+		// 	}
+		// ]));
 	},
-	// 临时mock数据
-	doubleCircleProduct: A([
-		{
-			seriesName: '2018Q1', data: A([
-				{ value: 61089, name: 'Kosovo' },
-				{ value: 38922, name: 'Cyprus' },
-				{ value: 23204, name: 'Ireland' }
-			])
-		},
-		{
-			seriesName: '2018Q2', data: A([
-				{ value: 60954, name: 'Kosovo' },
-				{ value: 48258, name: 'Cyprus' },
-				{ value: 63933, name: 'Ireland' }
-			])
-		}
-	]),
+
 	// 临时mock数据
 	doubleCircleRepresentative: A([
 		{
@@ -99,29 +145,7 @@ export default Controller.extend({
 			])
 		}
 	]),
-	barLineProduct: A([
-		{
-			name: '销售额',
-			date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-			data: [22907, 17205, 63508, 58993, 10647, 30289, 29612, 43131],
 
-			yAxisIndex: 1
-		},
-		{
-			name: '指标',
-			date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-			data: [45229, 13961, 39665, 62429, 30415, 12349, 2149, 65417],
-
-			yAxisIndex: 1
-		},
-		{
-			name: '指标达成率',
-			date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-			data: [33792, 61790, 51587, 50615, 5074, 37818, 55987, 8361],
-
-			yAxisIndex: 0
-		}
-	]),
 	barLineRepresentative: A([
 		{
 			name: '销售额',
@@ -171,16 +195,16 @@ export default Controller.extend({
 			this.set('salesGroupValue', value);
 			if (value === 0) {
 				this.set('doubleCircleData', this.model.doubleCircleProduct);
-				this.set('barLineData', this.model.trendProduct);
+				this.set('barLineData', this.model.barLineDataProduct);
 			} else if (value === 1) {
-				this.set('doubleCircleData', this.model.doubleCircleProduct);
-				this.set('barLineData', this.model.trendProduct);
+				this.set('doubleCircleData', this.model.doubleCircleCity);
+				this.set('barLineData', this.model.barLineDataCity);
 			} else if (value === 2) {
-				this.set('doubleCircleData', this.model.doubleCircleRe);
-				this.set('barLineData', this.model.trendRe);
+				this.set('doubleCircleData', this.model.doubleCircleRep);
+				this.set('barLineData', this.model.barLineDataRep);
 			} else if (value === 3) {
-				this.set('doubleCircleData', this.model.doubleCircleRe);
-				this.set('barLineData', this.model.trendRe);
+				this.set('doubleCircleData', this.model.doubleCircleHosp);
+				this.set('barLineData', this.model.barLineDataHosp);
 			}
 		}
 	}
