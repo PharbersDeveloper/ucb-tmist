@@ -58,23 +58,23 @@
 							local-class="choose-area" 
 							classNames="px-4"}}
 						<span local-class="keys" class="mr-4">
-							选择代表
+							选择城市
 						</span>
 						{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
 							{{#dd.button}}
-								{{#if tmpRsr.id}}
-									<p>{{tmpRsr.representativeName}}</p>
+								{{#if tmpCity.id}}
+									<p>{{tmpCity.name}}</p>
 								{{else}}
 									请选择
 								{{/if}}
 								{{bp-icon icon='down'}}
 							{{/dd.button}}
 							{{#dd.menu as |menu|}}
-								{{#each model.representativeSalesReports as |rsrs|}}
-									{{#menu.option value=rsrs
-												onClick=(action (mut tmpRsr))}}
-										{{rsrs.representativeName}}
+								{{#each model.cityArr as |city|}}
+									{{#menu.option value=city
+												onClick=(action (mut tmpCity))}}
+										{{city.name}}
 									{{/menu.option}}
 								{{/each}}
 							{{/dd.menu}}
