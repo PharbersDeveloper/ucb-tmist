@@ -50,7 +50,38 @@
 			{{#bp-layout main="between" 
 						local-class="choose-container"
 						classNames="bg-white"}}
-				{{#if (bp-eq salesGroupValue 2)}}
+				{{#if (bp-eq salesGroupValue 1)}}
+					{{#bp-layout main="between" cross="center"
+							local-class="choose-area" 
+							classNames="px-4"}}
+						<span local-class="keys" class="mr-4">
+							城市
+						</span>
+						{{#bp-dropdown widthSize="auto"
+								local-class="dd-medicines dd-area" as |dd|}}
+							{{#dd.button}}
+								{{#if regionChooseCity.id}}
+									<p>{{regionChooseCity.name}}</p>
+								{{else}}
+									全部选择
+								{{/if}}
+								{{bp-icon icon='down'}}
+							{{/dd.button}}
+							{{#dd.menu as |menu|}}
+								{{#menu.option value=''
+									onClick=(action (mut regionChooseCity))}}
+									全部选择
+								{{/menu.option}}
+								{{#each model.cities as |city|}}
+									{{#menu.option value=city
+												onClick=(action (mut regionChooseCity))}}
+										{{city.name}}
+									{{/menu.option}}
+								{{/each}}
+							{{/dd.menu}}
+						{{/bp-dropdown}}
+					{{/bp-layout}}
+				{{else if (bp-eq salesGroupValue 2)}}
 					{{#bp-layout main="between" cross="center"
 							local-class="choose-area" 
 							classNames="px-4"}}
@@ -112,43 +143,40 @@
 							{{/dd.menu}}
 						{{/bp-dropdown}}
 					{{/bp-layout}}
-				{{/if}}
-				{{#bp-layout main="between" cross="center"
+				{{else if (bp-eq salesGroupValue 0)}}
+					{{#bp-layout main="between" cross="center"
 							local-class="choose-area" 
 							classNames="px-4"}}
-					<span local-class="keys" class="mr-4">
-						选择产品
-					</span>
-					{{#bp-dropdown widthSize="auto"
-								local-class="dd-medicines dd-area" as |dd|}}
-						{{#dd.button}}
-							{{#if tmpRsr.id}}
-								<p>{{tmpRsr.representativeName}}</p>
-							{{else}}
-								请选择
-							{{/if}}
-							{{bp-icon icon='down'}}
-						{{/dd.button}}
-						{{#dd.menu as |menu|}}
-							{{#menu.option value=totalRepresentatives
-									onClick=(action (mut tmpRsr))}}
-								全部选择
-							{{/menu.option}}
-							{{#each model.representativeSalesReports as |rsrs|}}
-								{{#menu.option value=rsrs
-												onClick=(action (mut tmpRsr))}}
-									{{rsrs.representativeName}}
+						<span local-class="keys" class="mr-4">
+							选择产品
+						</span>
+						{{#bp-dropdown widthSize="auto" local-class="dd-medicines dd-area" as |dd|}}
+							{{#dd.button}}
+								{{#if productChooseProduct.id}}
+									<p>{{productChooseProduct.productConfig.product.name}}</p>
+								{{else}}
+									全部选择
+								{{/if}}
+								{{bp-icon icon='down'}}
+							{{/dd.button}}
+							{{#dd.menu as |menu|}}
+								{{#menu.option value=''
+									onClick=(action (mut productChooseProduct))}}
+									全部选择
 								{{/menu.option}}
-							{{/each}}
-						{{/dd.menu}}
-					{{/bp-dropdown}}
-				{{/bp-layout}}
-				{{#if (bp-eq salesGroupValue 0)}}
+								{{#each model.selfGoodsConfigs as |selfGoodsConfig|}}
+									{{#menu.option value=selfGoodsConfig
+												onClick=(action (mut productChooseProduct))}}
+										{{selfGoodsConfig.productConfig.product.name}}
+									{{/menu.option}}
+								{{/each}}
+							{{/dd.menu}}
+						{{/bp-dropdown}}
+					{{/bp-layout}}
 					<div local-class="choose-area"></div>
 				{{/if}}
 			{{/bp-layout}}
 			<div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
-				{{log barLineData}}
 				{{bp-bar-line
 					eid="chartbarLine"
 					chartData=barLineData

@@ -1,7 +1,6 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
-	productName: DS.attr('string'),	// 删除
 	sales: DS.attr('number'),	// 销售额
 	salesGrowth: DS.attr('number'), //销售增长率
 	salesQuota: DS.attr('number'),	// 销售指标

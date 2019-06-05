@@ -4,8 +4,8 @@ import { hash } from 'rsvp';
 export default Route.extend({
 	beforeModel(transition) {
 		let resourceConfig = this.modelFor('page-scenario'),
-			destConfigs = resourceConfig.destConfigs,
-			firstDestConfig = destConfigs.get('firstObject'),
+			destConfigHospitals = resourceConfig.destConfigHospitals,
+			firstDestConfig = destConfigHospitals.get('firstObject'),
 			proposalId = transition.params['page-scenario']['proposal_id'];
 
 		this.transitionTo('/scenario/' + proposalId + '/business/hospital/' +
@@ -13,7 +13,7 @@ export default Route.extend({
 	},
 	model() {
 		const pageScenarioModel = this.modelFor('page-scenario'),
-			destConfigs = pageScenarioModel.destConfigs,
+			destConfigHospitals = pageScenarioModel.destConfigHospitals,
 			goodsConfigs = pageScenarioModel.goodsConfigs,
 			businessInputs = pageScenarioModel.businessInputs,
 			resourceConfRep = pageScenarioModel.resourceConfRep;
@@ -26,7 +26,7 @@ export default Route.extend({
 			resourceConfManager: pageScenarioModel.resourceConfManager,
 			goodsConfigs,
 			selfGoodsConfigs: pageScenarioModel.selfGoodsConfigs,
-			destConfigs,
+			destConfigHospitals,
 			resourceConfRep,
 			salesConfigs: pageScenarioModel.salesConfigs
 		});

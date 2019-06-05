@@ -26,9 +26,8 @@ export default Route.extend({
 		});
 		tmpTableBody.map((ele, index) => {
 			let seasonNum = totalData.length / reportsLength,
-				tmpTableTr = tmpTableBodyLast.map((item) => {
-					return [item.get('quotaContribute'), item.get('salesGrowth'), item.get('quotaAchievement'), item.get('salesYearOnYear'), item.get('salesMonthOnMonth'), item.get('salesContribute'), item.get('ytdSales')];
-				});
+				item = tmpTableBodyLast[index],
+				tmpTableTr = [item.get('quotaContribute'), item.get('salesGrowth'), item.get('quotaAchievement'), item.get('salesYearOnYear'), item.get('salesMonthOnMonth'), item.get('salesContribute'), item.get('ytdSales')];
 
 			for (let i = 1; i <= seasonNum; i++) {
 				tmpTableTr.push(totalData[index + (i - 1) * reportsLength][0]);

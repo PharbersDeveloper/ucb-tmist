@@ -25,7 +25,7 @@ export default Controller.extend({
 	// budgetData: alias('total.budgetData'),
 	// overallFilterData: computed('currentHospState.state', 'businessInputs.@each.isFinish', function () {
 	// 	let currentHospState = this.get('currentHospState').state,
-	// 		destConfigs = this.get('model').destConfigs,
+	// 		destConfigHospitals = this.get('model').destConfigHospitals,
 	// 		businessInputs = this.get('businessInputs'),
 	// 		tmpDestConfigs = A([]);
 
@@ -33,7 +33,7 @@ export default Controller.extend({
 	// 		let tmpBis = businessInputs.filterBy('isFinish', currentHospState !== 1);
 
 	// 		tmpBis.forEach(ele => {
-	// 			destConfigs.forEach(item => {
+	// 			destConfigHospitals.forEach(item => {
 	// 				if (ele.get('destConfigId') === item.id) {
 	// 					tmpDestConfigs.push(item);
 	// 				}
@@ -41,7 +41,7 @@ export default Controller.extend({
 	// 		});
 	// 		return tmpDestConfigs;
 	// 	}
-	// 	return destConfigs;
+	// 	return destConfigHospitals;
 	// }),
 	// warning: computed('total.verify.{overTotalBusinessIndicators,overTotalBudgets,illegal}', function () {
 	// 	let { overTotalBusinessIndicators, overTotalBudgets, illegal } =
