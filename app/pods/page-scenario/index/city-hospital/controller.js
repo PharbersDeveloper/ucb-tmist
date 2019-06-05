@@ -3,9 +3,24 @@ import { A } from '@ember/array';
 
 export default Controller.extend({
 	salesGroupValue: 0,
+	init() {
+		this._super(...arguments);
+	},
 	actions: {
 		changeSalesValue(value) {
+			let city = this.model.destConfigRegion.get('regionConfig.region.cities').map(ele => {
+				let arr = A([]),
+					num = ele.get('hospitalConfigs').length;
+
+				arr.push(ele);
+				return {
+					cityData: arr,
+					hospNum: num
+				};
+			});
+
 			this.set('salesGroupValue', value);
+			this.set('city', city[value]);
 			if (value === 1) {
 				this.set('tmpCityInfo', {
 					name: '城市B',
