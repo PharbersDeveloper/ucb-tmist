@@ -7,14 +7,18 @@
 					执行结果报告
 				{{/left.item}}
 				{{#left.item}}
-					2019第1季度 关卡周期1/3*
-					{{!-- {{model.scenario.name}} --}}
+					{{model.scenario.name}}
+					{{!-- 关卡周期 {{model.scenario.phase}}/{{model.detailProposal.proposal.totalPhase}} --}}
 				{{/left.item}}
 			{{/body.left}}
 			{{#body.right}}
-				{{#bp-button type='primary' 
+				{{#bp-button classNames='mr-2'
 					onClick=(action 'checkManagerReport') }}
-					查看经理测评报告
+					导出数据
+				{{/bp-button}}
+				{{#bp-button
+					onClick=(action 'checkManagerReport') }}
+					查看测评综合表现
 				{{/bp-button}}
 			{{/body.right}}
 		{{/ph.body}}
