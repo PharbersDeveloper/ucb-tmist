@@ -21,6 +21,7 @@ export default Controller.extend({
 
 			this.set('salesGroupValue', value);
 			this.set('city', city[value]);
+
 			if (value === 1) {
 				this.set('tmpCityInfo', {
 					name: '城市B',

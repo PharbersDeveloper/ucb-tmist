@@ -38,26 +38,21 @@
 						<span>{{format-number destConfig.hospitalConfig.bedNumber}}</span>
 					{{/bp-layout}}
 					{{#bp-layout tagName="p"  classNames="mb-0"}}
-						<span class="mr-3">自费病人数量</span>
+						<span class="mr-3">自费病人比例</span>
 						<span>{{destConfig.hospitalConfig.bedNumber}}*</span>
 					{{/bp-layout}}
 				</div>
 			{{/bp-layout}}
-			{{#bp-layout direction="col" classNames="px-4 pt-2 pb-4"}}
-				<h4 local-class="title" class="mb-3">医院动态</h4>
-				<p local-class="desc" class="m-0">
-					2019年该医院将迎来百年庆典，届时会更换该医院医学研究部领导姜萌
-				</p>
-			{{/bp-layout}}
+			
 		{{/bp-layout}}
 		{{#bp-layout direction="col" local-class="medicine" classNames="px-4 py-3"}}
 			<h4 local-class="title" class="mb-3">医院药况</h4>
-			<table class="table">
+			<table class="table pb-4">
 				<thead>
 					<th>药品名</th>
 					<th>治疗领域</th>
-					<th>状态</th>
-					<th>所在领域市场潜力值</th>
+					<th>药品准入状态</th>
+					<th>患者数量</th>
 				</thead>
 				<tbody>
 					<tr>
@@ -80,6 +75,12 @@
 					</tr>
 				</tbody>
 			</table>
+			{{#bp-layout direction="col" classNames="pt-4 pb-4"}}
+				<h4 local-class="title" class="mb-3">医院动态</h4>
+				<p local-class="desc" class="m-0">
+					2019年该医院将迎来百年庆典，届时会更换该医院医学研究部领导姜萌
+				</p>
+			{{/bp-layout}}
 		{{/bp-layout}}
 	{{/bp-layout}}
 {{/bs-collapse}}
