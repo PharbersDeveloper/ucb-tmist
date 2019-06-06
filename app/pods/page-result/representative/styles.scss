@@ -1,0 +1,75 @@
+h2.title {
+	height: 54px;
+	@extend %header-medium;
+
+	&>p,
+	.choose-area {
+		flex: 1;
+	}
+}
+
+.double-circle-title {
+	h3.title {
+		flex: 1;
+		@extend %header-small;
+		height: 52px;
+	}
+}
+
+.chart {
+	height: 332px;
+}
+
+.choose-area {
+	flex: 1;
+
+	.keys {
+		flex: 0 0 56px;
+		@extend %p-primary;
+	}
+
+	.dd-area {
+		flex: 1;
+	}
+}
+
+.table-area {
+	background: #fff;
+	overflow-x: auto;
+
+	.table-content {
+		margin: 0 24px;
+		width: auto;
+	}
+}
+
+.table-container {
+	thead {
+		background-color: #fff;
+
+		th {
+			padding-left: $spacing-2;
+			border: 0;
+			@extend %p-small;
+			text-align: left !important;
+			width: fit-content;
+			min-width: 122px;
+
+			&:first-child {
+				min-width: 144px;
+			}
+		}
+	}
+
+	tbody {
+		td {
+			padding: 0;
+			padding-left: $spacing-2;
+
+			height: 52px;
+			line-height: 52px;
+			@extend %p-primary;
+			border: 0;
+		}
+	}
+}

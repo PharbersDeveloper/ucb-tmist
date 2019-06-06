@@ -1,125 +1,59 @@
-{{#bp-layout direction="col" local-class="business-container" 
-	classNames="pt-4"}}
-	{{!-- 
-	{{#bp-layout main="between" local-class="infos" classNames='mr-4'}}
-		
-		{{#bp-layout direction="col" classNames="mb-4 bg-white"}}
-			{{#bp-layout tagName="h3"  cross="center" 
-				local-class="title" classNames="px-4 m-0"}}
-				指标和资源
-			{{/bp-layout}}
-			<p>{{model.managerConfig.id}}</p>
-			{{#bp-layout classNames="p-4"}}
-				{{#bp-layout direction="col" local-class="keys" 
-					classNames="mr-3"}}
-					<p class="mb-3">总业务指标</p>
-					<p class="mb-3">总预算</p>
-					<p>总名额</p>
+{{#bp-layout direction="col" local-class="reference-container" }}
+	{{#bp-layout main="center" classNames="py-4" local-class="reference-tabs" }}
+		{{#bp-button-group value=groupValue type="radio" onChange=(action (mut groupValue)) as |bg|}}
+			{{#bg.button type="default" value='index' 
+				onClick=(action 'linkToRoute' 'index')}}产品竞品信息{{/bg.button}}
+			{{#bg.button type="default" value='city-hospital' 
+				onClick=(action 'linkToRoute' 'city-hospital')}}城市医院信息{{/bg.button}}
+			{{#bg.button type="default" value="member"
+				onClick=(action 'linkToRoute' 'member')}}代表信息{{/bg.button}}
+			{{#bg.button type="default" value="performance"
+			onClick=(action 'linkToRoute' 'performance')}}业绩表现{{/bg.button}}
+		{{/bp-button-group}}
+	{{/bp-layout}}
+	<div local-class="reference-content">
+		{{#if (bp-eq groupValue 'index')}}
+			<div local-class="products-container reference-content">
+				<div local-class="trend" class="mb-4">
+					<div local-class="trend-line" class="pt-3 pl-4">
+						{{bp-line/tm
+				eid="lineTrend"
+				title="产品份额竞争趋势"
+				subText='全国'
+				lineData=model.lineDataTm
+				lineColor=model.lineColorTm}}
+					</div>
+				</div>
+				{{#bp-layout tagName="h3" main="between" cross="center"
+		local-class="title"
+		classNames="m-0 px-4 bg-white"}}
+					<p local-class="main" class="m-0">药品详细信息</p>
+					<p local-class="overview" class="m-0">
+						<span class="mr-4">公司产品数量：{{model.selfGoodsConfigs.length}}</span>
+						<span>竞品产品数量：{{model.competeGoodsConfigs.length}}</span>
+					</p>
 				{{/bp-layout}}
-				{{#bp-layout direction="col" local-class="values"}}
-					<p class="mb-3">
-						{{format-number total.usedSalesTarget}} /
-						{{format-number model.resourceConfManager.managerConfig.totalBusinessIndicators}}
-					</p>
-					<p class="mb-3">
-						{{format-number total.usedBudget}} /
-						{{format-number model.resourceConfManager.managerConfig.totalBudgets}}
-					</p>
-					<p>
-						{{format-number total.usedMeetingPlaces}} /
-						{{format-number model.resourceConfManager.managerConfig.totalMeetingPlaces}}
-					</p>
-				{{/bp-layout}}
-			{{/bp-layout}}
-		{{/bp-layout}} --}}
-	{{!-- {{#bp-layout direction="col" local-class="over-all" classNames="bg-white"}}
-			{{#bp-layout tagName="h3" cross="center" main="between"
-				local-class="title" classNames="px-4 m-0"}}
-				<span>Overall</span>
-				{{#bp-dropdown widthSize="auto" local-class="dd-hosp" as |dd|}}
-					{{#dd.button type="link-subtle" }}
-						{{#if currentHospState.name}}
-							<p>{{currentHospState.name}}</p>
-						{{else}}
-							请选择
-						{{/if}}
-						{{bp-icon icon='down'}}
-					{{/dd.button}}
-					{{#dd.menu as |menu|}}
-						{{#each hospitalState as |hs|}}
-							{{#menu.option value=hs 
-								onClick=(action (mut currentHospState))}}
-								{{hs.name}}
-							{{/menu.option}}
-						{{/each}}
-					{{/dd.menu}}
-				{{/bp-dropdown}}
-			{{/bp-layout}}
-			{{#bp-layout direction="col" 
-				local-class="hospitals-configs" 
-				classNames="px-4"}}
-				{{#each overallFilterData as |dc|}}
-					{!-- <div local-class="hospital-config" class="pt-4">
-						<h4 local-class="title" class="mb-3">
-							{{dc.hospitalConfig.hospital.name}}
-						</h4>
-						{{#each model.businessInputs as |bi|}}
-							{{#if (bp-eq bi.destConfigId dc.id)}}
-								{{#bp-layout classNames="pb-4"}}
-									{{#bp-layout classNames="mr-4"}}
-										{{#bp-layout direction="col" 
-									local-class="keys" classNames="mr-2"}}
-											<span class="mb-1">潜力</span>
-											<span>预算</span>
-										{{/bp-layout}}
-										{{#bp-layout direction="col" local-class="values"}}
-											<span class="mb-1">￥{{format-number dc.hospitalConfig.potential}}</span>
-											<span>￥{{format-number bi.budget}}</span>
-										{{/bp-layout}}
-									{{/bp-layout}}
-									{{#bp-layout}}
-										{{#bp-layout direction="col" 
-									local-class="keys" classNames="mr-2"}}
-											<span class="mb-1">指标</span>
-											<span>会议名额(次)</span>
-										{{/bp-layout}}
-										{{#bp-layout direction="col" local-class="values"}}
-											<span class="mb-1">{{format-number bi.salesTarget}}</span>
-											<span>{{format-number bi.meetingPlaces}}</span>
-										{{/bp-layout}}
-									{{/bp-layout}}
-								{{/bp-layout}}
-								<div class="dropdown-divider"></div>
-							{{/if}}
-						{{/each}}
-					</div> --}
-					{{#link-to "page-scenario.index.hospital-config" dc.id
-						activeClass="current-hospital"}}
-						{{hospital-overall
-							hospitalName=dc.hospitalConfig.hospital.name
-							businessInputs=model.businessInputs
-							overallFilterData=dc}}
-					{{/link-to}}
+				{{#each model.selfGoodsConfigs as |item|}}
+					{{product-info goods=item}}
 				{{/each}}
-			{{/bp-layout}}
-		{{/bp-layout}} 
-	{{/bp-layout}}--}}
+				{{#each model.competeGoodsConfigs as |item|}}
+					{{product-info goods=item}}
+				{{/each}}
+			</div>
+		{{else}}
+			{{outlet}}
+		{{/if}}
+	</div>
+{{/bp-layout}}
+{{!-- {{#bp-layout direction="col" local-class="business-container" 
+	classNames="pt-4"}}
+
 	{{#bp-layout main="between" local-class="overviews" classNames='mb-4'}}
 		<div local-class="item">
 			{{#bp-layout tagName="h2" cross="center" classNames="px-4 py-3"}}
 				药品销售额指标
 			{{/bp-layout}}
 			<div class="p-4">
-				{{!-- <p local-class="info" class="mb-4">
-					{{format-number total.usedSalesTarget}} /
-					￥{{format-number model.resourceConfManager.managerConfig.totalBusinessIndicators}}
-				</p> --}}
-				{{!-- <div local-class='circle-container'>
-					{{bp-circle-double
-						eid="totalBusinessIndicators"
-						circleData=indicatorsData
-						circleSize=circleSize}}
-				</div> --}}
 				{{#each indicatorsData as |indicator|}}
 					{{#bp-layout main='between'}}
 						<span local-class='keys'>
@@ -132,14 +66,6 @@
 					{{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
 						{{p.bar value=indicator.value maxValue=indicator.total}}
 					{{/bp-progress}}
-					{{!-- {{#bp-layout tagName="p" cross="center" local-class="legend" classNames="m-0"}}
-						{{#bp-layout tagName="span" cross="center"}}
-							<span local-class="circle" class="mr-2"></span>
-							<span local-class="values">
-								{{indicator.name}}
-							</span>
-						{{/bp-layout}}
-					{{/bp-layout}} --}}
 				{{/each}}
 			</div>
 		</div>
@@ -150,7 +76,7 @@
 			<div class="p-4">
 				<p local-class="info" class="mb-4">
 					{{format-number total.usedBudget}} /
-					￥{{format-number model.resourceConfManager.managerConfig.totalBudgets}}
+					￥{{format-number model.resourceConfigManager.managerConfig.totalBudgets}}
 				</p>
 				<div local-class='circle-container'>
 					{{bp-circle-double
@@ -158,34 +84,8 @@
 						circleData=budgetData
 						circleSize=circleSize}}
 				</div>
-				{{!-- {{#bp-progress classNames="mb-4" as |p|}}
-					{{p.bar value=total.usedBudget maxValue=model.resourceConfManager.managerConfig.totalBudgets}}
-				{{/bp-progress}}
-				{{#bp-layout tagName="p" cross="center" local-class="legend" classNames="m-0"}}
-					{{#bp-layout tagName="span" cross="center"}}
-						<span local-class="circle" class="mr-2"></span>
-						<span local-class="values">
-							{{model.salesConfigs.firstObject.goodsConfig.productConfig.product.name}}
-						</span>
-					{{/bp-layout}}
-				{{/bp-layout}} --}}
 			</div>
 		</div>
-		{{!-- TODO 删除 --}}
-		{{!-- <div local-class="item">
-			{{#bp-layout tagName="h2" cross="center" classNames="px-4 py-3"}}
-				总会议名额
-			{{/bp-layout}}
-			<div class="p-4">
-				<p local-class="info" class="mb-4">
-					{{format-number total.usedMeetingPlaces}} /
-					{{format-number model.resourceConfManager.managerConfig.totalMeetingPlaces}}
-				</p>
-				{{#bp-progress as |p|}}
-					{{p.bar value=total.usedMeetingPlaces maxValue=model.resourceConfManager.managerConfig.totalMeetingPlaces}}
-				{{/bp-progress}}
-			</div>
-		</div> --}}
 	{{/bp-layout}}
 	{{#bp-layout local-class="hospitals"}}
 		{{#bp-layout direction="col" 
@@ -228,7 +128,6 @@
 		{{/bp-layout}}
 	{{/bp-layout}}
 {{/bp-layout}}
-{{!-- 总业务指标/总预算/总会议名额 超额提醒 --}}
 {{#bp-modal
 		open=warning.open 
 		position='center'
@@ -245,6 +144,5 @@
 	{{/modal.body}}
 	{{#modal.footer}}
 		{{#bp-button type="primary" onClick=(action modal.close)}}好的{{/bp-button}}
-		{{!-- {{#bp-button type="success" onClick=(action modal.submit)}}Save{{/bp-button}} --}}
 	{{/modal.footer}}
-{{/bp-modal}}
+{{/bp-modal}} --}}

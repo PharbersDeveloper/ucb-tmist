@@ -27,7 +27,10 @@
 				{{/link-to}}
 			{{/bp-layout}}
 		{{else}}
-			暂无历史成果
+			暂无历史成果。
+			{{#link-to "page-result" classNames='mb-3'}}
+				查看测试历史成果数据，正式发布会被移除
+			{{/link-to}}
 		{{/each}}
 	{{/bp-layout}}
 {{/bp-layout}}

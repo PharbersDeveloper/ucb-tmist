@@ -5,7 +5,7 @@ import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
 
 export default Controller.extend({
-	notice: localStorage.getItem('notice') !== 'false',
+	// notice: localStorage.getItem('notice') !== 'false',
 	neverShow: A(['不在显示']),
 	reports: computed('model.detailPaper', function () {
 		let paper = this.get('model.detailPaper'),
@@ -73,7 +73,7 @@ export default Controller.extend({
 	},
 	actions: {
 		startDeploy(proposalId) {
-			localStorage.setItem('notice', false);
+			// localStorage.setItem('notice', false);
 			this.entryMission(proposalId);
 			// this.transitionToRoute('page-notice', proposalId);
 		},
@@ -86,16 +86,16 @@ export default Controller.extend({
 			this.entryMission(proposalId);
 
 			// this.transitionToRoute('page-notice', proposalId);
-		},
-		closeNotice() {
-			this.set('notice', false);
-		},
-		chooseItem(item) {
-			if (item.length > 0) {
-				localStorage.setItem('notice', false);
-			} else {
-				localStorage.setItem('notice', true);
-			}
 		}
+		// closeNotice() {
+		// 	this.set('notice', false);
+		// },
+		// chooseItem(item) {
+		// 	if (item.length > 0) {
+		// 		localStorage.setItem('notice', false);
+		// 	} else {
+		// 		localStorage.setItem('notice', true);
+		// 	}
+		// }
 	}
 });

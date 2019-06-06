@@ -24,13 +24,12 @@
 	{{#bp-tabs local-class="tabs-container" as |tabs|}}
 		{{#tabs.tablist as |list|}}
 			<li class="nav-item">
-				{{#list.link-to 'page-scenario.reference' 
-					classNames='nav-link' }}
-					参考信息
-				{{/list.link-to}}
+				{{#list.link-to 'page-scenario.index' 
+					classNames='nav-link'  }}
+					参考信息{{/list.link-to}}
 			</li>
 			<li class="nav-item">
-				{{#list.link-to 'page-scenario.index' 
+				{{#list.link-to 'page-scenario.business' 
 					classNames='nav-link'  }}
 					业务决策{{/list.link-to}}
 			</li>
@@ -66,6 +65,63 @@
 			{{#bp-button type="primary" onClick=(action modal.close)}}取消{{/bp-button}}
 			{{#bp-button type="primary" onClick=(action modal.submit)}}确定提交{{/bp-button}}
 		{{/unless}}
-		{{!-- {{#bp-button type="success" onClick=(action modal.submit)}}Save{{/bp-button}} --}}
 	{{/modal.footer}}
+{{/bp-modal}}
+{{#bp-modal
+		open=notice 
+		position='center'
+		local-class='modal-welcome'
+		backdropClose=false
+		onHidden=(action (mut notice) false) as |modal|}}
+	{{#modal.header tagName='h2'}}
+		任务介绍（{{model.scenario.name}}）
+	{{/modal.header}}
+	{{#modal.body classNames="p-4"}}
+		<h3 local-class='title' class="mb-4">
+			请仔细阅读“参考信息”并通过“业务决策”完成以下任务
+		</h3>
+		{{#bp-layout cross='center' classNames='mb-3'}}
+			{{bp-icon icon="mission-1"}}
+			<h4 local-class='title' class="ml-2 mb-0">
+				完成区域划分
+				<span>(只需在首个季度完成)</span></h4>
+		{{/bp-layout}}
+		<p local-class='content' class="mb-4">
+			为所有医院分配代表，请确保每个代表都有负责的目标医院
+		</p>
+		{{#bp-layout cross='center' classNames='mb-3'}}
+			{{bp-icon icon="mission-2"}}
+			<h4 local-class='title' class="ml-2 mb-0">
+				分配业务指标
+			</h4>
+		{{/bp-layout}}
+		{{#bp-layout direction='col' local-class='content' }}
+			{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |mgc|}}
+				{{#bp-layout cross='center' classNames='mb-3'}}
+					{{bp-icon icon='pill'}}
+					<span local-class='keys' class="ml-2 mr-4">{{mgc.goodsConfig.productConfig.product.name}}</span>
+					<span local-class='values'>
+						{{mgc.goodsConfig.productConfig.priceType}}{{format-number mgc.goodsSalesTarget}}
+					</span>
+				{{/bp-layout}}
+			{{/each}}
+		{{/bp-layout}}
+		{{#bp-layout cross='center' classNames='mb-3'}}
+			{{bp-icon icon="mission-3"}}
+			<h4 local-class='title' class="ml-2 mb-0">
+				分配预算
+			</h4>
+		{{/bp-layout}}
+		{{#bp-layout direction='col' local-class='content'}}
+			{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |mgc|}}
+				{{#bp-layout cross='center' classNames='mb-3'}}
+					{{bp-icon icon='pill'}}
+					<span local-class='keys' class="ml-2 mr-4">{{mgc.goodsConfig.productConfig.product.name}}</span>
+					<span local-class='values'>
+						{{mgc.goodsConfig.productConfig.priceType}}{{format-number mgc.goodsSalesBudgets}}
+					</span>
+				{{/bp-layout}}
+			{{/each}}
+		{{/bp-layout}}
+	{{/modal.body}}
 {{/bp-modal}}

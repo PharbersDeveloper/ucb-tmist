@@ -33,7 +33,7 @@ export default Controller.extend({
 		const verifyService = this.get('verify'),
 			model = this.get('model'),
 			// resourceConfRep = model.resourceConfRep,
-			resourceConfigManager = model.resourceConfManager,
+			resourceConfigManager = model.resourceConfigManager,
 			total = verifyService.verifyInput(businessinputs, resourceConfigManager);
 
 		let { overTotalBusinessIndicators, overTotalBudgets,

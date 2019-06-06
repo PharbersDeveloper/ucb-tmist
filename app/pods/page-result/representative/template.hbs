@@ -1,0 +1,144 @@
+{{#bp-layout tagName="h2" cross="center" local-class="title"
+				 classNames="m-0 bg-white px-4"}}
+	代表销售结构分布图
+{{/bp-layout}}
+{{#bp-layout main='between' local-class='double-circle-title' classNames='bg-white'}}
+	{{#each doubleCircleData as |item|}}
+		{{#bp-layout cross='center' tagName='h3' local-class='title' classNames='m-0 px-4'}}
+			{{item.seriesName}}
+		{{/bp-layout}}
+	{{/each}}
+{{/bp-layout}}
+<div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
+	{{bp-circle-double
+		eid="circleRepresentative"
+		circleSize=circlePie
+		circleData=doubleCircleData
+		showSeriesName=false}}
+</div>
+{{#bp-layout tagName="h2" cross="center" 
+					local-class="title"
+					classNames="m-0 bg-white px-4"}}
+	代表销售趋势图
+{{/bp-layout}}
+{{#bp-layout main="between" 
+	local-class="choose-container"
+	classNames="bg-white"}}
+	{{#bp-layout main="between" cross="center"
+							local-class="choose-area" 
+							classNames="px-4"}}
+		<span local-class="keys" class="mr-4">
+			代表
+		</span>
+		{{#bp-dropdown widthSize="auto"
+			local-class="dd-area" as |dd|}}
+			{{#dd.button}}
+				{{#if repChooseRep.id}}
+					<p>{{repChooseRep.representativeConfig.representative.name}}</p>
+				{{else}}
+					代表总值
+				{{/if}}
+				{{bp-icon icon='down'}}
+			{{/dd.button}}
+			{{#dd.menu as |menu|}}
+				{{#menu.option value=''
+					onClick=(action (mut repChooseRep))}}
+					代表总值
+				{{/menu.option}}
+				{{#each model.resourceConfigRepresentatives as |resourceConfig|}}
+					{{#menu.option value=resourceConfig
+												onClick=(action (mut repChooseRep))}}
+						{{resourceConfig.representativeConfig.representative.name}}
+					{{/menu.option}}
+				{{/each}}
+			{{/dd.menu}}
+		{{/bp-dropdown}}
+	{{/bp-layout}}
+	{{#bp-layout main="between" cross="center" local-class="choose-area" classNames="px-4"}}
+		<span local-class="keys" class="mr-4">
+			产品
+		</span>
+		{{#bp-dropdown widthSize="auto"
+								local-class="dd-area" as |dd|}}
+			{{#dd.button}}
+				{{#if repChooseGoods.id}}
+					<p>{{repChooseGoods.productConfig.product.name}}</p>
+				{{else}}
+					全部总值
+				{{/if}}
+				{{bp-icon icon='down'}}
+			{{/dd.button}}
+			{{#dd.menu as |menu|}}
+				{{#menu.option value=''
+					onClick=(action (mut repChooseGoods))}}
+					全部总值
+				{{/menu.option}}
+				{{#each model.selfGoodsConfigs as |goodsConfig|}}
+					{{#menu.option value=goodsConfig
+						onClick=(action (mut repChooseGoods))}}
+						{{goodsConfig.productConfig.product.name}}
+					{{/menu.option}}
+				{{/each}}
+			{{/dd.menu}}
+		{{/bp-dropdown}}
+	{{/bp-layout}}
+{{/bp-layout}}
+<div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
+	{{bp-bar-line
+					eid="chartbarLine"
+					chartData=barLineData
+				}}
+</div>
+{{#bp-layout tagName="h2" main='between' cross="center" local-class="title"
+				 classNames="m-0 bg-white px-4"}}
+	代表销售数据表
+	{{#bp-layout main="end" cross="center"
+							local-class="choose-area" 
+							classNames="px-4"}}
+		<span local-class="keys" class="mr-4">
+			产品
+		</span>
+		{{#bp-dropdown widthSize="auto" as |dd|}}
+			{{#dd.button}}
+				{{#if repChooseProdTable.id}}
+					<p>{{repChooseProdTable.productConfig.product.name}}</p>
+				{{else}}
+					全部总值
+				{{/if}}
+				{{bp-icon icon='down'}}
+			{{/dd.button}}
+			{{#dd.menu as |menu|}}
+				{{#menu.option value=''
+									onClick=(action (mut repChooseProdTable))}}
+					全部总值
+				{{/menu.option}}
+				{{#each model.selfGoodsConfigs as |goodsConfig|}}
+					{{#menu.option value=goodsConfig
+												onClick=(action (mut repChooseProdTable))}}
+						{{goodsConfig.productConfig.product.name}}
+					{{/menu.option}}
+				{{/each}}
+			{{/dd.menu}}
+		{{/bp-dropdown}}
+	{{/bp-layout}}
+{{/bp-layout}}
+{{#bp-layout direction="col" local-class='table-area'}}
+	<div class="table-responsive" local-class='table-content'>
+		<table local-class="table-container" class="table">
+			<thead>
+				{{#each tableHead as |tcontent|}}
+					<th class="text-center">{{tcontent}}</th>
+				{{/each}}
+			</thead>
+			<tbody class="bg-white">
+				{{#each tableBody as |tableTr|}}
+					<tr>
+						{{#each tableTr as |tableTd|}}
+							<td>{{tableTd}}</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+{{/bp-layout}}

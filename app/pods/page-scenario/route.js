@@ -10,10 +10,10 @@ export default Route.extend({
 	 * 判断是否有 businessinput
 	 * @param  {model} scenario
 	 * @param  {model} paper
-	 * @param  {model} destConfigs
+	 * @param  {model} destConfigHospitals
 	 * @param  {model} selfGoodsConfigs
 	 */
-	isHaveBusinessInput(paper, destConfigs, selfGoodsConfigs, lastSeasonHospitalSalesReports = []) {
+	isHaveBusinessInput(paper, destConfigHospitals, selfGoodsConfigs, lastSeasonHospitalSalesReports = []) {
 		let state = paper.get('state'),
 			reDeploy = Number(localStorage.getItem('reDeploy')) === 1,
 			exitInEmberData = this.get('store').peekAll('businessinput');
@@ -22,27 +22,27 @@ export default Route.extend({
 		if ([1, 4].indexOf(state) >= 0 && !reDeploy || exitInEmberData.get('length') > 0) {
 			return this.get('store').peekAll('businessinput');
 		}
-		return this.generateBusinessInputs(destConfigs, selfGoodsConfigs, lastSeasonHospitalSalesReports);
+		return this.generateBusinessInputs(destConfigHospitals, selfGoodsConfigs, lastSeasonHospitalSalesReports);
 	},
 	/**
 	 * 生成 businessinputs
-	 * @param  {model} destConfigs
+	 * @param  {model} destConfigHospitals
 	 * @param  {model} selfGoodsConfigs
 	 */
-	generateBusinessInputs(destConfigs, selfGoodsConfigs, lastSeasonHospitalSalesReports) {
+	generateBusinessInputs(destConfigHospitals, selfGoodsConfigs, lastSeasonHospitalSalesReports) {
 		let promiseArray = A([]),
 			store = this.get('store');
 
-		promiseArray = destConfigs.map(ele => {
+		promiseArray = destConfigHospitals.map(ele => {
 			let goodsInputs = selfGoodsConfigs.map(item => {
 				return store.createRecord('goodsinput', {
 					destConfigId: ele.get('id'),
 					goodsConfig: item,
-					// salesTarget: '',	// 销售目标设定
-					// budget: ''	//预算设定
+					salesTarget: '',	// 销售目标设定
+					budget: ''	//预算设定
 					// TODO 测试，用后删除
-					salesTarget: 75000,	// 销售目标设定
-					budget: 42500	//预算设定
+					// salesTarget: 75000,	// 销售目标设定
+					// budget: 42500	//预算设定
 				});
 			});
 
@@ -90,7 +90,7 @@ export default Route.extend({
 			proposalId = params['proposal_id'],
 			paper = pageIndexModel.detailPaper;
 
-		let { detailProposal, destConfigs, goodsConfigs } = pageIndexModel,
+		let { detailProposal, destConfigs, destConfigHospitals, destConfigRegions, goodsConfigs } = pageIndexModel,
 			proposal = null,
 			businessInputs = null,
 			salesReports = A([]),
@@ -108,16 +108,16 @@ export default Route.extend({
 			}).then(data => {
 				lastSeasonHospitalSalesReports = data.sortBy('potential').reverse();
 
-				return destConfigs.map(ele => ele);
+				return destConfigHospitals.map(ele => ele);
 			}).then(data => {
-				let selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
+				let selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0),
+					competeGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 1);
 
 				if (scenario.get('phase') > 1) {
 					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs, lastSeasonHospitalSalesReports);
 				} else {
 					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs);
 				}
-
 				return hash({
 					proposal,
 					businessInputs,
@@ -125,9 +125,13 @@ export default Route.extend({
 					scenario,
 					paperState: paper.get('state'),
 					resourceConfRep: pageIndexModel.resourceConfigRepresentatives,
-					resourceConfManager: pageIndexModel.resourceConfigManager,
+					resourceConfigManager: pageIndexModel.resourceConfigManager,
 					goodsConfigs,
+					selfGoodsConfigs,
+					competeGoodsConfigs,
 					destConfigs,
+					destConfigHospitals,
+					destConfigRegions,
 					salesReports,
 					lastSeasonHospitalSalesReports,
 					resourceConfig: store.query('resourceConfig',
@@ -150,11 +154,13 @@ export default Route.extend({
 			scenario: model.scenario,
 			paper: model.paper
 		});
-		// applicationController.set('proposal', model.proposal);
-
 	},
 	setupController(controller, model) {
 		this._super(...arguments);
 		controller.set('businessInputs', model.businessInputs);
+
+		if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
+			controller.set('notice', true);
+		}
 	}
 });
