@@ -28,7 +28,7 @@ RUN git checkout -b frank origin/frank && \
 	npm install && \
 	npm link
 
-WORKDIR /app/new-tmist
+WORKDIR /app/ucb-tmist
 
 RUN rm -rf node_modules && \
 	rm package-lock.json && \
