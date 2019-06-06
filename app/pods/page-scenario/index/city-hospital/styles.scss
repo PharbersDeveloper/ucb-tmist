@@ -49,7 +49,7 @@
 		.city-infos {
 			flex: 1;
 
-			h3.title {
+			.title {
 				height: 52px;
 
 				.main {
@@ -60,7 +60,18 @@
 					@extend %p-small;
 				}
 			}
-
+			.sub-key {
+				@extend %p-secondary;
+			}
+			.sub-value {
+				@extend %p-primary;
+			}
+			.sub-value-num {
+				@extend %header-large;
+			}
+			.sub-num {
+				@extend %p-small;
+			}
 			.keys {
 				@extend %p-primary;
 			}

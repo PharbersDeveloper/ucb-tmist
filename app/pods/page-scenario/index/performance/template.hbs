@@ -63,17 +63,21 @@
 						{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
 							{{#dd.button}}
-								{{#if tmpCity.id}}
-									<p>{{tmpCity.name}}</p>
+								{{#if tmpReg.id}}
+									<p>{{tmpReg.name}}</p>
 								{{else}}
 									请选择
 								{{/if}}
 								{{bp-icon icon='down'}}
 							{{/dd.button}}
 							{{#dd.menu as |menu|}}
+								{{#menu.option value=totalRegion
+									onClick=(action (mut tmpReg))}}
+									全部选择
+								{{/menu.option}}
 								{{#each model.cityArr as |city|}}
 									{{#menu.option value=city
-												onClick=(action (mut tmpCity))}}
+												onClick=(action (mut tmpReg))}}
 										{{city.name}}
 									{{/menu.option}}
 								{{/each}}
@@ -90,17 +94,21 @@
 						{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
 							{{#dd.button}}
-								{{#if tmpRsr.id}}
-									<p>{{tmpRsr.representativeName}}</p>
+								{{#if tmpRep.id}}
+									<p>{{tmpRep.representativeName}}</p>
 								{{else}}
 									请选择
 								{{/if}}
 								{{bp-icon icon='down'}}
 							{{/dd.button}}
 							{{#dd.menu as |menu|}}
+								{{#menu.option value=totalRegion
+									onClick=(action (mut tmpRep))}}
+									全部选择
+								{{/menu.option}}
 								{{#each model.representativeSalesReports as |rsrs|}}
 									{{#menu.option value=rsrs
-										onClick=(action (mut tmpRsr))}}
+										onClick=(action (mut tmpRep))}}
 										{{rsrs.representativeName}}
 									{{/menu.option}}
 								{{/each}}
@@ -125,8 +133,8 @@
 							{{bp-icon icon='down'}}
 						{{/dd.button}}
 						{{#dd.menu as |menu|}}
-							{{#menu.option value=totalRepresentatives
-								}}
+							{{#menu.option value=totalProduct
+								onClick=(action (mut tmpRsr))}}
 								全部选择
 							{{/menu.option}}
 							{{#each model.productSalesReports as |rsrs|}}
@@ -394,3 +402,4 @@
 		{{/if}} --}}
 	{{/bp-layout}}
 {{/bp-layout}}
+{{log handleProdChange}}

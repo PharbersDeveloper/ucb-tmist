@@ -6,6 +6,6 @@ export default DS.Model.extend({
 	name: DS.attr('string'),
 	nonlocalPatientRatio: DS.attr('number'),	// 外地患者占比
 	type: DS.attr('string'),
-	hospitalConfigs: DS.hasMany(),
+	hospitalConfigs: DS.hasMany('hospitalConfigs'),
 	images: DS.hasMany()
 });
