@@ -17,9 +17,9 @@ RUN npm update && \
 
 WORKDIR /app
 
-LABEL ntm.version=0.1.9
+LABEL ucbtmist.version=0.0.1
 
-RUN git clone https://github.com/PharbersDeveloper/new-tmist.git && \
+RUN git clone https://github.com/PharbersDeveloper/ucb-tmist.git && \
 	git clone https://github.com/PharbersDeveloper/BP-Components.git 
 	
 WORKDIR /app/BP-Components
@@ -38,6 +38,6 @@ RUN rm -rf node_modules && \
 
 RUN ember b --environment production
 
-EXPOSE 8081
+EXPOSE 8082
 
 ENTRYPOINT ["ember", "s", "--live-reload=false"]
