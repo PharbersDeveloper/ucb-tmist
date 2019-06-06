@@ -1,6 +1,7 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
+	drugEntranceInfo: DS.attr('string'),
 	hospitalName: DS.attr('string'),
 	productName: DS.attr('string'),
 	potential: DS.attr('number'),	//	潜力
@@ -14,6 +15,8 @@ export default DS.Model.extend({
 	salesYearOnYear: DS.attr('number'),		// 销售额同比增长
 	share: DS.attr('number'),	// 份额
 	ytdSales: DS.attr('number'),	// YTD 销售额
+	patientCount: DS.attr('number'),	// 患者人数
+	summary: DS.attr(),
 	destConfig: DS.belongsTo(),
 	goodsConfig: DS.belongsTo(),
 	resourceConfig: DS.belongsTo()

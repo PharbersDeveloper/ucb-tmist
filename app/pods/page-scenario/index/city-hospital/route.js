@@ -30,12 +30,7 @@ export default Route.extend({
 
 		return hash({
 			destConfigRegion: destConfigRegions.firstObject,
-			tmpcity: tmpcity,
-			citiesHospital: A([
-				{ name: 'A市', third: 45, second: 61290, first: 47678 },
-				{ name: 'B市', third: 45, second: 61290, first: 47678 },
-				{ name: 'C市', third: 45, second: 61290, first: 47678 }
-			])
+			tmpcity: tmpcity
 		});
 	},
 	setupController(controller, model) {

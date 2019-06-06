@@ -8,7 +8,7 @@ h2.title {
 	}
 }
 
-.double-cirle-title {
+.double-circle-title {
 	h3.title {
 		flex: 1;
 		@extend %header-small;
@@ -21,8 +21,15 @@ h2.title {
 }
 
 .choose-area {
+	flex: 1;
+
 	.keys {
+		flex: 0 0 56px;
 		@extend %p-primary;
+	}
+
+	.dd-area {
+		flex: 1;
 	}
 }
 

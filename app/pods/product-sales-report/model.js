@@ -13,5 +13,6 @@ export default DS.Model.extend({
 	salesMonthOnMonth: DS.attr('number'),// 销售额环比增长
 	salesYearOnYear: DS.attr('number'),		// 销售额同比增长
 	ytdSales: DS.attr('number'),	// YTD 销售额
+	patientCount: DS.attr('number'),	// 患者人数
 	goodsConfig: DS.belongsTo()
 });
