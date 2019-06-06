@@ -15,5 +15,6 @@ export default DS.Model.extend({
 	share: DS.attr('number'),	// 份额
 	ytdSales: DS.attr('number'),	// YTD 销售额
 	destConfig: DS.belongsTo(),
-	goodsConfig: DS.belongsTo()
+	goodsConfig: DS.belongsTo(),
+	resourceConfig: DS.belongsTo()
 });

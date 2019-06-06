@@ -19,7 +19,10 @@ Router.map(function () {
     this.route('page-login', { path: 'login' });
     this.route('oauth-callback');
     this.route('page-result', { path: 'result' }, function () {
-        this.route('review');
+      this.route('review');
+
+      this.route('index', function() {});
+      this.route('loading');
     });
     this.route('page-notice', { path: 'notice/:proposal_id' });
     this.route('page-scenario', { path: 'scenario/:proposal_id' }, function () {

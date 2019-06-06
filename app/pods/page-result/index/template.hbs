@@ -86,27 +86,57 @@
 							local-class="choose-area" 
 							classNames="px-4"}}
 						<span local-class="keys" class="mr-4">
-							选择代表
+							代表
 						</span>
 						{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
 							{{#dd.button}}
-								{{#if tmpRsr.id}}
-									<p>{{tmpRsr.representativeName}}</p>
+								{{#if repChooseRep.id}}
+									<p>{{repChooseRep.representativeConfig.representative.name}}</p>
 								{{else}}
-									请选择
+									全部选择
 								{{/if}}
 								{{bp-icon icon='down'}}
 							{{/dd.button}}
 							{{#dd.menu as |menu|}}
-								{{#menu.option value=totalRepresentatives
-									onClick=(action (mut tmpRsr))}}
+								{{#menu.option value=''
+									onClick=(action (mut repChooseRep))}}
 									全部选择
 								{{/menu.option}}
-								{{#each model.representativeSalesReports as |rsrs|}}
-									{{#menu.option value=rsrs
-												onClick=(action (mut tmpRsr))}}
-										{{rsrs.representativeName}}
+								{{#each model.resourceConfigRepresentatives as |resourceConfig|}}
+									{{#menu.option value=resourceConfig
+												onClick=(action (mut repChooseRep))}}
+										{{resourceConfig.representativeConfig.representative.name}}
+									{{/menu.option}}
+								{{/each}}
+							{{/dd.menu}}
+						{{/bp-dropdown}}
+					{{/bp-layout}}
+					{{#bp-layout main="between" cross="center"
+							local-class="choose-area" 
+							classNames="px-4"}}
+						<span local-class="keys" class="mr-4">
+							产品
+						</span>
+						{{#bp-dropdown widthSize="auto"
+								local-class="dd-medicines dd-area" as |dd|}}
+							{{#dd.button}}
+								{{#if repChooseGoods.id}}
+									<p>{{repChooseGoods.productConfig.product.name}}</p>
+								{{else}}
+									全部选择
+								{{/if}}
+								{{bp-icon icon='down'}}
+							{{/dd.button}}
+							{{#dd.menu as |menu|}}
+								{{#menu.option value=''
+									onClick=(action (mut repChooseGoods))}}
+									全部选择
+								{{/menu.option}}
+								{{#each model.selfGoodsConfigs as |goodsConfig|}}
+									{{#menu.option value=goodsConfig
+												onClick=(action (mut repChooseGoods))}}
+										{{goodsConfig.productConfig.product.name}}
 									{{/menu.option}}
 								{{/each}}
 							{{/dd.menu}}
@@ -122,22 +152,22 @@
 						{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
 							{{#dd.button}}
-								{{#if tmpRsr.id}}
-									<p>{{tmpRsr.representativeName}}</p>
+								{{#if hospChooseHosp.id}}
+									<p>{{hospChooseHosp.hospitalConfig.hospital.name}}</p>
 								{{else}}
-									请选择
+									全部选择
 								{{/if}}
 								{{bp-icon icon='down'}}
 							{{/dd.button}}
 							{{#dd.menu as |menu|}}
-								{{#menu.option value=totalRepresentatives
-									onClick=(action (mut tmpRsr))}}
+								{{#menu.option value=''
+									onClick=(action (mut hospChooseHosp))}}
 									全部选择
 								{{/menu.option}}
-								{{#each model.representativeSalesReports as |rsrs|}}
-									{{#menu.option value=rsrs
-												onClick=(action (mut tmpRsr))}}
-										{{rsrs.representativeName}}
+								{{#each model.destConfigHospitals as |dchs|}}
+									{{#menu.option value=dchs
+												onClick=(action (mut hospChooseHosp))}}
+										{{dchs.hospitalConfig.hospital.name}}
 									{{/menu.option}}
 								{{/each}}
 							{{/dd.menu}}
@@ -195,30 +225,17 @@
 				<div class="table-responsive" local-class='table-content'>
 					<table local-class="table-container" class="table">
 						<thead>
-							<th>药品名称 </th>
-							{{#each model.tableHead as |tcontent|}}
+							{{#each tableHead as |tcontent|}}
 								<th class="text-center">{{tcontent}}</th>
 							{{/each}}
 						</thead>
 						<tbody class="bg-white">
-							{{#each model.prodTableBody as |trContent|}}
-								{{#if (bp-not-eq tmpPsr.productName undefined '全部选择')}}
-									{{#if (bp-eq tmpPsr.productName trContent.name)}}
-										<tr>
-											<td>{{trContent.name}}</td>
-											{{#each trContent.tableTr as |tdContent|}}
-												<td>￥{{format-number tdContent}}</td>
-											{{/each}}
-										</tr>
-									{{/if}}
-								{{else}}
-									<tr>
-										<td>{{trContent.name}}</td>
-										{{#each trContent.tableTr as |tdContent|}}
-											<td>{{format-number tdContent}}</td>
-										{{/each}}
-									</tr>
-								{{/if}}
+							{{#each tableBody as |tableTr|}}
+								<tr>
+									{{#each tableTr as |tableTd|}}
+										<td>{{tableTd}}</td>
+									{{/each}}
+								</tr>
 							{{/each}}
 						</tbody>
 					</table>

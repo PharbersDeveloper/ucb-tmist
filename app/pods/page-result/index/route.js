@@ -1,9 +1,107 @@
 import Route from '@ember/routing/route';
+import { htmlSafe } from '@ember/template';
 import { isEmpty } from '@ember/utils';
 import { all, hash } from 'rsvp';
 import { A } from '@ember/array';
 
 export default Route.extend({
+	/**
+	 * 获取季度报告下的所有的report id
+	 * @param  {Array} reportsBySeason 通过季度划分的报告
+	 */
+	getReportIds(reportsBySeason) {
+		return reportsBySeason.map(SalesReports => {
+			return SalesReports.map(SalesReport => SalesReport.id);
+		}).reduce((total, current) => total.concat(current), []);
+	},
+	/**
+	 * 对report数据按照季度进行整理
+	 * @param  {Array} tmpHeadQ	季度name
+	 * @param  {Array} reports 季度数量*产品/城市/代表/医院的总报告
+	 * @param  {Number} number 产品/城市/代表/医院的数量
+	 */
+	formatReports(tmpHeadQ, reports, number) {
+		return tmpHeadQ.map((ele, index) => {
+			return {
+				season: ele,
+				dataReports: reports.slice(index * number, index * number + number)
+			};
+		});
+	},
+	/**
+	 * 销售结构分布图(双饼图)
+	 * @param {} formatReport
+	*/
+	salesConstruct(formatReport) {
+		return formatReport.slice(-2).map(ele => {
+			return {
+				seriesName: ele.season,
+				data: ele.dataReports.map(item => {
+					return {
+						value: item.report.sales,
+						name: item.name
+					};
+				})
+			};
+		});
+	},
+	/**
+	 * 销售趋势图(柱状/折线混合图)
+	 * @param  {Array} barLineKeys 预处理格式
+	 * @param  {Array} formatReport 整理完后的报告数据
+	 * @param  {Array} date	季度数组
+	 */
+	salesTrend(barLineKeys, formatReport, date) {
+		return barLineKeys.map((ele, index) => {
+			let total = {
+				sales: A([]),
+				salesQuota: A([]),
+				quotaAchievement: A([])
+			};
+
+			formatReport.forEach(item => {
+				let currentSales = 0,
+					Quota = 0,
+					achi = 0;
+
+				item.dataReports.forEach(sReport => {
+					currentSales += sReport.report.sales;
+					Quota += sReport.report.salesQuota;
+					achi += sReport.report.quotaAchievement;
+				});
+				total.sales.push(currentSales);
+				total.salesQuota.push(Number(Quota.toFixed(2)));
+				total.quotaAchievement.push(Number(achi.toFixed(2)));
+			});
+			return {
+				key: ele.key,
+				name: ele.name,
+				date,
+				data: total[ele.key],
+				totalData: total[ele.key],
+				yAxisIndex: index === 2 ? 0 : 1
+			};
+		});
+	},
+	/**
+	 * 生成表头
+	 * @param  {Array} tmpHeadQ 季度的Q值
+	 * @param  {Array} customHead 每个tab前自定义的展示列
+	 */
+	generateTableHead(tableHead = A([]), tmpHeadQ, customHead) {
+		let lastSeasonName = tmpHeadQ.lastObject;
+
+		customHead.forEach(ele => {
+			tableHead.push(htmlSafe(`${ele}<br>${lastSeasonName}`));
+		});
+		tmpHeadQ.forEach(ele => {
+			tableHead.push(htmlSafe(`销售指标<br>${ele}`));
+		});
+		tmpHeadQ.forEach(ele => {
+			tableHead.push(htmlSafe(`销售额<br>${ele}`));
+		});
+		return tableHead;
+	},
 	generateTableBody(seasonData, nameKey) {
 		//seasonData Q1-Q4 Q1中有n个产品
 		let totalData = A([]),
@@ -84,9 +182,18 @@ export default Route.extend({
 			citySalesReportsCities = A([]),
 			formatCitySalesReports = A([]),
 			cities = A([]),
-			// representativeSalesReports = A([]),
-			// hospitalSalesReports = A([]),
-			// tableHead = A([]),
+
+			representativeSalesReports = A([]),
+			representativeSalesReportsResourceConfigs = A([]),
+			representativeSalesReportsReps = A([]),
+			formatRepresentativeSalesReports = A([]),
+			hospitalSalesReports = A([]),
+			hospitalSalesReportsHospitals = A([]),
+			formatHospitalSalesReports = A([]),
+			tableHeadProd = A([]),
+			tableBodyProd = A([]),
+			tableHeadCity = A([]),
+			tableBodyCity = A([]),
 			// prodTableBody = A([]),
 			// repTableBody = A([]),
 			// pieSeriesNameArr = A([]),
@@ -98,7 +205,11 @@ export default Route.extend({
 			]),
 			barLineDataProduct = A([]),
 			doubleCircleCity = A([]),
-			barLineDataCity = A([]);
+			barLineDataCity = A([]),
+			doubleCircleRep = A([]),
+			barLineDataRep = A([]),
+			doubleCircleHosp = A([]),
+			barLineDataHosp = A([]);
 
 		// 获取所有的 salesReports
 		return detailPaper.get('salesReports')
@@ -108,9 +219,7 @@ export default Route.extend({
 				//	获取所有salesReport 下的产品销售报告 productSalesReport
 				return all(increaseSalesReports.map(ele => ele.get('productSalesReports')));
 			}).then(data => {
-				let productSalesReportIds = data.map(productSalesReports => {
-					return productSalesReports.map(productSalesReport => productSalesReport.id);
-				}).reduce((total, current) => total.concat(current), []);
+				let productSalesReportIds = this.getReportIds(data);
 
 				// 通过 productSalesReport 的 id，获取其关联的 goodsConfig
 				return all(productSalesReportIds.map(ele => {
@@ -139,8 +248,6 @@ export default Route.extend({
 						}
 					});
 				});
-
-				// console.log(selfProductSalesReports);
 				// 获取所有季度名称
 				return all(increaseSalesReports.map(ele => {
 					return ele.get('scenario');
@@ -158,75 +265,46 @@ export default Route.extend({
 				});
 
 				// 整理季度数据
-				formatSelfProductSalesReports = tmpHeadQ.map((ele, index) => {
-					let selfGoodsNum = selfGoodsConfigs.length;
-
-					return {
-						season: ele,
-						productReports: selfProductSalesReports.slice(index * selfGoodsNum, index * selfGoodsNum + selfGoodsNum)
-					};
-				});
+				formatSelfProductSalesReports = that.formatReports(tmpHeadQ, selfProductSalesReports, selfGoodsConfigs.length);
 				// 产品销售结构分布图
-				doubleCircleProduct = formatSelfProductSalesReports.slice(-2).map(ele => {
-					return {
-						seriesName: ele.season,
-						data: ele.productReports.map(item => {
-							return {
-								value: item.report.sales,
-								name: item.name
-							};
-						})
-					};
-				});
-				// console.log(formatSelfProductSalesReports);
+				doubleCircleProduct = that.salesConstruct(formatSelfProductSalesReports);
+				// 产品销售趋势图
+				barLineDataProduct = that.salesTrend(barLineKeys, formatSelfProductSalesReports, tmpHeadQ);
 
-				barLineDataProduct = barLineKeys.map((ele, index) => {
-					let total = {
-						sales: A([]),
-						salesQuota: A([]),
-						quotaAchievement: A([])
-					};
-
-					formatSelfProductSalesReports.forEach(item => {
-						let currentSales = 0,
-							Quota = 0,
-							achi = 0;
-
-						item.productReports.forEach(productReport => {
-							currentSales += productReport.report.sales;
-							Quota += productReport.report.salesQuota;
-							achi += productReport.report.quotaAchievement;
-						});
-						total.sales.push(currentSales);
-						total.salesQuota.push(Quota);
-						total.quotaAchievement.push(Number(achi.toFixed(2)));
-					});
-					return {
-						key: ele.key,
-						name: ele.name,
-						date: tmpHeadQ,
-						data: total[ele.key],
-						totalData: total[ele.key],
-						yAxisIndex: index === 2 ? 0 : 1
-					};
-				});
 				// seasonQ = this.seasonQ(tmpHead.lastObject);
-				// tableHead.push(htmlSafe(`销售增长率<br>${seasonQ}`));
-				// tableHead.push(htmlSafe(`指标达成率<br>${seasonQ}`));
-				// tmpHead.forEach(ele => {
-				// 	seasonQ = this.seasonQ(ele);
-				// 	tableHead.push(htmlSafe(`销售额<br>${seasonQ}`));
-				// });
-				// tmpHead.forEach(ele => {
-				// 	seasonQ = this.seasonQ(ele);
-				// 	tableHead.push(htmlSafe(`销售指标<br>${seasonQ}`));
-				// });
+				let prodCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`,
+					`YTD销售额`];
+
+				tableHeadProd.push('产品名称');
+				tableHeadProd = this.generateTableHead(tableHeadProd, tmpHeadQ, prodCustomHead);
+				tableBodyProd = selfGoodsConfigs.map(ele => {
+					let lastSeasonReports = formatSelfProductSalesReports.slice(-1).lastObject.dataReports,
+						currentGoods = lastSeasonReports.findBy('goodsConfig.productConfig.product.id', ele.get('productConfig.product.id')),
+						currentGoodsReport = currentGoods.report,
+						currentGoodsTotalSeason = formatSelfProductSalesReports.map(item => {
+							return item.dataReports.findBy('goodsConfig.productConfig.product.id', ele.get('productConfig.product.id'));
+						}),
+						result = A([]);
+
+					result = [
+						ele.get('productConfig.product.name'),
+						currentGoodsReport.quotaContribute,
+						currentGoodsReport.quotaGrowth,
+						currentGoodsReport.quotaAchievement,
+						currentGoodsReport.salesYearOnYear,
+						currentGoodsReport.salesMonthOnMonth,
+						currentGoodsReport.salesContribute,
+						currentGoodsReport.ytdSales
+
+					];
+					result.push(...currentGoodsTotalSeason.map(ele => ele.report.salesQuota));
+					result.push(...currentGoodsTotalSeason.map(ele => ele.report.sales));
+					return result;
+				});
 				//	获取所有 salesReport 下的地区销售报告 citySalesReport
 				return all(increaseSalesReports.map(ele => ele.get('citySalesReports')));
 			}).then(data => {
-				let citySalesReportIds = data.map(csrs => {
-					return csrs.map(citySalesReport => citySalesReport.id);
-				}).reduce((total, current) => total.concat(current), []);
+				let citySalesReportIds = this.getReportIds(data);
 
 				// 通过 pcitySalesReport 的 id，获取其关联的 city(cities)
 				return all(citySalesReportIds.map(ele => {
@@ -249,59 +327,107 @@ export default Route.extend({
 				return data.get('region');
 			}).then(data => {
 				cities = data.get('cities');
-
-				let cityNum = cities.length;
-
 				// 整理季度数据
-				formatCitySalesReports = tmpHeadQ.map((ele, index) => {
-					return {
-						season: ele,
-						cityReports: citySalesReportsCities.slice(index * cityNum, index * cityNum + cityNum)
-					};
-				});
-				// 产品销售结构分布图
-				doubleCircleCity = formatCitySalesReports.slice(-2).map(ele => {
-					return {
-						seriesName: ele.season,
-						data: ele.cityReports.map(item => {
-							return {
-								value: item.report.sales,
-								name: item.name
-							};
-						})
-					};
-				});
-				barLineDataCity = barLineKeys.map((ele, index) => {
-					let total = {
-						sales: A([]),
-						salesQuota: A([]),
-						quotaAchievement: A([])
-					};
+				formatCitySalesReports = that.formatReports(tmpHeadQ, citySalesReportsCities, cities.length);
+				// 城市销售结构分布图
+				doubleCircleCity = that.salesConstruct(formatCitySalesReports);
+				// 城市销售趋势图
+				barLineDataCity = that.salesTrend(barLineKeys, formatCitySalesReports, tmpHeadQ);
 
-					formatCitySalesReports.forEach(item => {
-						let currentSales = 0,
-							Quota = 0,
-							achi = 0;
+				let cityCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`,
+					`YTD销售额`];
 
-						item.cityReports.forEach(cityReport => {
-							currentSales += cityReport.report.sales;
-							Quota += cityReport.report.salesQuota;
-							achi += cityReport.report.quotaAchievement;
-						});
-						total.sales.push(currentSales);
-						total.salesQuota.push(Quota);
-						total.quotaAchievement.push(Number(achi.toFixed(2)));
-					});
+				tableHeadCity.push('城市名称', '患者数量');
+				tableHeadCity = this.generateTableHead(tableHeadCity, tmpHeadQ, cityCustomHead);
+				tableBodyCity = cities.map(ele => {
+					let lastSeasonReports = formatCitySalesReports.slice(-1).lastObject.dataReports,
+						currentCity = lastSeasonReports.findBy('city.id', ele.get('id')),
+						currentCityReport = currentCity.report,
+						currentCityTotalSeason = formatCitySalesReports.map(item => {
+							return item.dataReports.findBy('city.id', ele.get('id'));
+						}),
+						result = A([]);
+
+					result = [
+						ele.get('name'),
+						ele.get('localPatientRatio'),
+						currentCityReport.quotaContribute,
+						currentCityReport.quotaGrowth,
+						currentCityReport.quotaAchievement,
+						currentCityReport.salesYearOnYear,
+						currentCityReport.salesMonthOnMonth,
+						currentCityReport.salesContribute,
+						currentCityReport.ytdSales
+
+					];
+					result.push(...currentCityTotalSeason.map(ele => ele.report.salesQuota));
+					result.push(...currentCityTotalSeason.map(ele => ele.report.sales));
+					return result;
+				});
+				return all(increaseSalesReports.map(ele => ele.get('representativeSalesReports')));
+			}).then(data => {
+				let representativeSalesReportIds = this.getReportIds(data);
+
+				// 通过 representativeSalesReport 的 id，获取其关联的 resourceConfig
+				return all(representativeSalesReportIds.map(ele => {
+					return store.findRecord('representativeSalesReport', ele);
+				}));
+			}).then(data => {
+				representativeSalesReports = data;
+
+				return all(representativeSalesReports.map(ele => ele.get('resourceConfig')));
+			}).then(data => {
+				representativeSalesReportsResourceConfigs = data;
+				return all(data.map(ele => ele.get('representativeConfig')));
+			}).then(data => {
+				return all(data.map(ele => ele.get('representative')));
+			}).then(data => {
+				representativeSalesReportsReps = data.map((ele, index) => {
 					return {
-						key: ele.key,
 						name: ele.name,
-						date: tmpHeadQ,
-						data: total[ele.key],
-						totalData: total[ele.key],
-						yAxisIndex: index === 2 ? 0 : 1
+						representative: ele,
+						goodsConfig: representativeSalesReports[index].goodsConfig,
+						report: representativeSalesReports[index]
 					};
 				});
-				return [];
+				// 整理季度数据
+				formatRepresentativeSalesReports = that.formatReports(tmpHeadQ, representativeSalesReportsReps, resourceConfigRepresentatives.length);
+
+				doubleCircleRep = that.salesConstruct(formatRepresentativeSalesReports);
+				barLineDataRep = that.salesTrend(barLineKeys, formatRepresentativeSalesReports, tmpHeadQ);
+				return all(increaseSalesReports.map(ele => ele.get('hospitalSalesReports')));
+			}).then(data => {
+				let hospitalSalesReportIds = this.getReportIds(data);
+
+				// 通过 hospitalSalesReport 的 id，获取其关联的 city(cities)
+				return all(hospitalSalesReportIds.map(ele => {
+					return store.findRecord('hospitalSalesReport', ele);
+				}));
+			})
+			.then(data => {
+				hospitalSalesReports = data;
+				return all(data.map(ele => ele.get('destConfig')));
+			}).then(data => {
+				return all(data.map(ele => ele.get('hospitalConfig')));
+			}).then(data => {
+				return all(data.map(ele => ele.get('hospital')));
+			}).then(data => {
+				hospitalSalesReportsHospitals = data.map((ele, index) => {
+					return {
+						name: ele.name,
+						hospital: ele,
+						report: hospitalSalesReports[index],
+						goodsConfig: hospitalSalesReports[index].goodsConfig,
+						resourceConfig: hospitalSalesReports[index].resourceConfig
+					};
+				});
+				// 整理季度数据
+				formatHospitalSalesReports = that.formatReports(tmpHeadQ, hospitalSalesReportsHospitals, destConfigHospitals.length);
+				// 医院销售结构分布图
+				doubleCircleHosp = that.salesConstruct(formatHospitalSalesReports);
+				// 医院销售趋势图
+				barLineDataHosp = that.salesTrend(barLineKeys, formatHospitalSalesReports, tmpHeadQ);
+
 				// promiseArray = this.generatePromiseArray(increaseSalesReports, 'productSalesReports');
 				// return rsvp.Promise.all(promiseArray);
 				// }).then(data => {
@@ -337,7 +463,20 @@ export default Route.extend({
 					formatCitySalesReports,
 					cities,
 					doubleCircleCity,
-					barLineDataCity
+					barLineDataCity,
+					formatRepresentativeSalesReports,
+					resourceConfigRepresentatives,
+					doubleCircleRep,
+					barLineDataRep,
+					formatHospitalSalesReports,
+					destConfigHospitals,
+					doubleCircleHosp,
+					barLineDataHosp,
+					tableHeadProd,
+					tableBodyProd,
+					tableHeadCity,
+					tableBodyCity
+
 				});
 			});
 		// 	//	获取代表销售报告
@@ -621,7 +760,8 @@ export default Route.extend({
 	setupController(controller, model) {
 		this._super(controller, model);
 		this.controller.set('doubleCircleData', model.doubleCircleProduct);
-		// this.controller.set('barLineData', model.barLineDataProduct);
+		this.controller.set('tableHead', model.tableHeadProd);
+		this.controller.set('tableBody', model.tableBodyProd);
 
 	}
 });
