@@ -26,7 +26,7 @@ export default Route.extend({
 		});
 		tmpTableBody.map((ele, index) => {
 			let seasonNum = totalData.length / reportsLength,
-				item = tmpTableBodyLast[index],
+				item = tmpTableBodyLast.objectAt(index),
 				tmpTableTr = [item.get('quotaContribute'), item.get('salesGrowth'), item.get('quotaAchievement'), item.get('salesYearOnYear'), item.get('salesMonthOnMonth'), item.get('salesContribute'), item.get('ytdSales')];
 
 			for (let i = 1; i <= seasonNum; i++) {
@@ -51,9 +51,11 @@ export default Route.extend({
 	model() {
 		let store = this.get('store'),
 			salesReports = store.peekAll('paper').get('firstObject').get('salesReports'),
+			cityArr = store.findAll('city'),
 			increaseSalesReports = A([]),
 			tmpHead = A([]),
 			productSalesReports = A([]),
+			citySalesReports = A([]),
 			representativeSalesReports = A([]),
 			hospitalSalesReports = A([]),
 			repBarLineData = A([]),
@@ -66,9 +68,14 @@ export default Route.extend({
 			// pieSeriesNameArr = A([]),
 			proDoubleCircleProduct = A([]),
 			proBarLineData = A([]),
-			hospTableBody = A([]);
+			hospTableBody = A([]),
+			regDoubleCircleProduct = A([]),
+			regBarLineData = A([]),
+			regTableBody = A([]);
 
-		return salesReports.then(data => {
+		return cityArr.then(() => {
+			return salesReports;
+		}).then(data => {
 			let promiseArray = A([]),
 				lastQName = '',
 				tmpTableHead = A(['指标贡献率*', '指标增长率', '指标达成率', '销售额同比增长*', '销售额环比增长*', '销售额贡献率*', 'YTD销售额*']);
@@ -172,6 +179,92 @@ export default Route.extend({
 			return null;
 			//*************************************************************************************************************//
 		}).then(() => {
+			//	获取地区销售报告
+			let promiseArray = this.generatePromiseArray(increaseSalesReports, 'citySalesReports');
+
+			return rsvp.Promise.all(promiseArray);
+		}).then(data => {
+			// data 代表两个时期
+			// let tmpData = data.slice(-2),
+			// 	dealedData = tmpData.map(ele => {
+			// 		return ele.filterBy('goodsConfig.productConfig.productType', 0);
+			// 	}),
+			// 	dealedTableData = data.map(ele => {
+			// 		return ele.filterBy('goodsConfig.productConfig.productType', 0);
+			// 	});
+			let dealedData = data.slice(-2),
+				dealedTableData = data;
+
+			return [dealedData, dealedTableData];
+		}).then(data => {
+			//地区-双扇形图数据
+			regDoubleCircleProduct = data[0].map((ele, index) => {
+				let circleData = ele.map(item => {
+					return {
+						value: item.get('sales'),
+						name: item.get('city.name')
+					};
+				});
+
+				return {
+					seriesName: tmpHead.slice(-2)[index],
+					data: circleData
+				};
+			});
+			//地区-销售数据表格
+			regTableBody = this.generateTableBody(data[1], 'productName');
+			return data[1];
+		}).then((data) => {
+			let tmpSalesArr = A([]),
+				tmpSalesQuotaArr = A([]),
+				tmpQuotaAchievementArr = A([]),
+				tmpSales = A([]),
+				tmpSalesQuota = A([]),
+				tmpQuotaAchievement = A([]);
+
+			// //产品-下拉框选择产品
+			// productSalesReports = data[0].map(ele => {
+			// 	return {
+			// 		productName: ele.get('goodsConfig.productConfig.product.name'),
+			// 		id: ele.get('goodsConfig.productConfig.product.id')
+			// 	};
+			// });
+			//地区-折线柱状图
+			data.forEach(ele => {
+				let arr = A([]);
+
+				ele.forEach(item => {
+					tmpSalesArr.pushObject(item.get('sales'));
+					tmpSalesQuotaArr.pushObject(item.get('salesQuota'));
+					tmpQuotaAchievementArr.pushObject(item.get('quotaAchievement'));
+					tmpSales = {
+						name: '销售额',
+						date: tmpHead,
+						data: tmpSalesArr,
+						yAxisIndex: 1
+					};
+					tmpSalesQuota = {
+						name: '指标',
+						date: tmpHead,
+						data: tmpSalesQuotaArr,
+						yAxisIndex: 1
+					};
+					tmpQuotaAchievement = {
+						name: '指标达成率',
+						date: tmpHead,
+						data: tmpQuotaAchievementArr,
+						yAxisIndex: 0
+					};
+				});
+
+				arr.pushObject(tmpSales);
+				arr.pushObject(tmpSalesQuota);
+				arr.pushObject(tmpQuotaAchievement);
+				regBarLineData = arr;
+			});
+			return null;
+			//*************************************************************************************************************//
+		}).then(() => {
 			//	获取医院销售报告
 			let promiseArray = this.generatePromiseArray(increaseSalesReports, 'hospitalSalesReports');
 
@@ -192,7 +285,7 @@ export default Route.extend({
 			hospDoubleCircleProduct = data[0].map((ele, index) => {
 				let circleData = ele.map(item => {
 					return {
-						value: item.get('share'),
+						value: item.get('sales'),
 						name: item.get('goodsConfig.productConfig.product.name')
 					};
 				});
@@ -280,7 +373,7 @@ export default Route.extend({
 			repDoubleCircleProduct = data[0].map((ele, index) => {
 				let circleData = ele.map(item => {
 					return {
-						value: item.get('share'),
+						value: item.get('sales'),
 						name: item.get('resourceConfig.representativeConfig.representative.name')
 					};
 				});
@@ -352,6 +445,12 @@ export default Route.extend({
 				proBarLineData,
 				prodTableBody,
 
+				citySalesReports,
+				regDoubleCircleProduct,
+				regBarLineData,
+				regTableBody,
+				cityArr,
+
 				hospitalSalesReports,
 				hospDoubleCircleProduct,
 				hospBarLineData,
@@ -374,6 +473,8 @@ export default Route.extend({
 		this.controller.set('barLineData', model.proBarLineData);
 		this.controller.set('proDoubleCircleProduct', model.proDoubleCircleProduct);
 		this.controller.set('proBarLineData', model.proBarLineData);
+		this.controller.set('regDoubleCircleProduct', model.regDoubleCircleProduct);
+		this.controller.set('regBarLineData', model.regBarLineData);
 		this.controller.set('hospDoubleCircleProduct', model.hospDoubleCircleProduct);
 		this.controller.set('hospBarLineData', model.hospBarLineData);
 		this.controller.set('repDoubleCircleProduct', model.repDoubleCircleProduct);

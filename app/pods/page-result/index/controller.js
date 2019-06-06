@@ -1,71 +1,75 @@
 import Controller from '@ember/controller';
-import { A } from '@ember/array';
+import ENV from 'ucb-tmist/config/environment';
 import { computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
+import { A } from '@ember/array';
 
 export default Controller.extend({
 	salesGroupValue: 0,
 	circlePie: A([0, 90]),
 	pageContent: A(['产品', '地区', '代表', '医院']),
-	barLineData: computed('productChooseProduct.id', 'regionChooseCity.id', function () {
-		let { productChooseProduct, regionChooseCity, model, salesGroupValue } = this,
-			{ formatSelfProductSalesReports, formatCitySalesReports } = model;
+	findCurrentItem(dataReports, key, value) {
+		return dataReports.findBy(key, value);
+	},
+	changeTrendData(originTrendData, formatReport, findItemKey, findItemValue) {
+		const that = this;
+
+		if (isEmpty(findItemValue)) {
+			return originTrendData;
+		}
+		return originTrendData.map(ele => {
+			let total = {
+				sales: A([]),
+				salesQuota: A([]),
+				quotaAchievement: A([])
+			};
+
+			formatReport.forEach(item => {
+				let currentItem = that.findCurrentItem(item.dataReports, findItemKey, findItemValue);
+
+				total.sales.push(currentItem.report.sales);
+				total.salesQuota.push(currentItem.report.salesQuota);
+				total.quotaAchievement.push(Number(currentItem.report.quotaAchievement.toFixed(2)));
+			});
+			return {
+				key: ele.key,
+				name: ele.name,
+				date: ele.date,
+				yAxisIndex: ele.yAxisIndex,
+				data: total[ele.key]
+			};
+		});
+	},
+	barLineData: computed('salesGroupValue', 'productChooseProduct.id', 'regionChooseCity.id', 'repChooseRep', 'repChooseGoods', 'hospChooseHosp', function () {
+		if (ENV.environment === 'development') {
+			window.console.log('recomputed 销售趋势图');
+		}
+		let { productChooseProduct, regionChooseCity, repChooseRep, repChooseGoods, hospChooseHosp, model, salesGroupValue } = this,
+			{ formatSelfProductSalesReports, formatCitySalesReports, formatRepresentativeSalesReports, formatHospitalSalesReports } = model;
 
 		if (salesGroupValue === 0) {
+			let findProductItemValue = isEmpty(productChooseProduct) ? productChooseProduct : productChooseProduct.get('goodsId'),
+				findProductItemKey = 'goodsConfig.goodsId';
 
-			if (isEmpty(productChooseProduct)) {
-				return model.barLineDataProduct;
-			}
-			return model.barLineDataProduct.map(ele => {
-				let total = {
-					sales: A([]),
-					salesQuota: A([]),
-					quotaAchievement: A([])
-				};
+			return this.changeTrendData(model.barLineDataProduct, formatSelfProductSalesReports, findProductItemKey, findProductItemValue);
 
-				formatSelfProductSalesReports.forEach(item => {
-					let currentProduct = item.productReports.findBy('goodsConfig.goodsId', productChooseProduct.goodsId);
-
-					total.sales.push(currentProduct.report.sales);
-					total.salesQuota.push(currentProduct.report.salesQuota);
-					total.quotaAchievement.push(Number(currentProduct.report.quotaAchievement.toFixed(2)));
-				});
-				return {
-					key: ele.key,
-					name: ele.name,
-					date: ele.date,
-					yAxisIndex: ele.yAxisIndex,
-					data: total[ele.key]
-				};
-			});
 		} else if (salesGroupValue === 1) {
-			if (isEmpty(regionChooseCity)) {
-				return model.barLineDataCity;
-			}
-			return model.barLineDataCity.map(ele => {
-				let total = {
-					sales: A([]),
-					salesQuota: A([]),
-					quotaAchievement: A([])
-				};
+			let findCityItemValue = isEmpty(regionChooseCity) ? regionChooseCity : regionChooseCity.get('id'),
+				findCityItemKey = 'city.id';
 
-				formatCitySalesReports.forEach(item => {
-					let currentItem = item.cityReports.findBy('city.id', regionChooseCity.id);
+			return this.changeTrendData(model.barLineDataCity, formatCitySalesReports, findCityItemKey, findCityItemValue);
 
-					total.sales.push(currentItem.report.sales);
-					total.salesQuota.push(currentItem.report.salesQuota);
-					total.quotaAchievement.push(Number(currentItem.report.quotaAchievement.toFixed(2)));
-				});
-				return {
-					key: ele.key,
-					name: ele.name,
-					date: ele.date,
-					yAxisIndex: ele.yAxisIndex,
-					data: total[ele.key]
-				};
-			});
+		} else if (salesGroupValue === 2) {
+			let findRepItemValue = isEmpty(repChooseRep) ? repChooseRep : repChooseRep.get('representativeConfig.representative.id'),
+				findRepItemKey = 'representative.id';
+
+			return this.changeTrendData(model.barLineDataRep, formatRepresentativeSalesReports, findRepItemKey, findRepItemValue);
+		} else if (salesGroupValue === 3) {
+			let findRepItemValue = isEmpty(hospChooseHosp) ? hospChooseHosp : hospChooseHosp.get('hospitalConfig.hospital.id'),
+				findRepItemKey = 'hospital.id';
+
+			return this.changeTrendData(model.barLineDataRep, formatHospitalSalesReports, findRepItemKey, findRepItemValue);
 		}
-
 	}),
 	init() {
 		this._super(...arguments);
@@ -112,23 +116,6 @@ export default Controller.extend({
 	},
 
 	// 临时mock数据
-	doubleCircleRepresentative: A([
-		{
-			seriesName: '2018Q3', data: A([
-				{ value: 24792, name: 'Ophelia Lindsey' },
-				{ value: 7253, name: 'Barbara Cunningham' },
-				{ value: 15683, name: 'Steve Martin' }
-			])
-		},
-		{
-			seriesName: '2018Q4', data: A([
-				{ value: 6317, name: 'Ophelia Lindsey' },
-				{ value: 61824, name: 'Barbara Cunningham' },
-				{ value: 8424, name: 'Steve Martin' }
-			])
-		}
-	]),
-	// 临时mock数据
 	doubleCircleHospital: A([
 		{
 			seriesName: '2018Q1', data: A([
@@ -143,29 +130,6 @@ export default Controller.extend({
 				{ value: 6114, name: 'JO' },
 				{ value: 6964, name: 'FM' }
 			])
-		}
-	]),
-
-	barLineRepresentative: A([
-		{
-			name: '销售额',
-			date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-			data: [46600, 62532, 29897, 6466, 18494, 8298, 2580, 24689],
-
-			yAxisIndex: 1
-		},
-		{
-			name: '指标',
-			date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-			data: [47073, 31518, 49834, 4653, 7922, 63047, 63986, 28405],
-
-			yAxisIndex: 1
-		},
-		{
-			name: '指标达成率',
-			date: ['2018Q1', '2018Q2', '2018Q3', '2018Q4', '2019Q1', '2019Q2', '2019Q3', '2019Q4'],
-			data: [54498, 25082, 64128, 51042, 23268, 59569, 57768, 43962],
-			yAxisIndex: 0
 		}
 	]),
 
@@ -195,16 +159,24 @@ export default Controller.extend({
 			this.set('salesGroupValue', value);
 			if (value === 0) {
 				this.set('doubleCircleData', this.model.doubleCircleProduct);
-				this.set('barLineData', this.model.barLineDataProduct);
+				this.set('tableHead', this.model.tableHeadProd);
+				this.set('tableBody', this.model.tableBodyProd);
+				// this.set('barLineData', this.model.barLineDataProduct);
 			} else if (value === 1) {
 				this.set('doubleCircleData', this.model.doubleCircleCity);
-				this.set('barLineData', this.model.barLineDataCity);
+				this.set('tableHead', this.model.tableHeadCity);
+				this.set('tableBody', this.model.tableBodyCity);
+				// this.set('barLineData', this.model.barLineDataCity);
 			} else if (value === 2) {
 				this.set('doubleCircleData', this.model.doubleCircleRep);
-				this.set('barLineData', this.model.barLineDataRep);
+				this.set('tableHead', this.model.tableHeadRep);
+				this.set('tableBody', this.model.tableBodyRep);
+				// this.set('barLineData', this.model.barLineDataRep);
 			} else if (value === 3) {
 				this.set('doubleCircleData', this.model.doubleCircleHosp);
-				this.set('barLineData', this.model.barLineDataHosp);
+				this.set('tableHead', this.model.tableHeadHosp);
+				this.set('tableBody', this.model.tableBodyHosp);
+				// this.set('barLineData', this.model.barLineDataHosp);
 			}
 		}
 	}
