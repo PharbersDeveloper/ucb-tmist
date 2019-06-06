@@ -469,6 +469,12 @@ export default Route.extend({
 	},
 	setupController(controller, model) {
 		this._super(controller, model);
+		this.controller.set('totalProduct', { id: '0', productName: '全部选择' });
+		this.controller.set('tmpRsr', { id: '0', productName: '全部选择' });
+		this.controller.set('totalRegion', { id: '0', name: '全部选择' });
+		this.controller.set('totalRepresentatives', { id: '0', representativeName: '全部选择' });
+		this.controller.set('totalHospitals', { id: '0', hospitalName: '全部选择' });
+
 		this.controller.set('doubleCircleData', model.proDoubleCircleProduct);
 		this.controller.set('barLineData', model.proBarLineData);
 		this.controller.set('proDoubleCircleProduct', model.proDoubleCircleProduct);
@@ -479,5 +485,6 @@ export default Route.extend({
 		this.controller.set('hospBarLineData', model.hospBarLineData);
 		this.controller.set('repDoubleCircleProduct', model.repDoubleCircleProduct);
 		this.controller.set('repBarLineData', model.repBarLineData);
+
 	}
 });
