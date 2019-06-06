@@ -23,6 +23,9 @@ Router.map(function () {
 
       this.route('index', function() {});
       this.route('loading');
+      this.route('region');
+      this.route('hospital');
+      this.route('representative');
     });
     this.route('page-notice', { path: 'notice/:proposal_id' });
     this.route('page-scenario', { path: 'scenario/:proposal_id' }, function () {
