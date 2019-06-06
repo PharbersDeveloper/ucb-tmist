@@ -2,9 +2,6 @@
 	{{#link-to "index" local-class='back' classNames='mb-3'}}
 		返回
 	{{/link-to}}
-	{{#link-to "page-result" local-class='back' classNames='mb-3'}}
-		result
-	{{/link-to}}
 	{{#bp-layout direction='col'}}
 		{{!-- <h2>历史成果</h2> --}}
 		{{#bp-page-header local-class='header' classNames='mb-4' as |ph|}}
@@ -30,7 +27,10 @@
 				{{/link-to}}
 			{{/bp-layout}}
 		{{else}}
-			暂无历史成果
+			暂无历史成果。
+			{{#link-to "page-result" classNames='mb-3'}}
+				查看测试历史成果数据，正式发布会被移除
+			{{/link-to}}
 		{{/each}}
 	{{/bp-layout}}
 {{/bp-layout}}

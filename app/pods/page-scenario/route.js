@@ -38,11 +38,11 @@ export default Route.extend({
 				return store.createRecord('goodsinput', {
 					destConfigId: ele.get('id'),
 					goodsConfig: item,
-					// salesTarget: '',	// 销售目标设定
-					// budget: ''	//预算设定
+					salesTarget: '',	// 销售目标设定
+					budget: ''	//预算设定
 					// TODO 测试，用后删除
-					salesTarget: 75000,	// 销售目标设定
-					budget: 42500	//预算设定
+					// salesTarget: 75000,	// 销售目标设定
+					// budget: 42500	//预算设定
 				});
 			});
 
@@ -125,7 +125,7 @@ export default Route.extend({
 					scenario,
 					paperState: paper.get('state'),
 					resourceConfRep: pageIndexModel.resourceConfigRepresentatives,
-					resourceConfManager: pageIndexModel.resourceConfigManager,
+					resourceConfigManager: pageIndexModel.resourceConfigManager,
 					goodsConfigs,
 					selfGoodsConfigs,
 					competeGoodsConfigs,

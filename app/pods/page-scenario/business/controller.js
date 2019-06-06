@@ -63,7 +63,7 @@ export default Controller.extend({
 		const store = this.get('store'),
 			model = this.model,
 			selfGoodsConfigs = model.selfGoodsConfigs,
-			resourceConfigManager = model.resourceConfManager;
+			resourceConfigManager = model.resourceConfigManager;
 
 		let verifyService = this.get('verify'),
 			businessInputs = this.get('businessInputs'),

@@ -7,7 +7,7 @@ export default Route.extend({
 		let dCId = params['destConfig_id'],
 			store = this.get('store'),
 			pageScenarioModel = this.modelFor('page-scenario'),
-			managerConf = pageScenarioModel.resourceConfManager,
+			managerConf = pageScenarioModel.resourceConfigManager,
 			repConfs = pageScenarioModel.resourceConfRep,
 			salesConfigs = pageScenarioModel.salesConfigs,
 			scenario = pageScenarioModel.scenario,

@@ -70,7 +70,7 @@ export default Controller.extend({
 	// }),
 	// total: computed('model.businessInputs.@each.{total}', function () {
 	// 	const store = this.get('store'),
-	// 		resourceConfigManager = this.get('model.resourceConfManager');
+	// 		resourceConfigManager = this.get('model.resourceConfigManager');
 
 	// 	let verifyService = this.get('verify'),
 	// 		businessInputs = this.get('businessInputs'),

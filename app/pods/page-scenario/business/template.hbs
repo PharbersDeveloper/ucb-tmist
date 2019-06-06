@@ -19,15 +19,15 @@
 				{{#bp-layout direction="col" local-class="values"}}
 					<p class="mb-3">
 						{{format-number total.usedSalesTarget}} /
-						{{format-number model.resourceConfManager.managerConfig.totalBusinessIndicators}}
+						{{format-number model.resourceConfigManager.managerConfig.totalBusinessIndicators}}
 					</p>
 					<p class="mb-3">
 						{{format-number total.usedBudget}} /
-						{{format-number model.resourceConfManager.managerConfig.totalBudgets}}
+						{{format-number model.resourceConfigManager.managerConfig.totalBudgets}}
 					</p>
 					<p>
 						{{format-number total.usedMeetingPlaces}} /
-						{{format-number model.resourceConfManager.managerConfig.totalMeetingPlaces}}
+						{{format-number model.resourceConfigManager.managerConfig.totalMeetingPlaces}}
 					</p>
 				{{/bp-layout}}
 			{{/bp-layout}}
@@ -147,7 +147,7 @@
 				{{/each}}
 				{{!-- <p local-class="info" class="mb-4">
 					{{format-number total.usedBudget}} /
-					￥{{format-number model.resourceConfManager.managerConfig.totalBudgets}}
+					￥{{format-number model.resourceConfigManager.managerConfig.totalBudgets}}
 				</p>
 				<div local-class='circle-container'>
 					{{bp-circle-double
@@ -156,7 +156,7 @@
 						circleSize=circleSize}}
 				</div> --}}
 				{{!-- {{#bp-progress classNames="mb-4" as |p|}}
-					{{p.bar value=total.usedBudget maxValue=model.resourceConfManager.managerConfig.totalBudgets}}
+					{{p.bar value=total.usedBudget maxValue=model.resourceConfigManager.managerConfig.totalBudgets}}
 				{{/bp-progress}}
 				{{#bp-layout tagName="p" cross="center" local-class="legend" classNames="m-0"}}
 					{{#bp-layout tagName="span" cross="center"}}
