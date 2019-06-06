@@ -32,11 +32,11 @@
 					font-size: 0;
 
 					p span:first-child {
-						@extend %p-primary;
+						@extend %p-secondary;
 					}
 
 					p span:last-child {
-						@extend %p-secondary;
+						@extend %p-primary;
 					}
 
 					&.properties:last-child {
@@ -46,12 +46,10 @@
 					}
 				}
 			}
-
-			p.desc {
-				@extend %p-secondary;
-			}
 		}
-
+		p.desc {
+			@extend %p-secondary;
+		}
 		.medicine {
 			flex: 1;
 

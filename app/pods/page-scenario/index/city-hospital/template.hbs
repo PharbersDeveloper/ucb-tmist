@@ -58,11 +58,6 @@
 	{{#bp-layout direction="col" local-class="content"}}
 		{{#bp-layout direction="col" local-class="city-infos"}}
 			{{#bp-layout direction='col' classNames='bg-white' class='mb-4'}}
-				{{!-- {{#bp-layout tagName="h3" main="between" cross="center" 
-					local-class="title" classNames="px-4 bg-white"}}
-					<span local-class="main">{{tmpCityInfo.name}}*</span>
-					<span local-class="desc">该城市共有医院 {{tmpCityInfo.destConfigs.length}}</span>
-				{{/bp-layout}} --}}
 				{{#bp-layout direction='row' main='between' cross='center' local-class="title"}}
 					<h3 local-class='main' class="mx-4 mt-3">{{city.cityData.firstObject.name}}</h3>
 				{{/bp-layout}}
@@ -94,20 +89,6 @@
 					{{/bp-layout}}
 				{{/bp-layout}}
 			{{/bp-layout}}
-			{{!-- {{#bp-layout classNames="mb-4 p-4 bg-white"}}
-				{{#bp-layout direction="col"}}
-					<p local-class="keys">城市类型</p>
-					<p local-class="keys">城市战略定位</p>
-					<p local-class="keys">治疗领域患者占比</p>
-					<p local-class="keys">该城市下共有医院数量</p>
-				{{/bp-layout}}
-				{{#bp-layout direction="col"}}
-					<p local-class="values" class="ml-3">地级市/非地级市</p>
-					<p local-class="values" class="ml-3">核心城市/外围城市</p>
-					<p local-class="values" class="ml-3">80%</p>
-					<p local-class="values" class="ml-3">55133</p>
-				{{/bp-layout}}
-			{{/bp-layout}} --}}
 		{{/bp-layout}}
 		{{#each tmpCityInfo.destConfigs as |destConfig|}}
 			{{hospital-info
