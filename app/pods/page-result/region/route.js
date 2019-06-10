@@ -39,6 +39,7 @@ export default Route.extend({
 					return {
 						name: ele.name,
 						city: ele,
+						goodsConfig: citySalesReports[index].goodsConfig,
 						report: citySalesReports[index]
 					};
 				});
@@ -80,8 +81,8 @@ export default Route.extend({
 						currentCityReport.ytdSales
 
 					];
-					result.push(...currentCityTotalSeason.map(ele => ele.report.salesQuota));
-					result.push(...currentCityTotalSeason.map(ele => ele.report.sales));
+					result.push(...currentCityTotalSeason.map(item => item.report.salesQuota));
+					result.push(...currentCityTotalSeason.map(item => item.report.sales));
 					return result;
 				});
 				return hash({

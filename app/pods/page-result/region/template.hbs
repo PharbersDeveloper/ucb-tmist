@@ -1,5 +1,4 @@
-{{#bp-layout tagName="h2" cross="center" local-class="title"
-				 classNames="m-0 bg-white px-4"}}
+{{#bp-layout tagName="h2" cross="center" local-class="title" classNames="m-0 bg-white px-4"}}
 	地区销售结构分布图
 {{/bp-layout}}
 {{#bp-layout main='between' local-class='double-circle-title' classNames='bg-white'}}
@@ -13,22 +12,14 @@
 	{{bp-circle-double eid="circleProd" circleSize=circlePie
 		circleData=doubleCircleData showSeriesName=false}}
 </div>
-{{#bp-layout tagName="h2" cross="center" 
-					local-class="title"
-					classNames="m-0 bg-white px-4"}}
+{{#bp-layout tagName="h2" cross="center" local-class="title"
+	classNames="m-0 bg-white px-4"}}
 	地区销售趋势图
 {{/bp-layout}}
-{{#bp-layout main="between" 
-						local-class="choose-container"
-						classNames="bg-white"}}
-	{{#bp-layout main="between" cross="center"
-							local-class="choose-area" 
-							classNames="px-4"}}
-		<span local-class="keys" class="mr-4">
-			城市
-		</span>
-		{{#bp-dropdown widthSize="auto"
-								local-class="dd-medicines dd-area" as |dd|}}
+{{#bp-layout main="between" local-class="choose-container" classNames="bg-white"}}
+	{{#bp-layout main="between" cross="center" local-class="choose-area" classNames="px-4"}}
+		<span local-class="keys" class="mr-4">城市</span>
+		{{#bp-dropdown widthSize="auto" local-class="dd-area" as |dd|}}
 			{{#dd.button}}
 				{{#if regionChooseCity.id}}
 					<p>{{regionChooseCity.name}}</p>
@@ -39,42 +30,39 @@
 			{{/dd.button}}
 			{{#dd.menu as |menu|}}
 				{{#menu.option value=''
-									onClick=(action (mut regionChooseCity))}}
+					onClick=(action (mut regionChooseCity))}}
 					地区总值
 				{{/menu.option}}
 				{{#each model.cities as |city|}}
 					{{#menu.option value=city
-												onClick=(action (mut regionChooseCity))}}
+						onClick=(action (mut regionChooseCity))}}
 						{{city.name}}
 					{{/menu.option}}
 				{{/each}}
 			{{/dd.menu}}
 		{{/bp-dropdown}}
 	{{/bp-layout}}
-	{{#bp-layout main="between" cross="center"
-							local-class="choose-area" 
-							classNames="px-4"}}
+	{{#bp-layout main="between" cross="center" local-class="choose-area" 
+		classNames="px-4"}}
 		<span local-class="keys" class="mr-4">
 			产品
 		</span>
-		{{#bp-dropdown widthSize="auto"
-								local-class="dd-medicines dd-area" as |dd|}}
+		{{#bp-dropdown widthSize="auto" local-class="dd-area" as |dd|}}
 			{{#dd.button}}
-				{{#if regionChooseProd.id}}
-					<p>{{regionChooseProd.productConfig.product.name}}</p>
+				{{#if chooseProd.id}}
+					<p>{{chooseProd.productConfig.product.name}}</p>
 				{{else}}
 					全部总值
 				{{/if}}
 				{{bp-icon icon='down'}}
 			{{/dd.button}}
 			{{#dd.menu as |menu|}}
-				{{#menu.option value=''
-									onClick=(action (mut regionChooseProd))}}
+				{{#menu.option value='' onClick=(action (mut chooseProd))}}
 					全部总值
 				{{/menu.option}}
 				{{#each model.selfGoodsConfigs as |goodsConfig|}}
 					{{#menu.option value=goodsConfig
-												onClick=(action (mut regionChooseProd))}}
+						onClick=(action (mut chooseProd))}}
 						{{goodsConfig.productConfig.product.name}}
 					{{/menu.option}}
 				{{/each}}
@@ -83,20 +71,16 @@
 	{{/bp-layout}}
 {{/bp-layout}}
 <div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
-	{{bp-bar-line
-					eid="chartbarLine"
-					chartData=barLineData
-				}}
+	{{bp-bar-line eid="chartbarLine"
+		chartData=barLineData}}
 </div>
 {{#bp-layout tagName="h2" main='between' cross="center" local-class="title"
-				 classNames="m-0 bg-white px-4"}}
+	classNames="m-0 bg-white px-4"}}
 	地区销售数据表
 	{{#bp-layout main="end" cross="center"
-							local-class="choose-area" 
-							classNames="px-4"}}
-		<span local-class="keys" class="mr-4">
-			产品
-		</span>
+		local-class="choose-area" 
+		classNames="px-4"}}
+		<span local-class="keys" class="mr-4">产品</span>
 		{{#bp-dropdown widthSize="auto" as |dd|}}
 			{{#dd.button}}
 				{{#if regionChooseProdTable.id}}
@@ -108,12 +92,12 @@
 			{{/dd.button}}
 			{{#dd.menu as |menu|}}
 				{{#menu.option value=''
-									onClick=(action (mut regionChooseProdTable))}}
+					onClick=(action (mut regionChooseProdTable))}}
 					全部总值
 				{{/menu.option}}
 				{{#each model.selfGoodsConfigs as |goodsConfig|}}
 					{{#menu.option value=goodsConfig
-												onClick=(action (mut regionChooseProdTable))}}
+						onClick=(action (mut regionChooseProdTable))}}
 						{{goodsConfig.productConfig.product.name}}
 					{{/menu.option}}
 				{{/each}}

@@ -13,6 +13,7 @@ export default Route.extend({
 
 		let hospitalSalesReports = A([]),
 			hospitalSalesReportsHospitals = A([]),
+			uniqByProducts = A([]),
 			formatHospitalSalesReports = A([]),
 			tableHeadHosp = A([]),
 			tableBodyHosp = A([]),
@@ -53,8 +54,10 @@ export default Route.extend({
 						resourceConfig: hospitalSalesReports[index].resourceConfig
 					};
 				});
+				uniqByProducts = hospitalSalesReportsHospitals.uniqBy('goodsConfig.productConfig.product.id');
+
 				// 整理季度数据
-				formatHospitalSalesReports = handler.formatReports(tmpHeadQ, hospitalSalesReportsHospitals, destConfigHospitals.length);
+				formatHospitalSalesReports = handler.formatReports(tmpHeadQ, hospitalSalesReportsHospitals, destConfigHospitals.length * uniqByProducts.length);
 				// 医院销售结构分布图
 				doubleCircleHosp = handler.salesConstruct(formatHospitalSalesReports);
 				// 医院销售趋势图
@@ -88,8 +91,8 @@ export default Route.extend({
 						currentItemReport.ytdSales
 
 					];
-					result.push(...currentItemTotalSeason.map(ele => ele.report.salesQuota));
-					result.push(...currentItemTotalSeason.map(ele => ele.report.sales));
+					result.push(...currentItemTotalSeason.map(item => item.report.salesQuota));
+					result.push(...currentItemTotalSeason.map(item => item.report.sales));
 					return result;
 				});
 				return hash({
@@ -101,7 +104,8 @@ export default Route.extend({
 					tableHeadHosp,
 					tableBodyHosp,
 					doubleCircleHosp,
-					barLineDataHosp
+					barLineDataHosp,
+					uniqByProducts
 				});
 			});
 	},

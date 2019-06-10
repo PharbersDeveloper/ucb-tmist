@@ -9,17 +9,19 @@ export default Controller.extend({
 	circlePie: A([0, 90]),
 	handler: service('serviceResultHandler'),
 
-	barLineData: computed('regionChooseCity.id', function () {
+	barLineData: computed('regionChooseCity.id', 'chooseProd', function () {
 		if (ENV.environment === 'development') {
 			window.console.log('recomputed 地区销售趋势图');
 		}
-		const { regionChooseCity, model } = this,
+		const { regionChooseCity, chooseProd, model } = this,
 			{ formatCitySalesReports } = model,
 			handler = this.handler;
 
 		let findCityItemValue = isEmpty(regionChooseCity) ? regionChooseCity : regionChooseCity.get('id'),
-			findCityItemKey = 'city.id';
+			findCityItemKey = 'city.id',
+			findGoodsValue = isEmpty(chooseProd) ? chooseProd : chooseProd.get('productConfig.product.id'),
+			findGoodsKey = 'goodsConfig.productConfig.product.id';
 
-		return handler.changeTrendData(model.barLineDataCity, formatCitySalesReports, findCityItemKey, findCityItemValue);
+		return handler.changeTrendData(model.barLineDataCity, formatCitySalesReports, findCityItemKey, findCityItemValue, findGoodsKey, findGoodsValue);
 	})
 });

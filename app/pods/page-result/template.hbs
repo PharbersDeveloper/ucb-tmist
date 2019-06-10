@@ -25,7 +25,7 @@
 		{{/ph.body}}
 	{{/bp-page-header}}
 	{{#bp-layout main='between' local-class='result-container'}}
-		<nav local-class='nav' class="nav flex-column p-4 bg-white">
+		<nav local-class='nav' class="nav flex-column mr-4 p-4 bg-white">
 			{{#each model.navs as |nav|}}
 				{{#link-to nav.route tagName='li' classNames='px-3'}}
 					{{nav.name}}
