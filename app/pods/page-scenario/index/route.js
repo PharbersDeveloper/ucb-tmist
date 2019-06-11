@@ -19,7 +19,8 @@ export default Route.extend({
 	model() {
 		const pageScenarioModel = this.modelFor('page-scenario'),
 			paper = pageScenarioModel.paper,
-			goodsConfigs = pageScenarioModel.goodsConfigs;
+			goodsConfigs = pageScenarioModel.goodsConfigs,
+			navs = pageScenarioModel.navs;
 
 		let seasons = A([]),
 			tmpData = A([]),
@@ -148,6 +149,7 @@ export default Route.extend({
 				});
 
 				return hash({
+					navs,
 					paper,
 					goodsConfigs,
 					selfGoodsConfigs: pageScenarioModel.selfGoodsConfigs,
