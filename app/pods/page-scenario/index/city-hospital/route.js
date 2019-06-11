@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import rsvp from 'rsvp';
+import EmberObject from '@ember/object';
 import { hash } from 'rsvp';
 import { A } from '@ember/array';
 
@@ -14,64 +14,46 @@ export default Route.extend({
 	},
 	model() {
 		const pageScenarioModel = this.modelFor('page-scenario'),
-			{destConfigRegions} = pageScenarioModel,
-			tmpcity = destConfigRegions.firstObject.get('regionConfig').then(data => {
-				return data.get('region');
-			}).then(data => {
-				return data.get('cities');
-			}).then(data => {
-				let num = data.firstObject.get('hospitalConfigs').length;
+			{ destConfigRegions, salesConfigs } = pageScenarioModel;
 
-				return {
-					cityData: [data.firstObject],
-					hospNum: num
-				};
+		let regionConfig = destConfigRegions.firstObject.get('regionConfig'),
+			cities = A([]),
+			citiesName = A([]);
+
+		return regionConfig.then(data => {
+			return data.get('region');
+		}).then(data => {
+			return data.get('cities');
+		}).then(data => {
+			cities = data;
+			citiesName = data.map(ele => ele.get('name'));
+
+			return data.map(ele => ele.get('hospitalConfigs'));
+		}).then(data => {
+			let hospitalNumbers = data.map((ele, index) => {
+					return {
+						cityName: citiesName[index],
+						thirdLevel: ele.filterBy('hospital.hospitalLevel', '三级'),
+						secondLevel: ele.filterBy('hospital.hospitalLevel', '二级'),
+						firstLevel: ele.filterBy('hospital.hospitalLevel', '一级')
+					};
+				}),
+				initTotal = EmberObject.create({ thirdLevel: 0, secondLevel: 0, firstLevel: 0 }),
+				total = hospitalNumbers.reduce((acc, current) => {
+					acc.thirdLevel += current.thirdLevel.length;
+					acc.secondLevel += current.secondLevel.length;
+					acc.firstLevel += current.firstLevel.length;
+
+					return acc;
+				}, initTotal);
+
+			return hash({
+				total,
+				hospitalNumbers,
+				city: cities.firstObject,
+				destConfigRegion: destConfigRegions.firstObject,
+				salesConfigs
 			});
-
-		return hash({
-			destConfigRegion: destConfigRegions.firstObject,
-			tmpcity: tmpcity
-		});
-	},
-	setupController(controller, model) {
-		this._super(...arguments);
-		controller.set('city', model.tmpcity);
-		controller.set('tmpCityInfo', {
-			name: '城市A',
-			destConfigs: A([
-				{
-					hospitalConfig: {
-						hospital: {
-							name: '安贞医院',
-							describe: 'describe',
-							code: 123,
-							hospitalCategory: '综合',
-							hospitalLevel: '三级',
-							position: '1312 Soliv Grove',
-							regtime: '1996/01',
-							images: A([
-								{ img: 'https://i.loli.net/2019/04/15/5cb4650ddde95.jpg' }
-							])
-						}
-					}
-				},
-				{
-					hospitalConfig: {
-						hospital: {
-							name: '331医院',
-							describe: 'describe',
-							code: 123,
-							hospitalCategory: '耳鼻喉',
-							hospitalLevel: '三级',
-							position: '1312 Soliv Grove',
-							regtime: '1996/01',
-							images: A([
-								{ img: 'https://i.loli.net/2019/04/15/5cb4650ddde95.jpg' }
-							])
-						}
-					}
-				}
-			])
 		});
 	}
 });

@@ -36,13 +36,13 @@ export default Route.extend({
 				tmpHead = data.map(ele => {
 					let name = ele.get('name');
 
-					return name.slice(0, 4) + name.slice(-4);
+					return name;
+					// return name.slice(0, 4) + name.slice(-4);
 				});
-				tmpHeadQ = tmpHead.map(ele => {
-					return this.seasonQ(ele);
-				});
+				tmpHeadQ = tmpHead.map(ele => ele);
 
 				return hash({
+					detailPaper,
 					tmpHead,
 					tmpHeadQ,
 					barLineKeys,

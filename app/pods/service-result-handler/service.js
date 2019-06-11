@@ -32,16 +32,26 @@ export default Service.extend({
 	 * 销售结构分布图(双饼图)
 	 * @param {} formatReport
 	*/
-	salesConstruct(formatReport) {
+	salesConstruct(formatReport, uniqByKey = '') {
 		return formatReport.slice(-2).map(ele => {
+			let uniqByDataReports = isEmpty(uniqByKey) ? ele.dataReports : ele.dataReports.uniqBy(uniqByKey);
+
 			return {
 				seriesName: ele.season + '销售额',
-				data: ele.dataReports.map(item => {
+				data: uniqByDataReports.map(item => {
 
-					let productId = isEmpty(item.goodsConfig) ? '' : item.goodsConfig.get('productConfig.product.id');
+					let currentEles = isEmpty(uniqByKey) ? A([item]) : ele.dataReports.filterBy(uniqByKey, item.name),
+
+						// 	currentEles.resuce((acc, cur) => {
+						// 	return acc +cur.report.sales
+						// },0)
+						productId = isEmpty(item.goodsConfig) ? '' : item.goodsConfig.get('productConfig.product.id');
 
 					return {
-						value: item.report.sales,
+						// value: item.report.sales,
+						value: currentEles.reduce((acc, cur) => {
+							return acc + cur.report.sales;
+						}, 0),
 						name: item.name,
 						productId
 					};

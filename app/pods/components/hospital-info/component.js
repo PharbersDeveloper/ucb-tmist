@@ -10,6 +10,12 @@ export default Component.extend({
 
 		return showContent ? 'right' : 'down';
 	}),
+	currentSalesConfigs: computed('salesConfigs', function () {
+		let hospitalId = this.hospitalConfig.get('hospital.id'),
+			salesConfigs = this.salesConfigs;
+
+		return salesConfigs.filterBy('destConfig.hospitalConfig.hospital.id', hospitalId);
+	}),
 	actions: {
 		showContent() {
 			this.toggleProperty('showContent');

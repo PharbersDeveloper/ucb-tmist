@@ -13,6 +13,7 @@ export default Route.extend({
 			currentController = this.controllerFor('page-scenario.business.hospitalConfig');
 
 		let dCId = params['destConfig_id'],
+			destConfig = store.peekRecord('destConfig', dCId),
 			// businessController = this.controllerFor('page-scenario.index'),
 			businessInputs = pageScenarioModel.businessInputs,
 			businessinput = null;
@@ -57,11 +58,11 @@ export default Route.extend({
 					notFirstPhase: scenario.get('phase') !== 1,
 					managerConf,
 					repConfs,
-					destConfig: store.peekRecord('destConfig', dCId),
+					destConfig,
 					businessinput,
 					goodsInputs: businessinput.get('goodsinputs'),
 					businessInputs,
-					salesConfigs
+					salesConfigs: salesConfigs.filterBy('destConfig.hospitalConfig.hospital.id', destConfig.get('hospitalConfig.hospital.id'))
 				});
 			});
 	}

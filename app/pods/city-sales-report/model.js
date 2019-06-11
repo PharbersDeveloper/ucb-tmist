@@ -17,6 +17,6 @@ export default DS.Model.extend({
 	share: DS.attr('number'),	// 份额
 	ytdSales: DS.attr('number'),	// YTD 销售额
 	city: DS.belongsTo(),
-	cities: DS.hasMany('city')
-	// goodsConfig: DS.belongsTo()
+	cities: DS.hasMany('city'),
+	goodsConfig: DS.belongsTo()
 });
