@@ -6,6 +6,11 @@ h1.title {
 	@extend %title;
 }
 
+p.no-mission {
+	height: 68px;
+	@extend %p-primary;
+}
+
 .list-header {
 	p {
 		flex: 1;

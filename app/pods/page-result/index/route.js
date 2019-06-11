@@ -9,7 +9,7 @@ export default Route.extend({
 		const store = this.get('store'),
 			handler = this.handler,
 			pageResultModel = this.modelFor('page-result'),
-			{ increaseSalesReports, tmpHeadQ, goodsConfigs, selfGoodsConfigs, barLineKeys } = pageResultModel;
+			{ increaseSalesReports, tmpHeadQ, selfGoodsConfigs, barLineKeys } = pageResultModel;
 
 		let productsSalesReports = A([]),
 			productSalesReportsGoodsConfigs = A([]),
@@ -86,8 +86,8 @@ export default Route.extend({
 						currentGoodsReport.ytdSales
 
 					];
-					result.push(...currentGoodsTotalSeason.map(ele => ele.report.salesQuota));
-					result.push(...currentGoodsTotalSeason.map(ele => ele.report.sales));
+					result.push(...currentGoodsTotalSeason.map(item => item.report.salesQuota));
+					result.push(...currentGoodsTotalSeason.map(item => item.report.sales));
 					return result;
 				});
 				return hash({

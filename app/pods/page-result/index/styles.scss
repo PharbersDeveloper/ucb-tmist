@@ -33,36 +33,37 @@ h2.title {
 	.table-content {
 		margin: 0 24px;
 		width: auto;
-	}
-}
 
-.table-container {
-	thead {
-		background-color: #fff;
+		.table-container {
+			thead {
+				background-color: #fff;
 
-		th {
-			padding-left: $spacing-2;
-			border: 0;
-			@extend %p-small;
-			text-align: left !important;
-			width: fit-content;
-			min-width: 122px;
+				th {
+					padding-left: $spacing-2;
+					border: 0;
+					@extend %p-small;
+					text-align: left !important;
+					width: fit-content;
+					min-width: 122px;
+					border-bottom: 1px solid rgba(9, 30, 66, 0.08);
 
-			&:first-child {
-				min-width: 144px;
+					&:first-child {
+						min-width: 144px;
+					}
+				}
 			}
-		}
-	}
 
-	tbody {
-		td {
-			padding: 0;
-			padding-left: $spacing-2;
+			tbody {
+				td {
+					padding: 0;
+					padding-left: $spacing-2;
 
-			height: 52px;
-			line-height: 52px;
-			@extend %p-primary;
-			border: 0;
+					height: 52px;
+					line-height: 52px;
+					@extend %p-primary;
+					border: 0;
+				}
+			}
 		}
 	}
 }

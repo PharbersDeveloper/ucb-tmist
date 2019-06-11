@@ -45,16 +45,13 @@
 		{{/bp-dropdown}}
 	{{/bp-layout}}
 	{{#bp-layout main="between" cross="center"
-							local-class="choose-area" 
-							classNames="px-4"}}
-		<span local-class="keys" class="mr-4">
-			产品
-		</span>
-		{{#bp-dropdown widthSize="auto"
-								local-class="dd-area" as |dd|}}
+		local-class="choose-area" 
+		classNames="px-4"}}
+		<span local-class="keys" class="mr-4">产品</span>
+		{{#bp-dropdown widthSize="auto" local-class="dd-area" as |dd|}}
 			{{#dd.button}}
-				{{#if hospChooseProd.id}}
-					<p>{{hospChooseProd.productConfig.product.name}}</p>
+				{{#if chooseProd.id}}
+					<p>{{chooseProd.productConfig.product.name}}</p>
 				{{else}}
 					全部总值
 				{{/if}}
@@ -62,13 +59,13 @@
 			{{/dd.button}}
 			{{#dd.menu as |menu|}}
 				{{#menu.option value=''
-									onClick=(action (mut hospChooseProd))}}
+					onClick=(action (mut chooseProd))}}
 					全部总值
 				{{/menu.option}}
-				{{#each model.selfGoodsConfigs as |goodsConfig|}}
-					{{#menu.option value=goodsConfig
-												onClick=(action (mut hospChooseProd))}}
-						{{goodsConfig.productConfig.product.name}}
+				{{#each model.uniqByProducts as |goodsConfig|}}
+					{{#menu.option value=goodsConfig.goodsConfig
+						onClick=(action (mut chooseProd))}}
+						{{goodsConfig.goodsConfig.productConfig.product.name}}
 					{{/menu.option}}
 				{{/each}}
 			{{/dd.menu}}
@@ -83,11 +80,9 @@
 	classNames="m-0 bg-white px-4"}}
 	医院销售数据表
 	{{#bp-layout main="end" cross="center"
-							local-class="choose-area" 
-							classNames="px-4"}}
-		<span local-class="keys" class="mr-4">
-			产品
-		</span>
+		local-class="choose-area" 
+		classNames="px-4"}}
+		<span local-class="keys" class="mr-4">产品</span>
 		{{#bp-dropdown widthSize="auto" as |dd|}}
 			{{#dd.button}}
 				{{#if hospChooseProdTable.id}}
@@ -99,13 +94,13 @@
 			{{/dd.button}}
 			{{#dd.menu as |menu|}}
 				{{#menu.option value=''
-									onClick=(action (mut hospChooseProdTable))}}
+					onClick=(action (mut hospChooseProdTable))}}
 					全部总值
 				{{/menu.option}}
-				{{#each model.selfGoodsConfigs as |goodsConfig|}}
-					{{#menu.option value=goodsConfig
-												onClick=(action (mut hospChooseProdTable))}}
-						{{goodsConfig.productConfig.product.name}}
+				{{#each model.uniqByProducts as |goodsConfig|}}
+					{{#menu.option value=goodsConfig.goodsConfig
+						onClick=(action (mut hospChooseProdTable))}}
+						{{goodsConfig.goodsConfig.productConfig.product.name}}
 					{{/menu.option}}
 				{{/each}}
 			{{/dd.menu}}

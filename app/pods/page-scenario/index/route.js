@@ -155,7 +155,7 @@ export default Route.extend({
 					destConfigHospitals: pageScenarioModel.destConfigHospitals,
 					salesConfigs: pageScenarioModel.salesConfigs,
 					resourceConfRep: pageScenarioModel.resourceConfRep,
-					resourceConfManager: pageScenarioModel.resourceConfManager,
+					resourceConfigManager: pageScenarioModel.resourceConfigManager,
 					lineDataTm: lineData,
 					lineColorTm
 				});
@@ -182,7 +182,7 @@ export default Route.extend({
 
 	// 	return hash({
 	// 		businessInputs: businessInputs,
-	// 		resourceConfManager: pageScenarioModel.resourceConfManager,
+	// 		resourceConfigManager: pageScenarioModel.resourceConfigManager,
 	// 		goodsConfigs,
 	// 		destConfigHospitals,
 	// 		resourceConfRep,

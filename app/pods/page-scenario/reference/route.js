@@ -19,7 +19,7 @@ export default Route.extend({
 			destConfigs: totalConfig.destConfigs,
 			salesConfigs: totalConfig.salesConfigs,
 			resourceConfRep: totalConfig.resourceConfRep,
-			resourceConfManager: totalConfig.resourceConfManager
+			resourceConfigManager: totalConfig.resourceConfigManager
 		});
 	}
 });

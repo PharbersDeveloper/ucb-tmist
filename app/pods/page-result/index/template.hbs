@@ -1,5 +1,4 @@
-{{#bp-layout tagName="h2" cross="center" local-class="title"
-				 classNames="m-0 bg-white px-4"}}
+{{#bp-layout tagName="h2" cross="center" local-class="title" classNames="m-0 bg-white px-4"}}
 	产品销售结构分布图
 {{/bp-layout}}
 {{#bp-layout main='between' local-class='double-cirle-title' classNames='bg-white'}}
@@ -11,17 +10,16 @@
 {{/bp-layout}}
 <div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
 	{{bp-circle-double
-						eid="circleProd"
-						circleSize=circlePie
-						circleData=doubleCircleData
-						showSeriesName=false}}
+		eid="circleProd"
+		circleSize=circlePie
+		circleData=doubleCircleData
+		showSeriesName=false}}
 </div>
 {{#bp-layout tagName="h2" cross="center" main='between'
  local-class="title" classNames="m-0 bg-white px-4"}}
 	<p class="m-0">产品销售趋势图</p>
-	{{#bp-layout main="end" cross="center"
-							local-class="choose-area" 
-							classNames="px-4"}}
+	{{#bp-layout main="end" cross="center" local-class="choose-area" 
+		classNames="px-4"}}
 		<span local-class="keys" class="mr-4">
 			产品
 		</span>
@@ -36,12 +34,12 @@
 			{{/dd.button}}
 			{{#dd.menu as |menu|}}
 				{{#menu.option value=''
-									onClick=(action (mut productChooseProduct))}}
+					onClick=(action (mut productChooseProduct))}}
 					全部总值
 				{{/menu.option}}
 				{{#each model.selfGoodsConfigs as |selfGoodsConfig|}}
 					{{#menu.option value=selfGoodsConfig
-												onClick=(action (mut productChooseProduct))}}
+						onClick=(action (mut productChooseProduct))}}
 						{{selfGoodsConfig.productConfig.product.name}}
 					{{/menu.option}}
 				{{/each}}
@@ -51,12 +49,11 @@
 {{/bp-layout}}
 <div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
 	{{bp-bar-line
-					eid="chartbarLine"
-					chartData=barLineData
-				}}
+		eid="chartbarLine"
+		chartData=barLineData}}
 </div>
 {{#bp-layout tagName="h2" main='between' cross="center" local-class="title"
-				 classNames="m-0 bg-white px-4"}}
+	 classNames="m-0 bg-white px-4"}}
 	产品销售数据表
 {{/bp-layout}}
 {{#bp-layout direction="col" local-class='table-area'}}

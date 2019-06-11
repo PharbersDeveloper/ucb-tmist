@@ -11,11 +11,11 @@ export default Route.extend({
 			selfGoodsConfigs = goodsConfigs.filterBy('productConfig.productType', 0);
 
 		let navs = A([
-			{ name: '产品销售报告', route: 'page-result.index' },
-			{ name: '地区销售报告', route: 'page-result.region' },
-			{ name: '代表销售报告', route: 'page-result.representative' },
-			{ name: '医院销售报告', route: 'page-result.hospital' }
-		]),
+				{ name: '产品销售报告', route: 'page-result.index' },
+				{ name: '地区销售报告', route: 'page-result.region' },
+				{ name: '代表销售报告', route: 'page-result.representative' },
+				{ name: '医院销售报告', route: 'page-result.hospital' }
+			]),
 			barLineKeys = A([
 				{ name: '销售额', key: 'sales' },
 				{ name: '指标', key: 'salesQuota' },

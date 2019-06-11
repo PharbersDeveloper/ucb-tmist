@@ -23,7 +23,7 @@ export default Route.extend({
 
 		return hash({
 			businessInputs: businessInputs,
-			resourceConfManager: pageScenarioModel.resourceConfManager,
+			resourceConfigManager: pageScenarioModel.resourceConfigManager,
 			goodsConfigs,
 			selfGoodsConfigs: pageScenarioModel.selfGoodsConfigs,
 			destConfigHospitals,

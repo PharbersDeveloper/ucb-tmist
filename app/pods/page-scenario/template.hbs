@@ -96,20 +96,14 @@
 			</h4>
 		{{/bp-layout}}
 		{{#bp-layout direction='col' local-class='content' }}
-			{{#each model.goodsConfigs as |gc|}}
-				{{#if (bp-eq gc.productConfig.productType 0)}}
-					{{#bp-layout cross='center' classNames='mb-3'}}
-						{{bp-icon icon='pill'}}
-						<span local-class='keys' class="ml-2 mr-4">{{gc.productConfig.product.name}}</span>
-						<span local-class='values'>
-							{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |managerGoodsConfig|}}
-								{{#if (bp-eq managerGoodsConfig.goodsConfig.productConfig.product.id gc.productConfig.product.id)}}
-									{{gc.productConfig.priceType}}{{managerGoodsConfig.goodsSalesTarget}}
-								{{/if}}
-							{{/each}}
-						</span>
-					{{/bp-layout}}
-				{{/if}}
+			{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |mgc|}}
+				{{#bp-layout cross='center' classNames='mb-3'}}
+					{{bp-icon icon='pill'}}
+					<span local-class='keys' class="ml-2 mr-4">{{mgc.goodsConfig.productConfig.product.name}}</span>
+					<span local-class='values'>
+						{{mgc.goodsConfig.productConfig.priceType}}{{format-number mgc.goodsSalesTarget}}
+					</span>
+				{{/bp-layout}}
 			{{/each}}
 		{{/bp-layout}}
 		{{#bp-layout cross='center' classNames='mb-3'}}
@@ -119,20 +113,14 @@
 			</h4>
 		{{/bp-layout}}
 		{{#bp-layout direction='col' local-class='content'}}
-			{{#each model.goodsConfigs as |gc|}}
-				{{#if (bp-eq gc.productConfig.productType 0)}}
-					{{#bp-layout cross='center' classNames='mb-3'}}
-						{{bp-icon icon='pill'}}
-						<span local-class='keys' class="ml-2 mr-4">{{gc.productConfig.product.name}}</span>
-						<span local-class='values'>
-							{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |managerGoodsConfig|}}
-								{{#if (bp-eq managerGoodsConfig.goodsConfig.productConfig.product.id gc.productConfig.product.id)}}
-									{{gc.productConfig.priceType}}{{managerGoodsConfig.goodsSalesBudgets}}
-								{{/if}}
-							{{/each}}
-						</span>
-					{{/bp-layout}}
-				{{/if}}
+			{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |mgc|}}
+				{{#bp-layout cross='center' classNames='mb-3'}}
+					{{bp-icon icon='pill'}}
+					<span local-class='keys' class="ml-2 mr-4">{{mgc.goodsConfig.productConfig.product.name}}</span>
+					<span local-class='values'>
+						{{mgc.goodsConfig.productConfig.priceType}}{{format-number mgc.goodsSalesBudgets}}
+					</span>
+				{{/bp-layout}}
 			{{/each}}
 		{{/bp-layout}}
 	{{/modal.body}}
