@@ -60,7 +60,6 @@ export default Controller.extend({
 		}
 	}),
 	total: computed('model.businessInputs.@each.{total}', function () {
-		console.log('in business controlelr')
 		const store = this.get('store'),
 			model = this.model,
 			{selfGoodsConfigs,managerGoodsConfigs,salesConfigs,goodsInputs} = model;

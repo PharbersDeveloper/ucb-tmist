@@ -17,11 +17,11 @@ RUN npm update && \
 
 WORKDIR /app
 
-LABEL ucbtmist.version=0.0.1
+LABEL ucbtmist.version=0.0.2
 
 RUN git clone https://github.com/PharbersDeveloper/ucb-tmist.git && \
-	git clone https://github.com/PharbersDeveloper/BP-Components.git 
-	
+	git clone https://github.com/PharbersDeveloper/BP-Components.git
+
 WORKDIR /app/BP-Components
 
 RUN git checkout -b frank origin/frank && \
