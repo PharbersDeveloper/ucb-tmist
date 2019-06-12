@@ -11,11 +11,11 @@ export default Route.extend({
 			selfGoodsConfigs = goodsConfigs.filterBy('productConfig.productType', 0);
 
 		let navs = A([
-			{ name: '产品销售报告', route: 'page-result.index' },
-			{ name: '地区销售报告', route: 'page-result.region' },
-			{ name: '代表销售报告', route: 'page-result.representative' },
-			{ name: '医院销售报告', route: 'page-result.hospital' }
-		]),
+				{ name: '产品销售报告', route: 'page-result.index' },
+				{ name: '地区销售报告', route: 'page-result.region' },
+				{ name: '代表销售报告', route: 'page-result.representative' },
+				{ name: '医院销售报告', route: 'page-result.hospital' }
+			]),
 			barLineKeys = A([
 				{ name: '销售额', key: 'sales' },
 				{ name: '指标', key: 'salesQuota' },
@@ -36,13 +36,13 @@ export default Route.extend({
 				tmpHead = data.map(ele => {
 					let name = ele.get('name');
 
-					return name.slice(0, 4) + name.slice(-4);
+					return name;
+					// return name.slice(0, 4) + name.slice(-4);
 				});
-				tmpHeadQ = tmpHead.map(ele => {
-					return this.seasonQ(ele);
-				});
+				tmpHeadQ = tmpHead.map(ele => ele);
 
 				return hash({
+					detailPaper,
 					tmpHead,
 					tmpHeadQ,
 					barLineKeys,

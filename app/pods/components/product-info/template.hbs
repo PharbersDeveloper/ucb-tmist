@@ -1,4 +1,4 @@
-{{#bp-layout tagName="h3" main="between" cross="center" local-class="title" class="px-4" }}
+{{#bp-layout tagName="h3" main="between" cross="center" local-class="title" class="m-0 px-4" }}
 	<span>
 		<span local-class="icon" {{action 'showContent'}}>{{bp-icon icon=icon }}</span>
 		{{#if (bp-eq goods.productConfig.productType 0)}}
@@ -43,7 +43,7 @@
 						{{goods.productConfig.lifeCycle}}
 					</span>
 					<span local-class="values" class="mb-3">
-						{{goods.productConfig.lifeCycle}}*
+						{{goods.productConfig.priceType}} {{format-number goods.productConfig.dailyCost}}
 					</span>
 				{{/bp-layout}}
 			{{/bp-layout}}

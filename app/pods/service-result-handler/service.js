@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import { htmlSafe } from '@ember/template';
+import EmberObject from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
 
@@ -31,14 +32,28 @@ export default Service.extend({
 	 * 销售结构分布图(双饼图)
 	 * @param {} formatReport
 	*/
-	salesConstruct(formatReport) {
+	salesConstruct(formatReport, uniqByKey = '') {
 		return formatReport.slice(-2).map(ele => {
+			let uniqByDataReports = isEmpty(uniqByKey) ? ele.dataReports : ele.dataReports.uniqBy(uniqByKey);
+
 			return {
 				seriesName: ele.season + '销售额',
-				data: ele.dataReports.map(item => {
+				data: uniqByDataReports.map(item => {
+
+					let currentEles = isEmpty(uniqByKey) ? A([item]) : ele.dataReports.filterBy(uniqByKey, item.name),
+
+						// 	currentEles.resuce((acc, cur) => {
+						// 	return acc +cur.report.sales
+						// },0)
+						productId = isEmpty(item.goodsConfig) ? '' : item.goodsConfig.get('productConfig.product.id');
+
 					return {
-						value: item.report.sales,
-						name: item.name
+						// value: item.report.sales,
+						value: currentEles.reduce((acc, cur) => {
+							return acc + cur.report.sales;
+						}, 0),
+						name: item.name,
+						productId
 					};
 				})
 			};
@@ -66,8 +81,9 @@ export default Service.extend({
 				item.dataReports.forEach(sReport => {
 					currentSales += sReport.report.sales;
 					Quota += sReport.report.salesQuota;
-					achi += sReport.report.quotaAchievement;
+					// achi += sReport.report.quotaAchievement;
 				});
+				achi = currentSales / Quota;
 				total.sales.push(currentSales);
 				total.salesQuota.push(Number(Quota.toFixed(2)));
 				total.quotaAchievement.push(Number(achi.toFixed(2)));
@@ -101,10 +117,19 @@ export default Service.extend({
 		});
 		return tableHead;
 	},
+	/**
+	 * @param  {} dataReports
+	 * @param  {String} key 筛选的 key
+	 * @param  {String} value 与 key 对应的哪个 value
+	 * @return {Array} 符合 filterBy 的 item
+	 */
 	findCurrentItem(dataReports, key, value) {
-		return dataReports.findBy(key, value);
+		if (isEmpty(value)) {
+			return dataReports;
+		}
+		return dataReports.filterBy(key, value);
 	},
-	changeTrendData(originTrendData, formatReport, findItemKey, findItemValue) {
+	changeTrendData(originTrendData, formatReport, findItemKey, findItemValue, findProdKey = '', findProdValue = '') {
 		if (isEmpty(findItemValue)) {
 			return originTrendData;
 		}
@@ -116,11 +141,22 @@ export default Service.extend({
 			};
 
 			formatReport.forEach(item => {
-				let currentItem = this.findCurrentItem(item.dataReports, findItemKey, findItemValue);
+				let currentTotal = EmberObject.create({
+						sales: 0,
+						salesQuota: 0
+					}),
+					currentItem = this.findCurrentItem(item.dataReports, findItemKey, findItemValue),
+					currentItemByProd = this.findCurrentItem(currentItem, findProdKey, findProdValue);
 
-				total.sales.push(currentItem.report.sales);
-				total.salesQuota.push(currentItem.report.salesQuota);
-				total.quotaAchievement.push(Number(currentItem.report.quotaAchievement.toFixed(2)));
+				currentItemByProd.reduce((acc, current) => {
+					acc.sales += current.report.sales;
+					acc.salesQuota += current.report.salesQuota;
+					return acc;
+				}, currentTotal);
+
+				total.sales.push(currentTotal.sales);
+				total.salesQuota.push(currentTotal.salesQuota);
+				total.quotaAchievement.push(Number((currentTotal.sales / currentTotal.salesQuota).toFixed(2)));
 			});
 			return {
 				key: ele.key,

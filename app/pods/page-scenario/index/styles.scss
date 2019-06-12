@@ -41,6 +41,39 @@
 	}
 }
 
+.result-container {
+	flex: 1;
+
+	.nav {
+		flex: 0 0 270px;
+		list-style: none;
+
+		&.reference-content {
+			width: 100%;
+		}
+
+		li {
+			height: 4*$spacing;
+			@extend %header-small;
+			line-height: 4*$spacing;
+			cursor: pointer;
+
+			span {
+				flex: 1;
+			}
+
+			&:global(.active) {
+				background-color: $n020a;
+			}
+		}
+	}
+
+	.content {
+		flex: 1;
+		overflow-x: auto;
+	}
+}
+
 // .business-container {
 // 	height: calc(100% - 25px);
 

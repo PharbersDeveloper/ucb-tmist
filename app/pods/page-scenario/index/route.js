@@ -19,7 +19,8 @@ export default Route.extend({
 	model() {
 		const pageScenarioModel = this.modelFor('page-scenario'),
 			paper = pageScenarioModel.paper,
-			goodsConfigs = pageScenarioModel.goodsConfigs;
+			goodsConfigs = pageScenarioModel.goodsConfigs,
+			navs = pageScenarioModel.navs;
 
 		let seasons = A([]),
 			tmpData = A([]),
@@ -65,7 +66,8 @@ export default Route.extend({
 				tmpHead = result.seasons.map(ele => {
 					let name = ele.get('name') || '';
 
-					return name.slice(0, 4) + name.slice(-4);
+					return name;
+					// return name.slice(0, 4) + name.slice(-4);
 				});
 				// 获取基于周期的数据
 				tmpData = data.map((productSalesReports, index) => {
@@ -81,7 +83,7 @@ export default Route.extend({
 						productNames
 					};
 				});
-				tmpRepData = repData.map((representativeSalesReports, index) => {
+				tmpRepData = repData.map((representativeSalesReports) => {
 					let resourceConfigIds = representativeSalesReports.map(ele => ele.get('resourceConfig'));
 
 					repPromiseArray = resourceConfigIds;
@@ -89,8 +91,9 @@ export default Route.extend({
 						resourceConfigIds
 					};
 				});
-				tmpHospData = hospData.map((hospitalSalesReports, index) => {
-					let destConfigIds = hospitalSalesReports.map(ele => ele.get('destConfig'));
+				tmpHospData = hospData.map((hospitalSalesReports) => {
+
+					let destConfigIds = hospitalSalesReports.filter(ele => ele.destConfigId !== '-1').map(ele => ele.get('destConfig'));
 
 					hospPromiseArray = destConfigIds;
 					return {
@@ -148,6 +151,7 @@ export default Route.extend({
 				});
 
 				return hash({
+					navs,
 					paper,
 					goodsConfigs,
 					selfGoodsConfigs: pageScenarioModel.selfGoodsConfigs,

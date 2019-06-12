@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 
 export default Component.extend({
-	classNames: ['mb-4', 'bg-white'],
+	classNames: ['mb-2', 'bg-white'],
 	localClassNames: 'product',
 	showContent: true,
 	icon: computed('showContent', function () {

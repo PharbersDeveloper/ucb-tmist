@@ -17,7 +17,8 @@
 		{{/unless}}
 		{{#bp-layout local-class="operating"}}
 			{{#if tmpRc.id}}
-				<img src={{tmpRc.representativeConfig.representative.images.firstObject.img}} local-class="avatar" alt="" class="mr-4">
+				<img src={{tmpRc.representativeConfig.representative.images.firstObject.img}} local-class="avatar"
+					alt="" class="mr-4">
 			{{else}}
 				<img src="/assets/images/img_placeholder.png" local-class="avatar" alt="" class="mr-4">
 			{{/if}}
@@ -40,8 +41,9 @@
 									onClick=(action 'changedRep')
 									local-class="representative-info"}}
 									{{#bp-layout cross="center"}}
-										<img width="24" height="24" src={{rc.representativeConfig.representative.images.firstObject.img}} alt="avatar"
-										 class="mr-2">
+										<img width="24" height="24"
+											src={{rc.representativeConfig.representative.images.firstObject.img}}
+											alt="avatar" class="mr-2">
 										<span local-class="name" class="mr-2">
 											{{rc.representativeConfig.representative.name}}
 										</span>
@@ -72,54 +74,60 @@
 	</thead>
 	<tbody>
 		{{#each model.salesConfigs as |sc|}}
-			{{#if (bp-eq sc.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
-				<tr class="mx-0">
-					<td class="pl-4 border-0 text-left">{{sc.goodsConfig.productConfig.product.name}}</td>
-					<td class="pl-2 border-0 text-center">
-						{{sc.goodsConfig.productConfig.treatmentArea}}
-					</td>
-					<td class="pl-2 border-0  text-right">
-						{{#each sc.salesReport.hospitalSalesReports as |hsr|}}
-							{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
-								{{format-number hsr.potential}}
+			<tr class="mx-0">
+				<td class="pl-4 border-0 text-left">
+					{{sc.goodsConfig.productConfig.product.name}}
+				</td>
+				<td class="pl-2 border-0 text-center">
+					{{sc.goodsConfig.productConfig.treatmentArea}}
+				</td>
+				<td class="pl-2 border-0  text-right">
+					{{format-number sc.patientCount}}
+				</td>
+				<td class="pl-2 border-0 text-right">
+					{{!-- {{#each sc.salesReport.hospitalSalesReports as |hsr|}}
+						{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
+							{{item.goodsConfig.productConfig.priceType}}{{format-number hsr.sales 0}}
+						{{/if}}
+					{{/each}} --}}
+					{{#each lastSales as |item|}}
+						{{#if (bp-eq item.goodsConfig.productConfig.product.id sc.goodsConfig.productConfig.product.id)}}
+							{{item.goodsConfig.productConfig.priceType}}
+							{{#if item.report.sales}}
+								{{format-number item.report.sales 0}}
+							{{else}}
+								0
 							{{/if}}
-						{{/each}}
-					</td>
-					<td class="pl-2 border-0 text-right">
-						{{#each sc.salesReport.hospitalSalesReports as |hsr|}}
-							{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
-								￥{{format-number hsr.sales 0}}
-							{{/if}}
-						{{/each}}
-					</td>
-					<td class="pl-2 border-0 text-right">
-						{{#each model.goodsInputs as |goodsInput|}}
-							{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsInput.goodsConfig.productConfig.product.id)}}
-								{{bp-input block=true widthSize="auto" 
+						{{/if}}
+					{{/each}}
+				</td>
+				<td class="pl-2 border-0 text-right">
+					{{#each model.goodsInputs as |goodsInput|}}
+						{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsInput.goodsConfig.productConfig.product.id)}}
+							{{bp-input block=true widthSize="auto" 
 								value=goodsInput.salesTarget
 								disabled=(not tmpRc.id)
 								local-class="input-prepend input-money"}}
-								{{!-- <p class="mt-2 mb-0 text-center" local-class="percent">
+							{{!-- <p class="mt-2 mb-0 text-center" local-class="percent">
 									{{IndicatorAllocationPercent.percent}}%
 								</p> --}}
-							{{/if}}
-						{{/each}}
-					</td>
-					<td class="pl-2 border-0 text-right">
-						{{#each model.goodsInputs as |goodsInput|}}
-							{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsInput.goodsConfig.productConfig.product.id)}}
-								{{bp-input block=true widthSize="auto"
+						{{/if}}
+					{{/each}}
+				</td>
+				<td class="pl-2 border-0 text-right">
+					{{#each model.goodsInputs as |goodsInput|}}
+						{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsInput.goodsConfig.productConfig.product.id)}}
+							{{bp-input block=true widthSize="auto"
 									value=goodsInput.budget
 									disabled=(not tmpRc.id)
 									local-class="input-prepend input-money"}}
-								{{!-- <p class="mt-2 mb-0 text-center" local-class="percent">
+							{{!-- <p class="mt-2 mb-0 text-center" local-class="percent">
 									{{budgetPercent.percent}}%
 								</p> --}}
-							{{/if}}
-						{{/each}}
-					</td>
-				</tr>
-			{{/if}}
+						{{/if}}
+					{{/each}}
+				</td>
+			</tr>
 		{{/each}}
 	</tbody>
 </table>

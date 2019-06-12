@@ -1,9 +1,9 @@
 {{#bp-layout direction="col" local-class="reference-container" }}
 	{{#bp-layout main="center" classNames="py-4" local-class="reference-tabs" }}
 		{{#bp-button-group value=groupValue type="radio" onChange=(action (mut groupValue)) as |bg|}}
-			{{#bg.button type="default" value='index' 
+			{{#bg.button type="default" value='index'
 				onClick=(action 'linkToRoute' 'index')}}产品竞品信息{{/bg.button}}
-			{{#bg.button type="default" value='city-hospital' 
+			{{#bg.button type="default" value='city-hospital'
 				onClick=(action 'linkToRoute' 'city-hospital')}}城市医院信息{{/bg.button}}
 			{{#bg.button type="default" value="member"
 				onClick=(action 'linkToRoute' 'member')}}代表信息{{/bg.button}}
@@ -17,16 +17,16 @@
 				<div local-class="trend" class="mb-4">
 					<div local-class="trend-line" class="pt-3 pl-4">
 						{{bp-line/tm
-				eid="lineTrend"
-				title="产品份额竞争趋势"
-				subText='全国'
-				lineData=model.lineDataTm
-				lineColor=model.lineColorTm}}
+							eid="lineTrend"
+							title="产品份额竞争趋势"
+							subText='全国'
+							unitYaxis='%'
+							lineData=model.lineDataTm
+							lineColor=model.lineColorTm}}
 					</div>
 				</div>
-				{{#bp-layout tagName="h3" main="between" cross="center"
-		local-class="title"
-		classNames="m-0 px-4 bg-white"}}
+				{{#bp-layout tagName="h3" main="between" cross="center" local-class="title"
+					classNames="mb-2 px-4 bg-white"}}
 					<p local-class="main" class="m-0">药品详细信息</p>
 					<p local-class="overview" class="m-0">
 						<span class="mr-4">公司产品数量：{{model.selfGoodsConfigs.length}}</span>
@@ -40,12 +40,25 @@
 					{{product-info goods=item}}
 				{{/each}}
 			</div>
+		{{else if (bp-eq groupValue 'performance')}}
+			{{#bp-layout main='between' local-class='result-container'}}
+				<nav local-class='nav' class="nav flex-column mr-4 p-4 bg-white">
+					{{#each model.navs as |nav|}}
+						{{#link-to nav.route tagName='li' classNames='px-3'}}
+							{{nav.name}}
+						{{/link-to}}
+					{{/each}}
+				</nav>
+				<div local-class='content'>
+					{{outlet}}
+				</div>
+			{{/bp-layout}}
 		{{else}}
 			{{outlet}}
 		{{/if}}
 	</div>
 {{/bp-layout}}
-{{!-- {{#bp-layout direction="col" local-class="business-container" 
+{{!-- {{#bp-layout direction="col" local-class="business-container"
 	classNames="pt-4"}}
 
 	{{#bp-layout main="between" local-class="overviews" classNames='mb-4'}}
@@ -88,8 +101,8 @@
 		</div>
 	{{/bp-layout}}
 	{{#bp-layout local-class="hospitals"}}
-		{{#bp-layout direction="col" 
-				local-class="hospitals-configs" 
+		{{#bp-layout direction="col"
+				local-class="hospitals-configs"
 				classNames="mr-4 px-4 bg-white"}}
 			{{#bp-layout tagName="h3" cross="center" main="between"
 				local-class="title" classNames="m-0"}}
@@ -105,7 +118,7 @@
 					{{/dd.button}}
 					{{#dd.menu as |menu|}}
 						{{#each hospitalState as |hs|}}
-							{{#menu.option value=hs 
+							{{#menu.option value=hs
 								onClick=(action (mut currentHospState))}}
 								{{hs.name}}
 							{{/menu.option}}
@@ -129,7 +142,7 @@
 	{{/bp-layout}}
 {{/bp-layout}}
 {{#bp-modal
-		open=warning.open 
+		open=warning.open
 		position='center'
 		onHidden=(action (mut warning.open) false) as |modal|}}
 	{{#modal.header}}

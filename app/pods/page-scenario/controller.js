@@ -11,7 +11,7 @@ export default Controller.extend({
 	cookies: service(),
 	verify: service('service-verify'),
 	oauthService: service('oauth_service'),
-	testBtn: computed(function () {
+	testBtn: computed(function() {
 		if (ENV.environment === 'development') {
 			return true;
 		}
@@ -24,7 +24,7 @@ export default Controller.extend({
 			open: true,
 			title: `确认提交`,
 			detail: `您将提交本季度（${scenario.get('name')}）决策，
-				并进入下一个季度（2019Q2）决策。提交后不可再更改本季度（${scenario.get('name')}）决策`
+				并进入下一个季度决策。提交后不可再更改本季度（${scenario.get('name')}）决策`
 		});
 		this.set('confirmSubmit', true);
 		return;
@@ -33,48 +33,53 @@ export default Controller.extend({
 		const verifyService = this.get('verify'),
 			model = this.get('model'),
 			// resourceConfRep = model.resourceConfRep,
-			resourceConfigManager = model.resourceConfigManager,
-			total = verifyService.verifyInput(businessinputs, resourceConfigManager);
+			{ managerGoodsConfigs, salesConfigs,goodsInputs } = model,
 
-		let { overTotalBusinessIndicators, overTotalBudgets,
-				illegal, lowTotalBusinessIndicators,
-				lowTotalBudgets } = total,
-			warning = { open: false, title: '', detail: '' };
+			total = verifyService.verifyInput(businessinputs, managerGoodsConfigs, goodsInputs);
+
+		let {
+			overTotalIndicators,
+			overTotalBudgets,
+			illegal,
+			lowTotalIndicators,
+			lowTotalBudgets
+		} = total,
+		warning = { open: false, title: '', detail: '' };
 
 		switch (true) {
-		case illegal:
-			warning.open = true;
-			warning.title = '非法值警告';
-			warning.detail = '请输入数字！';
-			this.set('warning', warning);
-			return false;
-		case lowTotalBusinessIndicators:
-			warning.open = true;
-			warning.title = '总业务指标未达标';
-			warning.detail = '您的业务销售额指标尚未完成，请完成总业务指标。';
-			this.set('warning', warning);
-			return false;
-		case lowTotalBudgets:
-			warning.open = true;
-			warning.title = '总预算剩余';
-			warning.detail = '您还有总预算剩余，请分配完毕。';
-			this.set('warning', warning);
-			return false;
-		case overTotalBusinessIndicators:
-			warning.open = true;
-			warning.title = '总业务指标超额';
-			warning.detail = '您的销售额指标设定总值已超出业务总指标限制，请重新分配。';
-			this.set('warning', warning);
-			return false;
-		case overTotalBudgets:
-			warning.open = true;
-			warning.title = '总预算超额';
-			warning.detail = '您的预算设定总值已超出总预算限制，请重新分配。';
-			this.set('warning', warning);
-			return false;
-		default:
-			this.allVerifySuccessful();
-			return true;
+			case illegal:
+				warning.open = true;
+				warning.title = '非法值警告';
+				warning.detail = '请输入数字！';
+				this.set('warning', warning);
+				return false;
+			case !isEmpty(lowTotalIndicators):
+				warning.open = true;
+				warning.title = '总业务指标未达标';
+				warning.detail = '您的业务销售额指标尚未完成，请完成总业务指标。';
+				this.set('warning', warning);
+				return false;
+			case !isEmpty(lowTotalBudgets):
+				warning.open = true;
+				warning.title = '总预算剩余';
+				warning.detail = '您还有总预算剩余，请分配完毕。';
+				this.set('warning', warning);
+				return false;
+			case !isEmpty(overTotalIndicators):
+				warning.open = true;
+				warning.title = '总业务指标超额';
+				warning.detail = '您的销售额指标设定总值已超出业务总指标限制，请重新分配。';
+				this.set('warning', warning);
+				return false;
+			case !isEmpty(overTotalBudgets):
+				warning.open = true;
+				warning.title = '总预算超额';
+				warning.detail = '您的预算设定总值已超出总预算限制，请重新分配。';
+				this.set('warning', warning);
+				return false;
+			default:
+				this.allVerifySuccessful();
+				return true;
 		}
 
 	},
@@ -161,6 +166,7 @@ export default Controller.extend({
 		// this.verifyTotalValue(businessinputs, representatives);
 		this.verificationRepHasAllocation(businessinputs, representatives);
 	},
+
 	sendInput(state) {
 		const ajax = this.get('ajax'),
 			applicationAdapter = this.get('store').adapterFor('application'),
@@ -239,8 +245,9 @@ export default Controller.extend({
 						title: `保存成功`,
 						detail: `保存成功。`
 					});
-					return;
+					return null;
 				}
+				return 'test';
 				// TODO 无R计算的逻辑
 				// return ajax.request(`${version}/CallRCalculate`, {
 				// 	method: 'POST',
@@ -253,8 +260,11 @@ export default Controller.extend({
 				// 		return that.updatePaper(store, paperId, state, that);
 				// 	}
 				// 	return response;
-			}).then(() => {
-				this.transitionToRoute('page-result');
+			}).then((data) => {
+				if (!isEmpty(data)) {
+					this.transitionToRoute('page-result');
+					return;
+				}
 
 			}).catch(err => {
 				window.console.log('error');
@@ -262,6 +272,7 @@ export default Controller.extend({
 			});
 		// });
 	},
+
 	updatePaper(store, paperId, state, context) {
 		store.findRecord('paper', paperId, { reload: true })
 			.then(data => {
@@ -281,7 +292,7 @@ export default Controller.extend({
 				representatives = store.peekAll('representative');
 			// 验证businessinputs
 			// 在page-scenario.business 获取之后进行的设置.
-			let businessinputs = store.peekAll('businessinput');
+			let businessinputs = this.model.businessInputs;
 
 			if (isEmpty(judgeAuth)) {
 				window.location = judgeAuth;

@@ -1,6 +1,7 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
+	dailyCost: DS.attr('number'),	//日使用费用
 	productType: DS.attr('number'),
 	priceType: DS.attr('string'),
 	lifeCycle: DS.attr('string'),
