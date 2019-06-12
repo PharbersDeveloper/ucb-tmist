@@ -1,6 +1,7 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
+	destConfigId: DS.attr('string'),
 	drugEntranceInfo: DS.attr('string'),
 	hospitalName: DS.attr('string'),
 	productName: DS.attr('string'),

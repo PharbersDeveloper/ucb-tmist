@@ -18,7 +18,6 @@ export default Route.extend({
 			reDeploy = Number(localStorage.getItem('reDeploy')) === 1,
 			exitInEmberData = this.get('store').peekAll('businessinput');
 
-		//	[1,4].indexOf(state)>=0
 		if ([1, 4].indexOf(state) >= 0 && !reDeploy || exitInEmberData.get('length') > 0) {
 			return this.get('store').peekAll('businessinput');
 		}
@@ -38,11 +37,11 @@ export default Route.extend({
 				return store.createRecord('goodsinput', {
 					destConfigId: ele.get('id'),
 					goodsConfig: item,
-					salesTarget: '',	// 销售目标设定
-					budget: ''	//预算设定
+					// salesTarget: '',	// 销售目标设定
+					// budget: ''	//预算设定
 					// TODO 测试，用后删除
-					// salesTarget: 75000,	// 销售目标设定
-					// budget: 42500	//预算设定
+					salesTarget: 70,	// 销售目标设定
+					budget: 4	//预算设定
 				});
 			});
 
@@ -90,7 +89,7 @@ export default Route.extend({
 			scenarioId = scenario.get('id'),
 			proposalId = params['proposal_id'],
 			paper = pageIndexModel.detailPaper;
-			// selfGoodsConfigs = goodsConfigs.filterBy('productConfig.productType', 0);
+		// selfGoodsConfigs = goodsConfigs.filterBy('productConfig.productType', 0);
 
 		let { detailProposal, destConfigs, destConfigHospitals, destConfigRegions } = pageIndexModel,
 			proposal = null,
@@ -122,19 +121,20 @@ export default Route.extend({
 
 				return all([increaseSalesReports.map(ele => {
 					return ele.get('scenario');
-				}),salesReport.get('hospitalSalesReports')]);
+				}), salesReport.get('hospitalSalesReports')]);
 
 				// return salesReport.get('hospitalSalesReports');
 			}).then(data => {
 				tmpHead = data[0].map(ele => {
 					let name = ele.get('name');
 
-					return name.slice(0, 4) + name.slice(-4);
+					return name;
+					// return name.slice(0, 4) + name.slice(-4);
 				});
-				tmpHeadQ = tmpHead.map(ele => {
-					return this.seasonQ(ele);
-				});
-
+				// tmpHeadQ = tmpHead.map(ele => {
+				// 	return this.seasonQ(ele);
+				// });
+				tmpHeadQ = tmpHead.map(ele => ele);
 				lastSeasonHospitalSalesReports = data[1].sortBy('potential').reverse();
 
 				return destConfigHospitals.map(ele => ele);

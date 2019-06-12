@@ -30,7 +30,6 @@ export default Controller.extend({
 
 		RSVP.Promise.all(promiseArray)
 			.then(data => {
-				//TODO paper.state !== 4(4需要与后端协商)
 				if (paper.state === 1 && reDeploy === 1 || paper.state !== 1 && paper.state !== 4) {
 					return store.createRecord('paperinput', {
 						paperId,

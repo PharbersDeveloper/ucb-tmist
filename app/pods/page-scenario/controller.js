@@ -239,8 +239,9 @@ export default Controller.extend({
 						title: `保存成功`,
 						detail: `保存成功。`
 					});
-					return;
+					return null;
 				}
+				return 'test';
 				// TODO 无R计算的逻辑
 				// return ajax.request(`${version}/CallRCalculate`, {
 				// 	method: 'POST',
@@ -253,8 +254,11 @@ export default Controller.extend({
 				// 		return that.updatePaper(store, paperId, state, that);
 				// 	}
 				// 	return response;
-			}).then(() => {
-				this.transitionToRoute('page-result');
+			}).then((data) => {
+				if (!isEmpty(data)) {
+					this.transitionToRoute('page-result');
+					return;
+				}
 
 			}).catch(err => {
 				window.console.log('error');

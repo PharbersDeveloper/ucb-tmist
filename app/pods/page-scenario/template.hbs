@@ -99,7 +99,9 @@
 			{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |mgc|}}
 				{{#bp-layout cross='center' classNames='mb-3'}}
 					{{bp-icon icon='pill'}}
-					<span local-class='keys' class="ml-2 mr-4">{{mgc.goodsConfig.productConfig.product.name}}</span>
+					<span local-class='keys' class="ml-2 mr-4">
+						{{mgc.goodsConfig.productConfig.product.name}}
+					</span>
 					<span local-class='values'>
 						{{mgc.goodsConfig.productConfig.priceType}}{{format-number mgc.goodsSalesTarget}}
 					</span>

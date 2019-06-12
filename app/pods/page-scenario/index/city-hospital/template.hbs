@@ -24,19 +24,19 @@
 					<th>一级</th>
 				</thead>
 				<tbody>
-					{{#each model.citiesHospital as |ch|}}
+					{{#each model.hospitalNumbers as |ch|}}
 						<tr>
-							<td>{{ch.name}}</td>
-							<td>{{ch.third}}</td>
-							<td>{{ch.second}}</td>
-							<td>{{ch.first}}</td>
+							<td>{{ch.cityName}}</td>
+							<td>{{ch.thirdLevel.length}}</td>
+							<td>{{ch.secondLevel.length}}</td>
+							<td>{{ch.firstLevel.length}}</td>
 						</tr>
 					{{/each}}
 					<tr>
 						<td>总计</td>
-						<td>**</td>
-						<td>*</td>
-						<td>*</td>
+						<td>{{model.total.thirdLevel}}</td>
+						<td>{{model.total.secondLevel}}</td>
+						<td>{{model.total.firstLevel}}</td>
 					</tr>
 					<tr></tr>
 				</tbody>
@@ -51,7 +51,9 @@
 			{{#bp-layout tagName="li" cross="center" 
 					local-class=(if (bp-eq salesGroupValue index) "active")
 					classNames="px-4"}}
-				<span {{action 'changeSalesValue' index}}>{{city.name}}</span>
+				<span {{action 'changeSalesValue' city index}}>
+					{{city.name}}
+				</span>
 			{{/bp-layout}}
 		{{/each}}
 	{{/bp-layout}}
@@ -59,30 +61,33 @@
 		{{#bp-layout direction="col" local-class="city-infos"}}
 			{{#bp-layout direction='col' classNames='bg-white' class='mb-4'}}
 				{{#bp-layout direction='row' main='between' cross='center' local-class="title"}}
-					<h3 local-class='main' class="mx-4 mt-3">{{city.cityData.firstObject.name}}</h3>
+					<h3 local-class='main' class="mx-4 mt-3">
+						{{model.city.name}}
+					</h3>
 				{{/bp-layout}}
 				{{#bp-layout direction='row' main='between' cross='start'}}
 					{{#bp-layout direction='col' main='center' classNames='m-4'}}
 						<p local-class="sub-key">总医院数量</p>
-						<p local-class='sub-value-num'>{{city.hospNum}}<span local-class='sub-num' class="ml-1">家</span></p>
+						<p local-class='sub-value-num'>{{model.city.hospitalConfigs.length}}<span local-class='sub-num'
+								class="ml-1">家</span></p>
 					{{/bp-layout}}
 					{{#bp-layout direction='col' main='center' classNames='m-4'}}
 						<p local-class="sub-key">城市类型</p>
-						<p local-class='sub-value'>{{city.cityData.firstObject.type}}</p>
+						<p local-class='sub-value'>{{model.city.type}}</p>
 					{{/bp-layout}}
 					{{#bp-layout direction='col' main='center' classNames='m-4'}}
 						<p local-class="sub-key">城市战略定位</p>
-						<p local-class='sub-value'>{{city.cityData.firstObject.level}}</p>
+						<p local-class='sub-value'>{{model.city.level}}</p>
 					{{/bp-layout}}
 					{{#bp-layout direction='col' main='center' classNames='m-4'}}
 						<p local-class="sub-key">患者占比</p>
 						{{#bp-layout direction='row' cross='center'}}
 							{{#bp-layout direction='col' classNames='mr-4'}}
-								<p local-class="sub-value" class="mb-1">{{city.cityData.firstObject.localPatientRatio}}</p>
+								<p local-class="sub-value" class="mb-1">{{model.city.localPatientRatio}}</p>
 								<p local-class='sub-num'>本地患者</p>
 							{{/bp-layout}}
 							{{#bp-layout direction='col'}}
-								<p local-class="sub-value" class="mb-1">{{city.cityData.firstObject.nonlocalPatientRatio}}</p>
+								<p local-class="sub-value" class="mb-1">{{model.city.nonlocalPatientRatio}}</p>
 								<p local-class='sub-num'>外地患者</p>
 							{{/bp-layout}}
 						{{/bp-layout}}
@@ -90,10 +95,10 @@
 				{{/bp-layout}}
 			{{/bp-layout}}
 		{{/bp-layout}}
-		{{#each tmpCityInfo.destConfigs as |destConfig|}}
+		{{#each model.city.hospitalConfigs as |hospitalConfig|}}
 			{{hospital-info
-					destConfig=destConfig 
-					salesConfigs=model.salesConfigs}}
+				hospitalConfig=hospitalConfig 
+				salesConfigs=model.salesConfigs}}
 		{{/each}}
 	{{/bp-layout}}
 {{/bp-layout}}

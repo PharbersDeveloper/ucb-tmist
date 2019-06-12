@@ -61,7 +61,14 @@ export default Route.extend({
 			data.forEach(ele => {
 				store.pushPayload(ele);
 			});
-			papers = store.peekAll('paper');
+			return store.query('paper', {
+				'proposal-id': useableProposals.get('firstObject').get('proposal.id'),
+				'account-id': cookies.read('account_id'),
+				'chart-type': 'hospital-sales-report-summary'
+			});
+		}).then(data => {
+			papers = data;
+
 			return store.query('scenario', {
 				'proposal-id': useableProposals.get('firstObject').get('proposal.id'),
 				'account-id': cookies.read('account_id')

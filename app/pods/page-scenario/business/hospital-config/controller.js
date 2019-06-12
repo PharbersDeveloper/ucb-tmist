@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-// import { computed } from '@ember/object';
+import { computed } from '@ember/object';
 // import { isEmpty } from '@ember/utils';
 // import { A } from '@ember/array';
 
@@ -41,7 +41,22 @@ export default Controller.extend({
 	// 		percent: isEmpty(totalBudgets) ? 0 : (budget * 100 / totalBudgets).toFixed(2)
 	// 	};
 	// }),
+	lastSales: computed('model.destConfig', function () {
+		const { destConfig, salesConfigs } = this.model;
 
+		let hospitalId = destConfig.get('hospitalConfig.hospital.id');
+
+		return salesConfigs.map(ele => {
+			let hosps = ele.get('salesReport.hospitalSalesReports').filter(item => item.get('destConfigId') !== '-1'),
+				currents = hosps.filterBy('destConfig.hospitalConfig.hospital.id', hospitalId);
+
+			return {
+				goodsConfig: ele.get('goodsConfig'),
+				report: currents.findBy('goodsConfig.productConfig.product.id', ele.get('goodsConfig.productConfig.product.id'))
+			};
+		});
+
+	}),
 	actions: {
 		changedRep(item) {
 			let businessinput = this.get('businessinput');

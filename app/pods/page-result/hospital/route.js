@@ -9,7 +9,7 @@ export default Route.extend({
 		const store = this.store,
 			handler = this.handler,
 			pageResultModel = this.modelFor('page-result'),
-			{ increaseSalesReports, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageResultModel;
+			{ detailPaper, increaseSalesReports, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageResultModel;
 
 		let hospitalSalesReports = A([]),
 			hospitalSalesReportsHospitals = A([]),
@@ -30,8 +30,8 @@ export default Route.extend({
 				}));
 			})
 			.then(data => {
-				hospitalSalesReports = data;
-				return all(data.map(ele => ele.get('resourceConfig')));
+				hospitalSalesReports = data.filter(ele => ele.get('destConfigId') !== '-1');
+				return all(hospitalSalesReports.map(ele => ele.get('resourceConfig')));
 			}).then(data => {
 				return all(data.map(ele => ele.get('representativeConfig')));
 			}).then(data => {
@@ -59,7 +59,22 @@ export default Route.extend({
 				// 整理季度数据
 				formatHospitalSalesReports = handler.formatReports(tmpHeadQ, hospitalSalesReportsHospitals, destConfigHospitals.length * uniqByProducts.length);
 				// 医院销售结构分布图
-				doubleCircleHosp = handler.salesConstruct(formatHospitalSalesReports);
+
+				// doubleCircleHosp = handler.salesConstruct(formatHospitalSalesReports);
+
+				doubleCircleHosp = detailPaper.get('salesReports').slice(-2).map(ele => {
+					let summary = ele.hospitalSalesReportSummary;
+
+					return {
+						seriesName: summary.scenarioName,
+						data: summary.values.map(item => {
+							return {
+								value: item.sales,
+								name: item.hospitalLevel
+							};
+						})
+					};
+				});
 				// 医院销售趋势图
 				barLineDataHosp = handler.salesTrend(barLineKeys, formatHospitalSalesReports, tmpHeadQ);
 
