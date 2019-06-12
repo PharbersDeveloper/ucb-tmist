@@ -3,19 +3,12 @@ import { computed } from '@ember/object';
 import { camelize } from '@ember/string';
 import { pluralize } from 'ember-inflector';
 import { inject as service } from '@ember/service';
+import ENV from 'ucb-tmist/config/environment';
 
 export default DS.JSONAPIAdapter.extend({
 	namespace: 'v0',
-	/**
-	 * 线上
-	 */
-	// host: 'http://ucb.pharbers.com',
-	// serviceHost: 'http://oauth.pharbers.com',
-	/**
-	 * 本地
-	 */
-	host: 'http://ucb.pharbers.com:8082',
-	serviceHost: 'http://192.168.100.174:9096',
+	host: ENV.redirectUri,
+	serviceHost: ENV.host,
 	scope: `APP/UCB`,
 	cookies: service(),
 	pathForType(type) {
