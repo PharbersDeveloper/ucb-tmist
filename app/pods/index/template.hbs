@@ -15,7 +15,7 @@
 				{{/body.left}}
 				{{#body.right}}
 					{{#if (bp-not-eq model.detailPaper.state 1 4)}}
-						{{#bp-button type="primary" tagName='span' 
+						{{#bp-button type="primary" tagName='span'
 							onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
 							开始部署
 						{{/bp-button}}
@@ -37,7 +37,7 @@
 			{{/bp-layout}}
 			{{#bp-layout direction="col" local-class='container' classNames="px-4 bg-white rounded"}}
 				{{#bp-layout local-class="item-resource" cross='center' classNames="my-4"}}
-					{{bp-icon size='large' icon='office-building' 
+					{{bp-icon size='large' icon='office-building'
 						local-class="icon"}}
 					{{#bp-layout local-class="main-box"}}
 						<span local-class='keys' class="mr-2">为医院分配代表</span>
@@ -46,13 +46,13 @@
 					<div local-class="blank"></div>
 					<div local-class='icon icon-right'>
 						{{#if (bp-eq assignHospitals model.destConfigs.length)}}
-							{{bp-icon size='large' icon='check' 
+							{{bp-icon size='large' icon='check'
 						local-class="icon icon-right"}}
 						{{/if}}
 					</div>
 				{{/bp-layout}}
 				{{#bp-layout local-class="item-resource" cross='center' classNames="my-4"}}
-					{{bp-icon size='large' icon='people' 
+					{{bp-icon size='large' icon='people'
 						local-class="icon"}}
 					{{#bp-layout local-class="main-box"}}
 						<span local-class='keys' class="mr-2">指派代表去医院</span>
@@ -61,7 +61,7 @@
 					<div local-class="blank"></div>
 					<div local-class='icon icon-right'>
 						{{#if (bp-eq assignRepresentatives model.resourceConfigRepresentatives.length)}}
-							{{bp-icon size='large' icon='check' 
+							{{bp-icon size='large' icon='check'
 						local-class="icon icon-right"}}
 						{{/if}}
 					</div>
@@ -79,7 +79,7 @@
 						{{#each goodsSalesTargets as |goodsSalesTarget|}}
 							{{#if (bp-eq gc.productConfig.product.id goodsSalesTarget.productConfig.product.id)}}
 								{{#bp-layout local-class="item-resource" classNames="my-4"}}
-									{{bp-icon size='large' icon='pill' 
+									{{bp-icon size='large' icon='pill'
 										local-class="icon"}}
 									{{#bp-layout direction="col" local-class="main-box"}}
 										{{#bp-layout main="between" classNames="mb-2"}}
@@ -110,7 +110,7 @@
 			{{/bp-layout}}
 			{{#bp-layout direction="col" local-class='container' classNames="px-4 bg-white rounded"}}
 				{{#bp-layout local-class="item-resource" classNames="my-4"}}
-					{{bp-icon size='large' icon='china-money' 
+					{{bp-icon size='large' icon='china-money'
 						local-class="icon"}}
 					{{#bp-layout direction="col" local-class="main-box"}}
 						{{#bp-layout main="between" classNames="mb-2"}}
@@ -126,7 +126,7 @@
 					<div local-class="blank"></div>
 					<div local-class='icon icon-right'>
 						{{#if (bp-eq usedBudget model.resourceConfigManager.managerConfig.totalBudgets)}}
-							{{bp-icon size='large' icon='check' 
+							{{bp-icon size='large' icon='check'
 						local-class="icon icon-right"}}
 						{{/if}}
 					</div>
@@ -145,7 +145,7 @@
 				<span local-class="times">共完成{{model.detailPaper.assessmentReports.length}}次</span>
 			{{/bp-layout}}
 			{{#each model.detailPaper.assessmentReports as |assessmentReport index|}}
-				{{#bp-layout tagName="p" main="between" cross="center" 
+				{{#bp-layout tagName="p" main="between" cross="center"
 				local-class="historp-report" classNames="px-2 py-3 m-0"
 				classNames=(if (bp-eq index 0) "mt-4 mb-0 px-2 py-3" "m-0 px-2 py-3")}}
 					{{#bp-layout tagName="span" local-class="infos"}}
@@ -197,16 +197,16 @@
 			{{/link-to}}
 			<p class="m-0">
 				{{#if (bp-not-eq model.detailPaper.state 1 4)}}
-					{{#bp-button type="primary" tagName='span' 
+					{{#bp-button type="primary" tagName='span'
 							onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
-						开始部署
+						开始测试
 					{{/bp-button}}
 				{{else}}
 					{{#bp-button tagName='span' classNames="mr-1" onClick=(action (mut reDeploy) true)}}
-						重新部署
+						重新开始
 					{{/bp-button}}
 					{{#bp-button type="primary" tagName='span' onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
-						继续部署
+						继续测试
 					{{/bp-button}}
 				{{/if}}
 			</p>
@@ -214,7 +214,7 @@
 	</div>
 {{/bp-layout}}
 {{#bp-modal
-		open=reDeploy 
+		open=reDeploy
 		position='center'
 		onHidden=(action (mut reDeploy) false) as |modal|}}
 	{{#modal.header closeButton=false}}

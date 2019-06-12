@@ -13,17 +13,17 @@ export default Route.extend({
 	},
 	model() {
 		const pageScenarioModel = this.modelFor('page-scenario'),
-			destConfigHospitals = pageScenarioModel.destConfigHospitals,
-			goodsConfigs = pageScenarioModel.goodsConfigs,
-			businessInputs = pageScenarioModel.businessInputs,
-			resourceConfRep = pageScenarioModel.resourceConfRep;
+			{ destConfigHospitals, goodsConfigs, businessInputs,goodsInputs,
+				resourceConfRep, managerGoodsConfigs ,resourceConfigManager} = pageScenarioModel;
 
 		this.controllerFor('page-scenario.business').set('businessInputs', businessInputs);
 		this.controllerFor('page-scenario').set('businessInputs', businessInputs);
 
 		return hash({
-			businessInputs: businessInputs,
-			resourceConfigManager: pageScenarioModel.resourceConfigManager,
+			businessInputs,
+			goodsInputs,
+			managerGoodsConfigs,
+			resourceConfigManager,
 			goodsConfigs,
 			selfGoodsConfigs: pageScenarioModel.selfGoodsConfigs,
 			destConfigHospitals,

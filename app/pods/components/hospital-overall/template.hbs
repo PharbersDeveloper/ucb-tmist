@@ -7,18 +7,18 @@
 			{{/bp-layout}}
 			{{#bp-layout classNames="pb-2 pt-3"}}
 				{{#bp-layout local-class='item' classNames="mr-4"}}
-					{{#bp-layout direction="col" 
+					{{#bp-layout direction="col"
 							local-class="keys" classNames="mr-2"}}
 						<span class="mb-1">患者数量</span>
 						<span>销售指标</span>
 					{{/bp-layout}}
 					{{#bp-layout direction="col" local-class="values"}}
 						<span class="mb-1">
-							{{#if (bp-eq overallFilterData.hospitalConfig.bedNumber '')}}
+							{{#unless patientCount}}
 								-
 							{{else}}
-								*{{format-number overallFilterData.hospitalConfig.bedNumber}}*
-							{{/if}}
+								{{format-number patientCount}}
+							{{/unless}}
 						</span>
 						<span>
 							{{#unless (bp-eq bi.totalSalesTarget '')}}
@@ -30,7 +30,7 @@
 					{{/bp-layout}}
 				{{/bp-layout}}
 				{{#bp-layout local-class='item'}}
-					{{#bp-layout direction="col" 
+					{{#bp-layout direction="col"
 							local-class="keys" classNames="mr-2"}}
 						<span class="mb-1">代表名称</span>
 						<span>预算分配</span>

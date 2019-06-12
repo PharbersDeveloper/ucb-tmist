@@ -34,88 +34,80 @@ export default Controller.extend({
 		}
 		return destConfigHospitals;
 	}),
-	warning: computed('total.verify.{overTotalBusinessIndicators,overTotalBudgets,illegal}', function () {
-		let { overTotalBusinessIndicators, overTotalBudgets, illegal } =
+	warning: computed('total.verify.{overTotalIndicators,overTotalBudgets,illegal}', function () {
+		let { overTotalIndicators, overTotalBudgets, illegal } =
 			this.get('total.verify'),
 			warning = { open: false, title: '', detail: '' };
 
 		switch (true) {
 		case illegal:
 			warning.open = true;
-			warning.title = '非法值警告';
+			warning.title = '非法值警告inBusinessCOntroller';
 			warning.detail = '请输入数字！';
 			return warning;
-		case overTotalBusinessIndicators:
+		case !isEmpty(overTotalIndicators):
 			warning.open = true;
-			warning.title = '总业务指标超额';
-			warning.detail = '您的销售额指标设定总值已超出业务总指标限制，请重新分配。';
+			warning.title = `业务指标超额`;
+			warning.detail = `${overTotalIndicators.productName} 的销售额指标设定总值已超出业务总指标限制，请重新分配。`;
 			return warning;
-		case overTotalBudgets:
+		case !isEmpty(overTotalBudgets):
 			warning.open = true;
-			warning.title = '总预算超额';
-			warning.detail = '您的预算设定总值已超出总预算限制，请重新分配。';
+			warning.title = `预算超额`;
+			warning.detail = `${overTotalBudgets.productName} 的预算设定总值已超出总预算限制，请重新分配。`;
 			return warning;
 		default:
 			return warning;
 		}
 	}),
 	total: computed('model.businessInputs.@each.{total}', function () {
+		console.log('in business controlelr')
 		const store = this.get('store'),
 			model = this.model,
-			selfGoodsConfigs = model.selfGoodsConfigs,
-			resourceConfigManager = model.resourceConfigManager;
+			{selfGoodsConfigs,managerGoodsConfigs,salesConfigs,goodsInputs} = model;
 
 		let verifyService = this.get('verify'),
 			businessInputs = this.get('businessInputs'),
 			newBusinessInputs = businessInputs,
-			usedSalesTarget = 0,
-			usedBudget = 0,
+			// usedSalesTarget = 0,
+			// usedBudget = 0,
 			indicatorsData = A([]),
 			budgetData = A([]);
 
-		newBusinessInputs.forEach(bi => {
-			usedSalesTarget += Number(bi.get('totalSalesTarget'));
-			usedBudget += Number(bi.get('totalBudget'));
-		});
+		// newBusinessInputs.forEach(bi => {
+		// 	usedSalesTarget += Number(bi.get('totalSalesTarget'));
+		// 	usedBudget += Number(bi.get('totalBudget'));
+		// });
 		// console.log(selfGoodsConfigs);
 		selfGoodsConfigs.forEach(goodsConfig => {
-			let goodsInputs = store.peekAll('goodsinput'),
-				currentProductId = goodsConfig.get('productConfig.product.id'),
-				singleGoodsInputs = goodsInputs.filterBy('goodsConfig.productConfig.product.id', currentProductId),
+			let currentProductId = goodsConfig.get('productConfig.product.id'),
+				currentGoodsInputs = goodsInputs.filterBy('goodsConfig.productConfig.product.id', currentProductId),
 				target = 0,
 				budget = 0;
-			// currentManagerGoodsConfig = resourceConfigManager.get('managerConfig.managerGoodsConfigs').findBy('goodsConfig.id', goodsConfig.id);
 
-			// console.log(resourceConfigManager.get('managerConfig.managerGoodsConfigs'));
-			// console.warn(currentManagerGoodsConfig.goodsSalesTarget);
-			// console.warn(currentManagerGoodsConfig.goodsSalesBudgets);
-
-			singleGoodsInputs.forEach(gci => {
+			currentGoodsInputs.forEach(gci => {
 				target += Number(gci.get('salesTarget'));
 				budget += Number(gci.get('budget'));
 			});
 			indicatorsData.push({
 				value: target,
-				total: 1500000,
-				id: goodsConfig.get('productConfig.product.id'),
+				priceType:  goodsConfig.get('productConfig.priceType'),
+				id: currentProductId,
 				name: goodsConfig.get('productConfig.product.name')
 			});
 			budgetData.push({
 				value: budget,
-				total: 85000,
-				id: goodsConfig.get('productConfig.product.id'),
+				priceType:  goodsConfig.get('productConfig.priceType'),
+				id: currentProductId,
 				name: goodsConfig.get('productConfig.product.name')
 			});
 		});
 
 		return {
-			usedSalesTarget,
-			usedBudget,
-			// indicatorsData: A([{ seriesName: '', data: indicatorsData }]),
+			// usedSalesTarget,
+			// usedBudget,
 			indicatorsData,
-			// budgetData: A([{ seriesName: '', data: budgetData }]),
 			budgetData,
-			verify: verifyService.verifyInput(businessInputs, resourceConfigManager)
+			verify: verifyService.verifyInput(businessInputs, managerGoodsConfigs,goodsInputs)
 		};
 	}),
 	findModelValue(model = {}, key) {

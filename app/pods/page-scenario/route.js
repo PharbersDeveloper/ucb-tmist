@@ -15,11 +15,13 @@ export default Route.extend({
 	 */
 	isHaveBusinessInput(detailPaper, destConfigHospitals, selfGoodsConfigs, lastSeasonHospitalSalesReports = []) {
 		let state = detailPaper.get('state'),
+			paperInputs = detailPaper.get('paperinputs'),
 			reDeploy = Number(localStorage.getItem('reDeploy')) === 1,
 			exitInEmberData = this.get('store').peekAll('businessinput');
 
 		if ([1, 4].indexOf(state) >= 0 && !reDeploy || exitInEmberData.get('length') > 0) {
-			return this.get('store').peekAll('businessinput');
+			return paperInputs.lastObject.get('businessinputs');
+			// return this.get('store').peekAll('businessinput');
 		}
 		return this.generateBusinessInputs(destConfigHospitals, selfGoodsConfigs, lastSeasonHospitalSalesReports);
 	},
@@ -37,11 +39,11 @@ export default Route.extend({
 				return store.createRecord('goodsinput', {
 					destConfigId: ele.get('id'),
 					goodsConfig: item,
-					// salesTarget: '',	// 销售目标设定
-					// budget: ''	//预算设定
+					salesTarget: '',	// 销售目标设定
+					budget: ''	//预算设定
 					// TODO 测试，用后删除
-					salesTarget: 70,	// 销售目标设定
-					budget: 4	//预算设定
+					// salesTarget: 70,	// 销售目标设定
+					// budget: 4	//预算设定
 				});
 			});
 
@@ -85,11 +87,9 @@ export default Route.extend({
 			cookies = this.get('cookies'),
 			pageIndexModel = this.modelFor('index'),
 			{ detailPaper, scenario, resourceConfigRepresentatives, goodsConfigs } = pageIndexModel,
-			// scenario = pageIndexModel.scenario,
 			scenarioId = scenario.get('id'),
 			proposalId = params['proposal_id'],
 			paper = pageIndexModel.detailPaper;
-		// selfGoodsConfigs = goodsConfigs.filterBy('productConfig.productType', 0);
 
 		let { detailProposal, destConfigs, destConfigHospitals, destConfigRegions } = pageIndexModel,
 			proposal = null,
@@ -109,7 +109,10 @@ export default Route.extend({
 			]),
 			increaseSalesReports = A([]),
 			tmpHead = A([]),
-			tmpHeadQ = A([]);
+			tmpHeadQ = A([]),
+			selfGoodsConfigs= A([]),
+			competeGoodsConfigs= A([]),
+			managerConfig = null;
 
 		return detailProposal.get('proposal')
 			.then(data => {
@@ -139,7 +142,7 @@ export default Route.extend({
 
 				return destConfigHospitals.map(ele => ele);
 			}).then(data => {
-				let selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0),
+					selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
 					competeGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 1);
 
 				if (scenario.get('phase') > 1) {
@@ -147,7 +150,20 @@ export default Route.extend({
 				} else {
 					businessInputs = this.isHaveBusinessInput(detailPaper, data, selfGoodsConfigs);
 				}
+				return pageIndexModel.resourceConfigManager.get('managerConfig');
+			}).then(data=> {
+				managerConfig = data;
+				return all( businessInputs.map(ele=>ele.get('goodsinputs')));
+			}).then(data=> {
+				let totalGoodsInputs = data.reduce((acc,cur)=> {
+					let inside = cur.reduce((iacc,icur)=> iacc.concat(icur),[]);
+
+					return acc.concat(inside);
+				},[]);
+
 				return hash({
+					businessInputs,
+					goodsInputs: totalGoodsInputs,
 					tmpHead,
 					tmpHeadQ,
 					barLineKeys,
@@ -156,13 +172,13 @@ export default Route.extend({
 					resourceConfigRepresentatives,
 					navs,
 					proposal,
-					businessInputs,
 					paper,
 					detailPaper,
 					scenario,
 					detailPaperState: detailPaper.get('state'),
 					resourceConfRep: pageIndexModel.resourceConfigRepresentatives,
 					resourceConfigManager: pageIndexModel.resourceConfigManager,
+					managerGoodsConfigs: managerConfig.get('managerGoodsConfigs'),
 					goodsConfigs,
 					selfGoodsConfigs,
 					competeGoodsConfigs,

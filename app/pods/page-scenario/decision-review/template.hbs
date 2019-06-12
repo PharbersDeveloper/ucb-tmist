@@ -2,10 +2,10 @@
 	<div local-class="situation business" class="mt-4">
 		{{#bp-layout direction="col" classNames="bg-white"}}
 			{{#bp-layout main="between" local-class="choose-container"}}
-				{{#bp-layout main="between" cross="center" 
+				{{#bp-layout main="between" cross="center"
 							local-class="choose-area" classNames="px-4"}}
 					<span local-class="keys" class="mr-4">选择周期</span>
-					{{#bp-dropdown widthSize="auto" 
+					{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
 						{{#dd.button}}
 							{{#if tmpSeason.id}}
@@ -27,10 +27,10 @@
 						{{/dd.menu}}
 					{{/bp-dropdown}}
 				{{/bp-layout}}
-				{{#bp-layout main="between" cross="center" 
+				{{#bp-layout main="between" cross="center"
 							local-class="choose-area" classNames="px-4"}}
 					<span local-class="keys" class="mr-4">选择药品</span>
-					{{#bp-dropdown widthSize="auto" 
+					{{#bp-dropdown widthSize="auto"
 								local-class="dd-medicines dd-area" as |dd|}}
 						{{#dd.button}}
 							{{#if tmpGc.id}}
@@ -47,7 +47,7 @@
 							{{/menu.option}}
 							{{#each model.goodsConfigs as |gc|}}
 								{{#unless gc.productConfig.productType}}
-									{{#menu.option value=gc 
+									{{#menu.option value=gc
 												onClick=(action (mut tmpGc))}}
 										{{gc.productConfig.product.name}}
 									{{/menu.option}}
@@ -56,10 +56,10 @@
 						{{/dd.menu}}
 					{{/bp-dropdown}}
 				{{/bp-layout}}
-				{{#bp-layout main="between" cross="center" 
+				{{!-- {{#bp-layout main="between" cross="center"
 							local-class="choose-area"  classNames="px-4"}}
 					<span local-class="keys" class="mr-4">选择代表</span>
-					{{#bp-dropdown widthSize="auto" 
+					{{#bp-dropdown widthSize="auto"
 								local-class="dd-sort dd-area" as |dd|}}
 						{{#dd.button}}
 							{{#if tmpRep.name}}
@@ -82,7 +82,7 @@
 							{{/each}}
 						{{/dd.menu}}
 					{{/bp-dropdown}}
-				{{/bp-layout}}
+				{{/bp-layout}} --}}
 			{{/bp-layout}}
 			{{business-review model=filterTableData}}
 			{{!-- <table local-class="table-container" class="table">

@@ -13,6 +13,7 @@ export default DS.Model.extend({
 			totalBudget = 0,
 			isFinish = A([]);
 
+
 		goodsInputs.forEach(goodsInput => {
 			let salesTarget = goodsInput.get('salesTarget'),
 				budget = goodsInput.get('budget');
