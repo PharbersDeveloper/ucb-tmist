@@ -13,9 +13,10 @@ export default Controller.extend({
 		if (ENV.environment === 'development') {
 			window.console.log('recomputed 代表销售趋势图');
 		}
-		let { repChooseRep, chooseProd, model } = this,
-			{ formatRepresentativeSalesReports } = model,
-			handler = this.handler,
+		const { model, handler } = this,
+			{ formatRepresentativeSalesReports } = model;
+
+		let { repChooseRep, chooseProd } = this,
 			findRepItemValue = isEmpty(repChooseRep) ? repChooseRep : repChooseRep.get('representativeConfig.representative.id'),
 			findRepItemKey = 'representative.id',
 			findGoodsValue = isEmpty(chooseProd) ? chooseProd : chooseProd.get('productConfig.product.id'),
@@ -27,14 +28,21 @@ export default Controller.extend({
 		if (ENV.environment === 'development') {
 			window.console.log('recomputed 代表销售数据表');
 		}
-		const { model } = this,
+		const { model, handler } = this,
 			{ formatRepresentativeSalesReports, resourceConfigRepresentatives } = model;
 
-		let lastSeasonReports = formatRepresentativeSalesReports.slice(-1).lastObject.dataReports;
+		let lastSeasonReports = formatRepresentativeSalesReports.slice(-1).lastObject.dataReports,
+			chooseProdTable = this.chooseProdTable,
+			productId = '';
 
+		if (isEmpty(chooseProdTable)) {
+			return model.tableBodyRep;
+		}
+		console.log(chooseProdTable.get('productConfig.product.id'));
+		productId = chooseProdTable.get('productConfig.product.id');
 		return resourceConfigRepresentatives.map(ele => {
-			let currentItems = this.findCurrentItem(lastSeasonReports, 'representative.id', ele.get('representativeConfig.representative.id')),
-				currentItemsByProds = this.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', ''),
+			let currentItems = handler.findCurrentItem(lastSeasonReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+				currentItemsByProds = handler.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', productId),
 				currentRepValue = EmberObject.create({
 					patientCount: 0,
 					quotaContribute: 0,
@@ -59,8 +67,8 @@ export default Controller.extend({
 				}, currentRepValue),
 
 				currentItemTotalSeason = formatRepresentativeSalesReports.map(item => {
-					let currentSeason = this.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
-						currentSeasonByProds = this.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', ''),
+					let currentSeason = handler.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+						currentSeasonByProds = handler.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', productId),
 						values = EmberObject.create({
 							salesQuota: 0,
 							sales: 0
