@@ -23,7 +23,7 @@ export default Route.extend({
 			barLineDataHosp = A([]);
 
 		return store.query('paper', {
-			'proposal-id': proposal.get('.id'),
+			'proposal-id': proposal.get('id'),
 			'account-id': cookies.read('account_id'),
 			'chart-type': 'hospital-sales-report-summary'
 		}).then(data => {
