@@ -5,23 +5,36 @@ import { A } from '@ember/array';
 
 export default Route.extend({
 	handler: service('serviceResultHandler'),
+	cookies: service(),
 	model() {
-		const store = this.store,
-			handler = this.handler,
-			pageResultModel = this.modelFor('page-scenario'),
-			{ detailPaper, increaseSalesReports, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageResultModel;
+		const { store, cookies, handler } = this,
+			pageScenarioModel = this.modelFor('page-scenario'),
+			{ proposal, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageScenarioModel;
 
-		let hospitalSalesReports = A([]),
+		let paper = null,
+			hospitalSalesReports = A([]),
 			hospitalSalesReportsHospitals = A([]),
 			uniqByProducts = A([]),
 			formatHospitalSalesReports = A([]),
 			tableHeadHosp = A([]),
 			tableBodyHosp = A([]),
 			doubleCircleHosp = A([]),
+			increaseSalesReports = A([]),
 			barLineDataHosp = A([]);
 
-		return all(increaseSalesReports.map(ele => ele.get('hospitalSalesReports')))
+		return store.query('paper', {
+			'proposal-id': proposal.get('.id'),
+			'account-id': cookies.read('account_id'),
+			'chart-type': 'hospital-sales-report-summary'
+		}).then(data => {
+			paper = data.firstObject;
+			return paper.get('salesReports');
+		})
 			.then(data => {
+				increaseSalesReports = data.sortBy('time');
+
+				return all(increaseSalesReports.map(ele => ele.get('hospitalSalesReports')));
+			}).then(data => {
 				let hospitalSalesReportIds = handler.getReportIds(data);
 
 				// 通过 hospitalSalesReport 的 id，获取其关联的 city(cities)
