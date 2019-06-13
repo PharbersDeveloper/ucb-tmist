@@ -38,7 +38,6 @@ export default Controller.extend({
 		if (isEmpty(chooseProdTable)) {
 			return model.tableBodyRep;
 		}
-		console.log(chooseProdTable.get('productConfig.product.id'));
 		productId = chooseProdTable.get('productConfig.product.id');
 		return resourceConfigRepresentatives.map(ele => {
 			let currentItems = handler.findCurrentItem(lastSeasonReports, 'representative.id', ele.get('representativeConfig.representative.id')),

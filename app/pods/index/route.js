@@ -99,6 +99,7 @@ export default Route.extend({
 			return all(data.map(ele => ele.get('productConfig')));
 		}).then(data => {
 			return hash({
+
 				papers,
 				useableProposals,
 				detailProposal: useableProposals.get('firstObject'),

@@ -11,7 +11,7 @@ export default Controller.extend({
 	cookies: service(),
 	verify: service('service-verify'),
 	oauthService: service('oauth_service'),
-	testBtn: computed(function() {
+	testBtn: computed(function () {
 		if (ENV.environment === 'development') {
 			return true;
 		}
@@ -32,54 +32,47 @@ export default Controller.extend({
 	verifyTotalValue(businessinputs) {
 		const verifyService = this.get('verify'),
 			model = this.get('model'),
-			// resourceConfRep = model.resourceConfRep,
-			{ managerGoodsConfigs, salesConfigs,goodsInputs } = model,
-
+			{ managerGoodsConfigs, goodsInputs } = model,
 			total = verifyService.verifyInput(businessinputs, managerGoodsConfigs, goodsInputs);
 
-		let {
-			overTotalIndicators,
-			overTotalBudgets,
-			illegal,
-			lowTotalIndicators,
-			lowTotalBudgets
-		} = total,
-		warning = { open: false, title: '', detail: '' };
+		let { overTotalIndicators, overTotalBudgets, illegal, lowTotalIndicators,
+				lowTotalBudgets } = total,
+			warning = { open: false, title: '', detail: '' };
 
 		switch (true) {
-			case illegal:
-				warning.open = true;
-				warning.title = '非法值警告';
-				warning.detail = '请输入数字！';
-				this.set('warning', warning);
-				return false;
-			case !isEmpty(lowTotalIndicators):
-				warning.open = true;
-				warning.title = '总业务指标未达标';
-				warning.detail = '您的业务销售额指标尚未完成，请完成总业务指标。';
-				this.set('warning', warning);
-				return false;
-			case !isEmpty(lowTotalBudgets):
-				warning.open = true;
-				warning.title = '总预算剩余';
-				warning.detail = '您还有总预算剩余，请分配完毕。';
-				this.set('warning', warning);
-				return false;
-			case !isEmpty(overTotalIndicators):
-				warning.open = true;
-				warning.title = '总业务指标超额';
-				warning.detail = '您的销售额指标设定总值已超出业务总指标限制，请重新分配。';
-				this.set('warning', warning);
-				return false;
-			case !isEmpty(overTotalBudgets):
-				warning.open = true;
-				warning.title = '总预算超额';
-				warning.detail = '您的预算设定总值已超出总预算限制，请重新分配。';
-				this.set('warning', warning);
-				return false;
-			default:
-				this.allVerifySuccessful();
-				return true;
+		case illegal:
+			warning.open = true;
+			warning.title = '非法值警告';
+			warning.detail = '请输入数字！';
+			this.set('warning', warning);
+			return false;
+		case !isEmpty(lowTotalIndicators):
+			warning.open = true;
+			warning.title = '总业务指标未达标';
+			warning.detail = '您的业务销售额指标尚未完成，请完成总业务指标。';
+			this.set('warning', warning);
+			return false;
+		case !isEmpty(lowTotalBudgets):
+			warning.open = true;
+			warning.title = '总预算剩余';
+			warning.detail = '您还有总预算剩余，请分配完毕。';
+			this.set('warning', warning);
+			return false;
+		case !isEmpty(overTotalIndicators):
+			warning.open = true;
+			warning.title = '总业务指标超额';
+			warning.detail = '您的销售额指标设定总值已超出业务总指标限制，请重新分配。';
+			this.set('warning', warning);
+			return false;
+		case !isEmpty(overTotalBudgets):
+			warning.open = true;
+			warning.title = '总预算超额';
+			warning.detail = '您的预算设定总值已超出总预算限制，请重新分配。';
+			this.set('warning', warning);
+			return false;
+		default:
+			this.allVerifySuccessful();
+			return true;
 		}
 
 	},
@@ -184,13 +177,7 @@ export default Controller.extend({
 			phase = scenario.get('phase'),
 			businessinputs = store.peekAll('businessinput'),
 			goodsinputs = store.peekAll('goodsinput');
-		// promiseArray = A([]);
 
-
-		// promiseArray = businessinputs.map(ele => {
-		// 	return ele.get('goodsinputs');
-		// });
-		// all(promiseArray)
 		goodsinputs.save()
 			.then(data => {
 				businessinputs.forEach(ele => {

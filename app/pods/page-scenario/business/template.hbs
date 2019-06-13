@@ -103,7 +103,7 @@
 			{{/bp-layout}}
 		{{/bp-layout}}
 	{{/bp-layout}}--}}
-	{{#bp-layout main="between" local-class="overviews" classNames='mb-4' }}
+	{{#bp-layout main="between" classNames='mb-4' }}
 		<div local-class="item">
 			{{#bp-layout tagName="h3" cross="center" local-class='title' classNames="m-0 px-4" }}
 				药品销售额指标
@@ -114,14 +114,17 @@
 						{{#if (bp-eq indicator.id managerGoodsConfig.goodsConfig.productConfig.product.id)}}
 							{{#bp-layout tagName='p' main='between' classNames='mb-1' }}
 								<span local-class='keys'>
-							{{indicator.name}}
-						</span>
+									{{indicator.name}}
+								</span>
 								<span local-class='values'>
-							{{indicator.priceType}}{{indicator.value}}/{{managerGoodsConfig.productConfig.priceType}}{{format-number managerGoodsConfig.goodsSalesTarget}}
-						</span>
+									{{indicator.priceType}}{{indicator.value}}/{{managerGoodsConfig.productConfig.priceType}}{{format-number managerGoodsConfig.goodsSalesTarget}}
+								</span>
 							{{/bp-layout}}
-							{{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
-								{{p.bar value=indicator.value maxValue=managerGoodsConfig.goodsSalesTarget local-class='bar'}}
+							{{#bp-progress local-class="progress"  classNames="mb-4" as |p|}}
+								{{p.bar value=indicator.value 
+									maxValue=managerGoodsConfig.goodsSalesTarget 
+									id=(string-concat 'bar' index)
+									local-class='bar'}}
 							{{/bp-progress}}
 						{{/if}}
 					{{/each}}
@@ -138,11 +141,11 @@
 						{{#if (bp-eq budget.id managerGoodsConfig.goodsConfig.productConfig.product.id)}}
 							{{#bp-layout main='between' classNames='mb-1' }}
 								<span local-class='keys'>
-							{{budget.name}}
-						</span>
+									{{budget.name}}
+								</span>
 								<span local-class='values'>
-							{{budget.priceType}}{{budget.value}}/{{managerGoodsConfig.productConfig.priceType}}{{format-number managerGoodsConfig.goodsSalesBudgets}}
-						</span>
+									{{budget.priceType}}{{budget.value}}/{{managerGoodsConfig.productConfig.priceType}}{{format-number managerGoodsConfig.goodsSalesBudgets}}
+								</span>
 							{{/bp-layout}}
 							{{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
 								{{p.bar value=budget.value maxValue=managerGoodsConfig.goodsSalesBudgets local-class='bar'}}
