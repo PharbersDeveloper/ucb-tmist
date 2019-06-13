@@ -60,23 +60,13 @@ export default Controller.extend({
 		}
 	}),
 	total: computed('model.businessInputs.@each.{total}', function () {
-		const store = this.get('store'),
-			model = this.model,
-			{selfGoodsConfigs,managerGoodsConfigs,salesConfigs,goodsInputs} = model;
+		const { selfGoodsConfigs, managerGoodsConfigs, goodsInputs } = this.model;
 
 		let verifyService = this.get('verify'),
 			businessInputs = this.get('businessInputs'),
-			newBusinessInputs = businessInputs,
-			// usedSalesTarget = 0,
-			// usedBudget = 0,
 			indicatorsData = A([]),
 			budgetData = A([]);
 
-		// newBusinessInputs.forEach(bi => {
-		// 	usedSalesTarget += Number(bi.get('totalSalesTarget'));
-		// 	usedBudget += Number(bi.get('totalBudget'));
-		// });
-		// console.log(selfGoodsConfigs);
 		selfGoodsConfigs.forEach(goodsConfig => {
 			let currentProductId = goodsConfig.get('productConfig.product.id'),
 				currentGoodsInputs = goodsInputs.filterBy('goodsConfig.productConfig.product.id', currentProductId),
@@ -89,32 +79,24 @@ export default Controller.extend({
 			});
 			indicatorsData.push({
 				value: target,
-				priceType:  goodsConfig.get('productConfig.priceType'),
+				priceType: goodsConfig.get('productConfig.priceType'),
 				id: currentProductId,
 				name: goodsConfig.get('productConfig.product.name')
 			});
 			budgetData.push({
 				value: budget,
-				priceType:  goodsConfig.get('productConfig.priceType'),
+				priceType: goodsConfig.get('productConfig.priceType'),
 				id: currentProductId,
 				name: goodsConfig.get('productConfig.product.name')
 			});
 		});
 
 		return {
-			// usedSalesTarget,
-			// usedBudget,
 			indicatorsData,
 			budgetData,
-			verify: verifyService.verifyInput(businessInputs, managerGoodsConfigs,goodsInputs)
+			verify: verifyService.verifyInput(businessInputs, managerGoodsConfigs, goodsInputs)
 		};
 	}),
-	findModelValue(model = {}, key) {
-		if (isEmpty(model) || isEmpty(key)) {
-			return 0;
-		}
-
-	},
 	init() {
 		this._super(...arguments);
 		this.set('currentHospState', {

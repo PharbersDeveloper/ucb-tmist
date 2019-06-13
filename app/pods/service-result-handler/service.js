@@ -6,6 +6,34 @@ import { A } from '@ember/array';
 
 export default Service.extend({
 	/**
+	 * 将小数转化为百分比
+	 * @param  {Number} pointNumber
+	 * @param  {Number} fixed=2 要保留的小数位
+	 */
+	formatPercent(pointNumber, fixed = 2) {
+		let str = Number(pointNumber * 100).toFixed(fixed);
+
+		if (Number(pointNumber) === 0) {
+			return 0;
+		}
+		return `${str}%`;
+	},
+	/**
+	 * @param  {Number} number
+	 * @param  {String} unit=''	单位
+	 * @param  {Number} fixed=2	保留小数点
+	 * @return {String}
+	 */
+	formatThousand(number, unit = '', fixed = 2) {
+		if (isEmpty(number)) {
+			return '';
+		}
+		if (Number(number) === 0) {
+			return 0;
+		}
+		return unit + Number.prototype.toLocaleString.call(Number(number.toFixed(fixed)));
+	},
+	/**
 	 * 获取季度报告下的所有的report id
 	 * @param  {Array} reportsBySeason 通过季度划分的报告
 	 */
@@ -129,6 +157,14 @@ export default Service.extend({
 		}
 		return dataReports.filterBy(key, value);
 	},
+	/**
+	 * @param  {Array} originTrendData 原图表数据
+	 * @param  {} formatReport
+	 * @param  {} findItemKey
+	 * @param  {} findItemValue
+	 * @param  {} findProdKey=''
+	 * @param  {} findProdValue=''
+	 */
 	changeTrendData(originTrendData, formatReport, findItemKey, findItemValue, findProdKey = '', findProdValue = '') {
 		if (isEmpty(findItemValue)) {
 			return originTrendData;
@@ -165,6 +201,191 @@ export default Service.extend({
 				yAxisIndex: ele.yAxisIndex,
 				data: total[ele.key]
 			};
+		});
+	},
+	generateHospitalTableData(destConfigHospitals, lastSeasonReports, formatHospitalSalesReports, productId = '') {
+		return destConfigHospitals.map(ele => {
+
+			let currentItems = this.findCurrentItem(lastSeasonReports, 'hospital.id', ele.get('hospitalConfig.hospital.id')),
+				currentItemsByProds = this.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', productId),
+				currentValue = EmberObject.create({
+					patientCount: 0,
+					quotaContribute: 0,
+					quotaGrowth: 0,
+					quotaAchievement: 0,
+					salesYearOnYear: 0,
+					salesMonthOnMonth: 0,
+					salesContribute: 0,
+					ytdSales: 0,
+					drugEntranceInfo: '',
+					representative: ''
+				}),
+				currentItemReport = currentItemsByProds.reduce((acc, current) => {
+					acc.patientCount += Number(current.report.patientCount);
+					acc.quotaContribute += current.report.quotaContribute;
+					acc.quotaGrowth += current.report.quotaGrowth;
+					acc.quotaAchievement += current.report.quotaAchievement;
+					acc.salesYearOnYear += current.report.salesYearOnYear;
+					acc.salesMonthOnMonth += current.report.salesMonthOnMonth;
+					acc.salesContribute += current.report.salesContribute;
+					acc.ytdSales += current.report.ytdSales;
+					acc.drugEntranceInfo = current.report.drugEntranceInfo;
+
+					return acc;
+				}, currentValue),
+				currentItemTotalSeason = formatHospitalSalesReports.map(item => {
+					let currentSeason = this.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+						currentSeasonByProds = this.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', productId),
+						values = EmberObject.create({
+							salesQuota: 0,
+							sales: 0
+						});
+
+					return currentSeasonByProds.reduce((acc, current) => {
+						acc.salesQuota += current.report.salesQuota;
+						acc.sales += current.report.sales;
+						return acc;
+					}, values);
+				}),
+				result = A([]);
+
+			result = [
+				ele.get('hospitalConfig.hospital.name'),
+				currentItemsByProds.firstObject.resourceConfig.get('representativeConfig.representative.name'),
+				this.formatThousand(currentItemReport.patientCount, '', 0),
+				currentItemReport.drugEntranceInfo,
+				this.formatPercent(currentItemReport.quotaContribute),
+				this.formatPercent(currentItemReport.quotaGrowth),
+				this.formatPercent(currentItemReport.quotaAchievement),
+				this.formatPercent(currentItemReport.salesYearOnYear),
+				this.formatPercent(currentItemReport.salesMonthOnMonth),
+				this.formatPercent(currentItemReport.salesContribute),
+				this.formatThousand(currentItemReport.ytdSales, '￥')
+
+			];
+			result.push(...currentItemTotalSeason.map(item => this.formatThousand(item.salesQuota, '￥')));
+			result.push(...currentItemTotalSeason.map(item => this.formatThousand(item.sales, '￥')));
+			return result;
+		});
+	},
+	generateRegionTableData(cities, lastSeasonReports, formatCitySalesReports, productId = '') {
+		return cities.map(ele => {
+			let currentItems = this.findCurrentItem(lastSeasonReports, 'city.id', ele.get('id')),
+				currentItemsByProds = this.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', productId),
+				currentRepValue = EmberObject.create({
+					patientCount: 0,
+					quotaContribute: 0,
+					quotaGrowth: 0,
+					quotaAchievement: 0,
+					salesYearOnYear: 0,
+					salesMonthOnMonth: 0,
+					salesContribute: 0,
+					ytdSales: 0
+				}),
+				currentItemReport = currentItemsByProds.reduce((acc, current) => {
+
+					acc.patientCount += Number(current.report.patientCount);
+					acc.quotaContribute += current.report.quotaContribute;
+					acc.quotaGrowth += current.report.quotaGrowth;
+					acc.quotaAchievement += current.report.quotaAchievement;
+					acc.salesYearOnYear += current.report.salesYearOnYear;
+					acc.salesMonthOnMonth += current.report.salesMonthOnMonth;
+					acc.salesContribute += current.report.salesContribute;
+					acc.ytdSales += current.report.ytdSales;
+					return acc;
+				}, currentRepValue),
+
+				currentItemTotalSeason = formatCitySalesReports.map(item => {
+					let currentSeason = this.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+						currentSeasonByProds = this.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', productId),
+						values = EmberObject.create({
+							salesQuota: 0,
+							sales: 0
+						});
+
+					return currentSeasonByProds.reduce((acc, current) => {
+						acc.salesQuota += current.report.salesQuota;
+						acc.sales += current.report.sales;
+						return acc;
+					}, values);
+				}),
+				result = A([]);
+
+			result = [
+				ele.get('name'),
+				this.formatThousand(currentItemReport.patientCount, '', 0),
+				this.formatPercent(currentItemReport.quotaContribute),
+				this.formatPercent(currentItemReport.quotaGrowth),
+				this.formatPercent(currentItemReport.quotaAchievement),
+				this.formatPercent(currentItemReport.salesYearOnYear),
+				this.formatPercent(currentItemReport.salesMonthOnMonth),
+				this.formatPercent(currentItemReport.salesContribute),
+				this.formatThousand(currentItemReport.ytdSales, '￥')
+
+			];
+			result.push(...currentItemTotalSeason.map(item => this.formatThousand(item.salesQuota, '￥')));
+			result.push(...currentItemTotalSeason.map(item => this.formatThousand(item.sales, '￥')));
+			return result;
+		});
+	},
+	generateRepTableData(resourceConfigRepresentatives, lastSeasonReports, formatRepresentativeSalesReports, productId = '') {
+		return resourceConfigRepresentatives.map(ele => {
+			let currentItems = this.findCurrentItem(lastSeasonReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+				currentItemsByProds = this.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', productId),
+				currentRepValue = EmberObject.create({
+					patientCount: 0,
+					quotaContribute: 0,
+					quotaGrowth: 0,
+					quotaAchievement: 0,
+					salesYearOnYear: 0,
+					salesMonthOnMonth: 0,
+					salesContribute: 0,
+					ytdSales: 0
+				}),
+				currentItemReport = currentItemsByProds.reduce((acc, current) => {
+
+					acc.patientCount += Number(current.report.patientCount);
+					acc.quotaContribute += current.report.quotaContribute;
+					acc.quotaGrowth += current.report.quotaGrowth;
+					acc.quotaAchievement += current.report.quotaAchievement;
+					acc.salesYearOnYear += current.report.salesYearOnYear;
+					acc.salesMonthOnMonth += current.report.salesMonthOnMonth;
+					acc.salesContribute += current.report.salesContribute;
+					acc.ytdSales += current.report.ytdSales;
+					return acc;
+				}, currentRepValue),
+
+				currentItemTotalSeason = formatRepresentativeSalesReports.map(item => {
+					let currentSeason = this.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+						currentSeasonByProds = this.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', productId),
+						values = EmberObject.create({
+							salesQuota: 0,
+							sales: 0
+						});
+
+					return currentSeasonByProds.reduce((acc, current) => {
+						acc.salesQuota += current.report.salesQuota;
+						acc.sales += current.report.sales;
+						return acc;
+					}, values);
+				}),
+				result = A([]);
+
+			result = [
+				ele.get('representativeConfig.representative.name'),
+				this.formatThousand(currentItemReport.patientCount, '', 0),
+				this.formatPercent(currentItemReport.quotaContribute),
+				this.formatPercent(currentItemReport.quotaGrowth),
+				this.formatPercent(currentItemReport.quotaAchievement),
+				this.formatPercent(currentItemReport.salesYearOnYear),
+				this.formatPercent(currentItemReport.salesMonthOnMonth),
+				this.formatPercent(currentItemReport.salesContribute),
+				this.formatThousand(currentItemReport.ytdSales, '￥')
+
+			];
+			result.push(...currentItemTotalSeason.map(item => this.formatThousand(item.salesQuota, '￥')));
+			result.push(...currentItemTotalSeason.map(item => this.formatThousand(item.sales, '￥')));
+			return result;
 		});
 	}
 });

@@ -9,8 +9,8 @@ export default Component.extend({
 
 		let hospitalId = overallFilterData.get('hospitalConfig.hospital.id'),
 			currentSalesConfigs = salesConfigs.filterBy('destConfig.hospitalConfig.hospital.id', hospitalId),
-			patientCount = currentSalesConfigs.reduce((acc, cur) => acc + cur.patientCount, 0)
+			patientCount = currentSalesConfigs.reduce((acc, cur) => acc + cur.patientCount, 0);
 
 		return patientCount;
-	}),
+	})
 });

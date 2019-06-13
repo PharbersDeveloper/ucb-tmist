@@ -83,8 +83,8 @@
 		<span local-class="keys" class="mr-4">产品</span>
 		{{#bp-dropdown widthSize="auto" as |dd|}}
 			{{#dd.button}}
-				{{#if regionChooseProdTable.id}}
-					<p>{{regionChooseProdTable.productConfig.product.name}}</p>
+				{{#if chooseProdTable.id}}
+					<p>{{chooseProdTable.productConfig.product.name}}</p>
 				{{else}}
 					全部总值
 				{{/if}}
@@ -92,12 +92,12 @@
 			{{/dd.button}}
 			{{#dd.menu as |menu|}}
 				{{#menu.option value=''
-					onClick=(action (mut regionChooseProdTable))}}
+					onClick=(action (mut chooseProdTable))}}
 					全部总值
 				{{/menu.option}}
 				{{#each model.selfGoodsConfigs as |goodsConfig|}}
 					{{#menu.option value=goodsConfig
-						onClick=(action (mut regionChooseProdTable))}}
+						onClick=(action (mut chooseProdTable))}}
 						{{goodsConfig.productConfig.product.name}}
 					{{/menu.option}}
 				{{/each}}
@@ -114,7 +114,7 @@
 				{{/each}}
 			</thead>
 			<tbody class="bg-white">
-				{{#each tableBody as |tableTr|}}
+				{{#each tableData as |tableTr|}}
 					<tr>
 						{{#each tableTr as |tableTd|}}
 							<td>{{tableTd}}</td>

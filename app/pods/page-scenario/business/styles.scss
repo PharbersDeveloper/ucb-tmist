@@ -1,138 +1,149 @@
 .business-container {
-	height: calc(100% - 25px);
+    height: calc(100% - 25px);
 
-	.overviews {
-		// flex: 0 0 170px;
+    .item {
+        flex: 1;
+        background-color: $n000;
 
-		.item {
-			flex: 1;
-			background-color: $n000;
+        h3 {
+            @extend %header-medium;
+            height: 54px;
+        }
 
-			h3 {
-				@extend %header-medium;
-				height: 54px;
-			}
+        .info {
+            @extend %header-large;
+        }
 
-			.info {
-				@extend %header-large;
-			}
+        .keys {
+            @extend %p-secondary;
+        }
 
-			.keys {
-				@extend %p-secondary;
-			}
+        .values {
+            @extend %header-medium;
+        }
 
-			.values {
-				@extend %header-medium;
-			}
+        .progress {
+            height: $spacing;
+            background-color: #F4F5F7;
+        }
 
-			.progress {
-				height: $spacing;
-				background-color: #F4F5F7;
-			}
+        .progress:nth-child(2) {
+            .bar {
+                background-color: #79F2C0;
+            }
+        }
 
-			.progress:first-child {
-				.bar {
-					background-color: #79F2C0;
-					;
-				}
-			}
+        .progress:nth-child(4) {
+            .bar {
+                background-color: #79E2F2;
+            }
+        }
 
-			.progress:nth-child(2) {
-				.bar {
-					background-color: #79E2F2;
-					;
-				}
-			}
+        .progress:nth-child(6) {    
+            .bar {
+                background-color: #998DD9;
+            }
+        }
 
-			.progress:nth-child(3) {
+        // .progress:first-child {
+        //     .bar {
+        //         background-color: #79F2C0;
+        //     }
+        // }
 
-				.bar {
-					background-color: #998DD9;
-					;
-				}
-			}
-		}
-	}
+        // .progress:nth-child(2) {
+        //     height: 16px;
 
-	.infos {
-		flex: 0 0 314px;
+        //     .bar {
+        //         background-color: #79E2F2;
+        //     }
+        // }
 
-		h3.title {
-			flex: 0 0 54px;
-			@extend %header-medium;
+        // .progress:nth-child(3) {
+        //     height: 24px;
 
-			.dd-hosp {
-				width: 98px;
-			}
-		}
+        //     .bar {
+        //         background-color: #998DD9;
+        //     }
+        // }
+    }
 
-		h4.title {
-			@extend %header-small;
-		}
+    .infos {
+        flex: 0 0 314px;
 
-		.keys {
-			@extend %p-primary;
-		}
+        h3.title {
+            flex: 0 0 54px;
+            @extend %header-medium;
 
-		.values {
-			@extend %p-secondary;
-		}
+            .dd-hosp {
+                width: 98px;
+            }
+        }
 
-		.hospitals-configs {
-			max-height: 402px;
-			overflow: auto;
+        h4.title {
+            @extend %header-small;
+        }
 
-			a:hover {
-				text-decoration: none;
-			}
+        .keys {
+            @extend %p-primary;
+        }
 
-			:global(.current-hospital) {
-				:global(.hospital-box) {
-					background-color: $n040a;
-				}
-			}
-		}
+        .values {
+            @extend %p-secondary;
+        }
 
-		.over-all {
-			.values {
-				@extend %p-small;
-				line-height: 20px;
-			}
-		}
-	}
+        .hospitals-configs {
+            max-height: 402px;
+            overflow: auto;
 
-	.hospitals {
-		// flex: 1;
+            a:hover {
+                text-decoration: none;
+            }
 
-		.hospitals-configs {
-			flex: 0 0 368px;
-			max-height: 552px;
-			overflow: auto;
+            :global(.current-hospital) {
+                :global(.hospital-box) {
+                    background-color: $n040a;
+                }
+            }
+        }
 
-			h3.title {
-				flex: 0 0 54px;
-				@extend %header-medium;
+        .over-all {
+            .values {
+                @extend %p-small;
+                line-height: 20px;
+            }
+        }
+    }
 
-				.dd-hosp {
-					width: 98px;
-				}
-			}
+    .hospitals {
 
-			a:hover {
-				text-decoration: none;
-			}
+        .hospitals-configs {
+            flex: 0 0 368px;
+            max-height: 552px;
+            overflow: auto;
 
-			:global(.current-hospital) {
-				:global(.hospital-box) {
-					background-color: $n020a;
-				}
-			}
-		}
+            h3.title {
+                flex: 0 0 54px;
+                @extend %header-medium;
 
-		.hospital {
-			flex: 1;
-		}
-	}
+                .dd-hosp {
+                    width: 98px;
+                }
+            }
 
+            a:hover {
+                text-decoration: none;
+            }
 
+            :global(.current-hospital) {
+                :global(.hospital-box) {
+                    background-color: $n020a;
+                }
+            }
+        }
+
+        .hospital {
+            flex: 1;
+        }
+    }
 }

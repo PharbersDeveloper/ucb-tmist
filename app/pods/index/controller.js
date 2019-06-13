@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
-import { alias } from '@ember/object/computed';
+// import { alias } from '@ember/object/computed';
 import { computed } from '@ember/object';
-import { isEmpty } from '@ember/utils';
+// import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
 
 export default Controller.extend({
@@ -13,56 +13,56 @@ export default Controller.extend({
 
 		return inputs.sortBy('time').reverse();
 	}),
-	assignHospitals: alias('restManagerResource.assignHospitals'),
-	assignRepresentatives: alias('restManagerResource.assignRepresentatives'),
-	usedBudget: alias('restManagerResource.usedBudget'),
-	goodsSalesTargets: alias('restManagerResource.goodsSalesTargets'),
+	// assignHospitals: alias('restManagerResource.assignHospitals'),
+	// assignRepresentatives: alias('restManagerResource.assignRepresentatives'),
+	// usedBudget: alias('restManagerResource.usedBudget'),
+	// goodsSalesTargets: alias('restManagerResource.goodsSalesTargets'),
 
-	restManagerResource: computed('model.{paperinput}', function () {
-		const model = this.get('model'),
-			{ paperinput, businessInputs, selfProductConfigs } = model;
+	// restManagerResource: computed('model.{paperinput}', function () {
+	// 	const model = this.get('model'),
+	// 		{ paperinput, businessInputs, selfProductConfigs } = model;
 
-		let usedSalesTarget = 0,
-			usedBudget = 0,
-			assignHospitalArray = A([]),
-			assignRepresentativeArray = A([]);
+	// 	let usedSalesTarget = 0,
+	// 		usedBudget = 0,
+	// 		assignHospitalArray = A([]),
+	// 		assignRepresentativeArray = A([]);
 
-		if (isEmpty(paperinput)) {
-			return {
-				assignHospitals: assignHospitalArray.get('length'),
-				assignRepresentatives: assignRepresentativeArray.get('length'),
-				usedBudget,
-				usedSalesTarget,
-				goodsSalesTargets: selfProductConfigs.map(ele => {
-					return {
-						productConfig: ele,
-						salesTarget: 0,
-						budget: 0
-					};
-				})
-			};
-		}
+	// 	if (isEmpty(paperinput)) {
+	// 		return {
+	// 			assignHospitals: assignHospitalArray.get('length'),
+	// 			assignRepresentatives: assignRepresentativeArray.get('length'),
+	// 			usedBudget,
+	// 			usedSalesTarget,
+	// 			goodsSalesTargets: selfProductConfigs.map(ele => {
+	// 				return {
+	// 					productConfig: ele,
+	// 					salesTarget: 0,
+	// 					budget: 0
+	// 				};
+	// 			})
+	// 		};
+	// 	}
 
-		businessInputs.forEach(bi => {
-			if (!isEmpty(bi.get('resourceConfig'))) {
-				assignHospitalArray.push(bi.get('resourceConfig'));
-			}
-			usedSalesTarget += Number(bi.get('totalSalesTarget'));
-			usedBudget += Number(bi.get('totalBudget'));
-		});
-		if (assignHospitalArray.get('length') !== 0) {
-			let businessinputRepresentatives = assignHospitalArray.map(ele => ele.get('resourceConfig.representativeConfig.representative.id'));
+	// 	businessInputs.forEach(bi => {
+	// 		if (!isEmpty(bi.get('resourceConfig'))) {
+	// 			assignHospitalArray.push(bi.get('resourceConfig'));
+	// 		}
+	// 		usedSalesTarget += Number(bi.get('totalSalesTarget'));
+	// 		usedBudget += Number(bi.get('totalBudget'));
+	// 	});
+	// 	if (assignHospitalArray.get('length') !== 0) {
+	// 		let businessinputRepresentatives = assignHospitalArray.map(ele => ele.get('resourceConfig.representativeConfig.representative.id'));
 
-			assignRepresentativeArray = businessinputRepresentatives.uniq().filter(item => item);
-		}
-		return {
-			assignHospitals: assignHospitalArray.get('length'),
-			assignRepresentatives: assignRepresentativeArray.get('length'),
-			usedBudget,
-			usedSalesTarget,
-			goodsSalesTargets: []
-		};
-	}),
+	// 		assignRepresentativeArray = businessinputRepresentatives.uniq().filter(item => item);
+	// 	}
+	// 	return {
+	// 		assignHospitals: assignHospitalArray.get('length'),
+	// 		assignRepresentatives: assignRepresentativeArray.get('length'),
+	// 		usedBudget,
+	// 		usedSalesTarget,
+	// 		goodsSalesTargets: []
+	// 	};
+	// }),
 	entryMission(proposalId) {
 		let now = new Date().getTime();
 

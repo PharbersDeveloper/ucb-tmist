@@ -9,13 +9,13 @@ export default Route.extend({
 	/**
 	 * 判断是否有 businessinput
 	 * @param  {model} scenario
-	 * @param  {model} detailPaper
+	 * @param  {model} paper
 	 * @param  {model} destConfigHospitals
 	 * @param  {model} selfGoodsConfigs
 	 */
-	isHaveBusinessInput(detailPaper, destConfigHospitals, selfGoodsConfigs, lastSeasonHospitalSalesReports = []) {
-		let state = detailPaper.get('state'),
-			paperInputs = detailPaper.get('paperinputs'),
+	isHaveBusinessInput(paper, destConfigHospitals, selfGoodsConfigs, lastSeasonHospitalSalesReports = []) {
+		let state = paper.get('state'),
+			paperInputs = paper.get('paperinputs'),
 			reDeploy = Number(localStorage.getItem('reDeploy')) === 1,
 			exitInEmberData = this.get('store').peekAll('businessinput');
 
@@ -86,7 +86,7 @@ export default Route.extend({
 		const store = this.get('store'),
 			cookies = this.get('cookies'),
 			pageIndexModel = this.modelFor('index'),
-			{ detailPaper, scenario, resourceConfigRepresentatives, goodsConfigs } = pageIndexModel,
+			{ scenario, resourceConfigRepresentatives, goodsConfigs } = pageIndexModel,
 			scenarioId = scenario.get('id'),
 			proposalId = params['proposal_id'],
 			paper = pageIndexModel.detailPaper;
@@ -107,17 +107,17 @@ export default Route.extend({
 				{ name: '指标', key: 'salesQuota' },
 				{ name: '指标达成率', key: 'quotaAchievement' }
 			]),
-			increaseSalesReports = A([]),
-			tmpHead = A([]),
 			tmpHeadQ = A([]),
-			selfGoodsConfigs= A([]),
-			competeGoodsConfigs= A([]),
+			selfGoodsConfigs = A([]),
+			competeGoodsConfigs = A([]),
+			increaseSalesReports = A([]),
+			goodsInputs = A([]),
 			managerConfig = null;
 
 		return detailProposal.get('proposal')
 			.then(data => {
 				proposal = data;
-				return data.get('salesReports');
+				return paper.get('salesReports');
 			}).then(data => {
 				increaseSalesReports = data.sortBy('time');
 				let salesReport = increaseSalesReports.get('lastObject');
@@ -128,43 +128,42 @@ export default Route.extend({
 
 				// return salesReport.get('hospitalSalesReports');
 			}).then(data => {
-				tmpHead = data[0].map(ele => {
+				tmpHeadQ = data[0].map(ele => {
 					let name = ele.get('name');
 
 					return name;
-					// return name.slice(0, 4) + name.slice(-4);
 				});
-				// tmpHeadQ = tmpHead.map(ele => {
-				// 	return this.seasonQ(ele);
-				// });
-				tmpHeadQ = tmpHead.map(ele => ele);
+
 				lastSeasonHospitalSalesReports = data[1].sortBy('potential').reverse();
 
 				return destConfigHospitals.map(ele => ele);
 			}).then(data => {
-					selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
-					competeGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 1);
+				selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
+				competeGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 1);
 
 				if (scenario.get('phase') > 1) {
-					businessInputs = this.isHaveBusinessInput(detailPaper, data, selfGoodsConfigs, lastSeasonHospitalSalesReports);
+					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs, lastSeasonHospitalSalesReports);
 				} else {
-					businessInputs = this.isHaveBusinessInput(detailPaper, data, selfGoodsConfigs);
+					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs);
 				}
 				return pageIndexModel.resourceConfigManager.get('managerConfig');
-			}).then(data=> {
+			}).then(data => {
 				managerConfig = data;
-				return all( businessInputs.map(ele=>ele.get('goodsinputs')));
-			}).then(data=> {
-				let totalGoodsInputs = data.reduce((acc,cur)=> {
-					let inside = cur.reduce((iacc,icur)=> iacc.concat(icur),[]);
+				return all(businessInputs.map(ele => ele.get('goodsinputs')));
+			}).then(data => {
+				goodsInputs = data.reduce((acc, cur) => {
+					let inside = cur.reduce((iacc, icur) => iacc.concat(icur), []);
 
 					return acc.concat(inside);
-				},[]);
+				}, []);
 
+				return all(destConfigHospitals.map(ele => ele.get('hospitalConfig')));
+			}).then(data => {
+				return all(data.map(ele => ele.get('hospital')));
+			}).then(() => {
 				return hash({
 					businessInputs,
-					goodsInputs: totalGoodsInputs,
-					tmpHead,
+					goodsInputs,
 					tmpHeadQ,
 					barLineKeys,
 					increaseSalesReports,
@@ -173,9 +172,9 @@ export default Route.extend({
 					navs,
 					proposal,
 					paper,
-					detailPaper,
+					// detailPaper,
 					scenario,
-					detailPaperState: detailPaper.get('state'),
+					// detailPaperState: paper.get('state'),
 					resourceConfRep: pageIndexModel.resourceConfigRepresentatives,
 					resourceConfigManager: pageIndexModel.resourceConfigManager,
 					managerGoodsConfigs: managerConfig.get('managerGoodsConfigs'),
@@ -205,28 +204,28 @@ export default Route.extend({
 		applicationController.setProperties({
 			proposal: model.proposal,
 			scenario: model.scenario,
-			detailPaper: model.detailPaper
+			paper: model.paper
 		});
 	},
 	setupController(controller, model) {
 		this._super(...arguments);
 		controller.set('businessInputs', model.businessInputs);
 
-		if ([0, 2, 3].indexOf(model.detailPaper.state) >= 0) {
+		if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
 			controller.set('notice', true);
 		}
-	},
-	seasonQ(seasonText) {
-		let season = isEmpty(seasonText) ? '' : seasonText;
-
-		if (season === '') {
-			return season;
-		}
-		season = season.replace('第一季度', 'Q1');
-		season = season.replace('第二季度', 'Q2');
-		season = season.replace('第三季度', 'Q3');
-		season = season.replace('第四季度', 'Q4');
-
-		return season;
 	}
+	// seasonQ(seasonText) {
+	// 	let season = isEmpty(seasonText) ? '' : seasonText;
+
+	// 	if (season === '') {
+	// 		return season;
+	// 	}
+	// 	season = season.replace('第一季度', 'Q1');
+	// 	season = season.replace('第二季度', 'Q2');
+	// 	season = season.replace('第三季度', 'Q3');
+	// 	season = season.replace('第四季度', 'Q4');
+
+	// 	return season;
+	// }
 });

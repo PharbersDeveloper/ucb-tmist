@@ -1,77 +1,91 @@
 .reference-container {
-	height: calc(100% - 25px);
+    height: calc(100% - 25px);
 
-	h4.title {
-		@extend %header-small;
-	}
+    h4.title {
+        @extend %header-small;
+    }
 
-	.reference-tabs {
-		flex: 0 0 80px;
-	}
+    .reference-tabs {
+        flex: 0 0 80px;
+    }
 
-	.reference-content {
-		flex: 1;
-	}
+    .reference-content {
+        flex: 1;
+    }
 }
 
 .products-container {
-	.trend {
-		.title {
-			height: 52px;
-			line-height: 52px;
-			@extend %p-primary;
-		}
+    .trend {
+        .title {
+            height: 52px;
+            line-height: 52px;
+            @extend %p-primary;
+        }
 
-		.trend-line {
-			height: 400px;
-			background-color: #fff;
-		}
-	}
+        .trend-line {
+            height: 400px;
+            background-color: #fff;
+        }
+    }
 
-	h3.title {
-		height: 52px;
+    h3.title {
+        height: 52px;
 
-		.main {
-			@extend %header-small;
-		}
+        .main {
+            @extend %header-small;
 
-		.overview {
-			@extend %p-secondary;
-		}
-	}
+            .sub-title {
+                @extend %p-small;
+            }
+        }
+
+        .keys {
+            @extend %p-primary;
+
+
+        }
+
+        button {
+            line-height: 100%;
+        }
+
+        .overview {
+            @extend %p-secondary;
+        }
+    }
 }
 
 .result-container {
-	flex: 1;
+    flex: 1;
 
-	.nav {
-		flex: 0 0 270px;
-		list-style: none;
+    .nav {
+        flex: 0 0 270px;
+        list-style: none;
 
-		&.reference-content {
-			width: 100%;
-		}
+        &.reference-content {
+            width: 100%;
+        }
 
-		li {
-			height: 4*$spacing;
-			@extend %header-small;
-			line-height: 4*$spacing;
-			cursor: pointer;
+        li {
+            height: 4*$spacing;
+            @extend %header-small;
+            line-height: 4*$spacing;
+            cursor: pointer;
 
-			span {
-				flex: 1;
-			}
+            span {
+                flex: 1;
+            }
 
-			&:global(.active) {
-				background-color: $n020a;
-			}
-		}
-	}
+            &:global(.active) {
+                background-color: $n020a;
+            }
+        }
+    }
 
-	.content {
-		flex: 1;
-		overflow-x: auto;
-	}
+    .content {
+        flex: 1;
+        overflow-x: auto;
+    }
 }
 
 // .business-container {

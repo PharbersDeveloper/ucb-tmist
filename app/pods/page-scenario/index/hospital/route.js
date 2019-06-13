@@ -5,23 +5,36 @@ import { A } from '@ember/array';
 
 export default Route.extend({
 	handler: service('serviceResultHandler'),
+	cookies: service(),
 	model() {
-		const store = this.store,
-			handler = this.handler,
-			pageResultModel = this.modelFor('page-scenario'),
-			{ increaseSalesReports, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageResultModel;
+		const { store, cookies, handler } = this,
+			pageScenarioModel = this.modelFor('page-scenario'),
+			{ proposal, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageScenarioModel;
 
-		let hospitalSalesReports = A([]),
+		let paper = null,
+			hospitalSalesReports = A([]),
 			hospitalSalesReportsHospitals = A([]),
 			uniqByProducts = A([]),
 			formatHospitalSalesReports = A([]),
 			tableHeadHosp = A([]),
 			tableBodyHosp = A([]),
 			doubleCircleHosp = A([]),
+			increaseSalesReports = A([]),
 			barLineDataHosp = A([]);
 
-		return all(increaseSalesReports.map(ele => ele.get('hospitalSalesReports')))
+		return store.query('paper', {
+			'proposal-id': proposal.get('id'),
+			'account-id': cookies.read('account_id'),
+			'chart-type': 'hospital-sales-report-summary'
+		}).then(data => {
+			paper = data.firstObject;
+			return paper.get('salesReports');
+		})
 			.then(data => {
+				increaseSalesReports = data.sortBy('time');
+
+				return all(increaseSalesReports.map(ele => ele.get('hospitalSalesReports')));
+			}).then(data => {
 				let hospitalSalesReportIds = handler.getReportIds(data);
 
 				// 通过 hospitalSalesReport 的 id，获取其关联的 city(cities)
@@ -59,7 +72,20 @@ export default Route.extend({
 				// 整理季度数据
 				formatHospitalSalesReports = handler.formatReports(tmpHeadQ, hospitalSalesReportsHospitals, destConfigHospitals.length * uniqByProducts.length);
 				// 医院销售结构分布图
-				doubleCircleHosp = handler.salesConstruct(formatHospitalSalesReports);
+				// doubleCircleHosp = handler.salesConstruct(formatHospitalSalesReports);
+				doubleCircleHosp = paper.get('salesReports').slice(-2).map(ele => {
+					let summary = ele.hospitalSalesReportSummary;
+
+					return {
+						seriesName: summary.scenarioName,
+						data: summary.values.map(item => {
+							return {
+								value: item.sales,
+								name: item.hospitalLevel
+							};
+						})
+					};
+				});
 				// 医院销售趋势图
 				barLineDataHosp = handler.salesTrend(barLineKeys, formatHospitalSalesReports, tmpHeadQ);
 
