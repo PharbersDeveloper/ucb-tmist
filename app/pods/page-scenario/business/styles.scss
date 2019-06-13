@@ -27,27 +27,45 @@
             background-color: #F4F5F7;
         }
 
-        .progress:first-child {
+        .progress:nth-child(2) {
             .bar {
                 background-color: #79F2C0;
             }
         }
 
-        .progress:nth-child(2) {
-            height: 16px;
-
+        .progress:nth-child(4) {
             .bar {
                 background-color: #79E2F2;
             }
         }
 
-        .progress:nth-child(3) {
-            height: 24px;
-
+        .progress:nth-child(6) {    
             .bar {
                 background-color: #998DD9;
             }
         }
+
+        // .progress:first-child {
+        //     .bar {
+        //         background-color: #79F2C0;
+        //     }
+        // }
+
+        // .progress:nth-child(2) {
+        //     height: 16px;
+
+        //     .bar {
+        //         background-color: #79E2F2;
+        //     }
+        // }
+
+        // .progress:nth-child(3) {
+        //     height: 24px;
+
+        //     .bar {
+        //         background-color: #998DD9;
+        //     }
+        // }
     }
 
     .infos {
