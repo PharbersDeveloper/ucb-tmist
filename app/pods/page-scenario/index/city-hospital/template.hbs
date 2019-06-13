@@ -1,6 +1,6 @@
 {{#bp-layout local-class="overview" classNames="mb-4"}}
 	{{#bp-layout direction="col" local-class="item" classNames="mr-2 bg-white"}}
-		{{#bp-layout tagName="h2" cross="center" 
+		{{#bp-layout tagName="h2" cross="center"
 			local-class="title" classNames="px-4 pt-3"}}
 			地区简介
 		{{/bp-layout}}
@@ -17,7 +17,7 @@
 		{{#bp-layout local-class="content"
 			classNames="p-4"}}
 			<table class="table">
-				<thead>
+				<thead class='border-bottom'>
 					<th>城市</th>
 					<th>三级</th>
 					<th>二级</th>
@@ -25,7 +25,7 @@
 				</thead>
 				<tbody>
 					{{#each model.hospitalNumbers as |ch|}}
-						<tr>
+						<tr >
 							<td>{{ch.cityName}}</td>
 							<td>{{ch.thirdLevel.length}}</td>
 							<td>{{ch.secondLevel.length}}</td>
@@ -45,10 +45,10 @@
 	{{/bp-layout}}
 {{/bp-layout}}
 {{#bp-layout local-class="cities-container"}}
-	{{#bp-layout tagName="ul" direction="col" local-class="nav" 
+	{{#bp-layout tagName="ul" direction="col" local-class="nav"
 				classNames="mr-4 p-4 bg-white"}}
 		{{#each model.destConfigRegion.regionConfig.region.cities as |city index|}}
-			{{#bp-layout tagName="li" cross="center" 
+			{{#bp-layout tagName="li" cross="center"
 					local-class=(if (bp-eq salesGroupValue index) "active")
 					classNames="px-4"}}
 				<span {{action 'changeSalesValue' city index}}>
@@ -97,7 +97,7 @@
 		{{/bp-layout}}
 		{{#each model.city.hospitalConfigs as |hospitalConfig|}}
 			{{hospital-info
-				hospitalConfig=hospitalConfig 
+				hospitalConfig=hospitalConfig
 				salesConfigs=model.salesConfigs}}
 		{{/each}}
 	{{/bp-layout}}

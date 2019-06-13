@@ -18,6 +18,7 @@ export default Route.extend({
 
 		tableData = businessinputs.map(ele => {
 			let biHospitalId = ele.get('destConfig.hospitalConfig.hospital.id'),
+				currentSalesConfig = salesConfigs.findBy('destConfig.hospitalConfig.hospital.id',biHospitalId),
 				sales = 0;
 
 			lastSeasonHospitalSalesReports.forEach(item => {
@@ -30,8 +31,8 @@ export default Route.extend({
 
 			return {
 				hospitalName: ele.get('destConfig.hospitalConfig.hospital.name'),
-				hospitalLevel: ele.get('destConfig.hospitalConfig.hospital.name'),
-				patientNumber: ele.get('destConfig.hospitalConfig.hospital.name'),
+				hospitalLevel: ele.get('destConfig.hospitalConfig.hospital.hospitalLevel'),
+				patientNumber: Number.prototype.toLocaleString.call(currentSalesConfig.get('patientCount')),
 				sales: sales,
 				representative: isEmpty(ele.get('resourceConfig.representativeConfig.representative.name')) ? '-' : ele.get('resourceConfig.representativeConfig.representative.name'),
 				totalSalesTarget: isEmpty(ele.get('totalSalesTarget')) ? '-' : ele.get('totalSalesTarget'),

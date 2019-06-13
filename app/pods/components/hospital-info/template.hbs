@@ -1,4 +1,4 @@
-{{#bp-layout tagName="h3" cross="center" local-class="title" class="px-4" }}
+{{#bp-layout tagName="h3" cross="center" local-class="title" class="m-0 px-4" }}
 	<span class="mr-2" local-class="icon" {{action 'showContent'}}>
 		{{bp-icon icon=icon}}
 	</span>
@@ -7,7 +7,7 @@
 {{#bs-collapse collapsed=showContent}}
 	{{#bp-layout main="between" local-class="content"}}
 		{{#bp-layout direction="col" main="between" local-class="infos"}}
-			{{#bp-layout main="between" local-class="basic" 
+			{{#bp-layout main="between" local-class="basic"
 				classNames="px-4 py-3"}}
 				{{#each hospitalConfig.hospital.images as |imgRcs index|}}
 					{{#if (bp-eq index 0)}}
