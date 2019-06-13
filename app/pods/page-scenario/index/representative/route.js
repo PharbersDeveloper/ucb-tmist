@@ -1,7 +1,7 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import EmberObject from '@ember/object';
-import { isEmpty } from '@ember/utils';
+// import { isEmpty } from '@ember/utils';
 import { all, hash } from 'rsvp';
 import { A } from '@ember/array';
 
@@ -54,8 +54,7 @@ export default Route.extend({
 
 				// 整理季度数据
 				formatRepresentativeSalesReports = handler.formatReports(tmpHeadQ, representativeSalesReportsReps, resourceConfigRepresentatives.length * uniqByProducts.length);
-
-				doubleCircleRep = handler.salesConstruct(formatRepresentativeSalesReports);
+				doubleCircleRep = handler.salesConstruct(formatRepresentativeSalesReports, 'representative.name');
 				barLineDataRep = handler.salesTrend(barLineKeys, formatRepresentativeSalesReports, tmpHeadQ);
 
 				let repCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`,
@@ -66,8 +65,8 @@ export default Route.extend({
 				tableHeadRep = handler.generateTableHead(tableHeadRep, tmpHeadQ, repCustomHead);
 
 				tableBodyRep = resourceConfigRepresentatives.map(ele => {
-					let currentItems = this.findCurrentItem(lastSeasonReports, 'representative.id', ele.get('representativeConfig.representative.id')),
-						currentItemsByProds = this.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', ''),
+					let currentItems = handler.findCurrentItem(lastSeasonReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+						currentItemsByProds = handler.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', ''),
 						currentRepValue = EmberObject.create({
 							patientCount: 0,
 							quotaContribute: 0,
@@ -92,8 +91,8 @@ export default Route.extend({
 						}, currentRepValue),
 
 						currentItemTotalSeason = formatRepresentativeSalesReports.map(item => {
-							let currentSeason = this.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
-								currentSeasonByProds = this.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', ''),
+							let currentSeason = handler.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+								currentSeasonByProds = handler.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', ''),
 								values = EmberObject.create({
 									salesQuota: 0,
 									sales: 0
@@ -137,11 +136,5 @@ export default Route.extend({
 					uniqByProducts
 				});
 			});
-	},
-	findCurrentItem(data, key, value) {
-		if (isEmpty(value)) {
-			return data;
-		}
-		return data.filterBy(key, value);
 	}
 });
