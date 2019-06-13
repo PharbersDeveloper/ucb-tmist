@@ -1,17 +1,20 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
+import EmberObject from '@ember/object';
 import { all, hash } from 'rsvp';
 import { A } from '@ember/array';
 
 export default Route.extend({
 	handler: service('serviceResultHandler'),
+	cookies: service(),
 	model() {
-		const store = this.store,
-			handler = this.handler,
+		const { store, handler, cookies } = this,
 			pageResultModel = this.modelFor('page-result'),
-			{ detailPaper, increaseSalesReports, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageResultModel;
+			{ detailProposal, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageResultModel;
 
-		let hospitalSalesReports = A([]),
+		let paper = null,
+			increaseSalesReports = A([]),
+			hospitalSalesReports = A([]),
 			hospitalSalesReportsHospitals = A([]),
 			uniqByProducts = A([]),
 			formatHospitalSalesReports = A([]),
@@ -20,7 +23,22 @@ export default Route.extend({
 			doubleCircleHosp = A([]),
 			barLineDataHosp = A([]);
 
-		return all(increaseSalesReports.map(ele => ele.get('hospitalSalesReports')))
+		return detailProposal.get('proposal')
+			.then(data => {
+
+				return store.query('paper', {
+					'proposal-id': data.get('id'),
+					'account-id': cookies.read('account_id'),
+					'chart-type': 'hospital-sales-report-summary'
+				});
+			}).then(data => {
+				paper = data.firstObject;
+				return paper.get('salesReports');
+			}).then(data => {
+				increaseSalesReports = data.sortBy('time');
+
+				return all(increaseSalesReports.map(ele => ele.get('hospitalSalesReports')));
+			})
 			.then(data => {
 				let hospitalSalesReportIds = handler.getReportIds(data);
 
@@ -62,7 +80,7 @@ export default Route.extend({
 
 				// doubleCircleHosp = handler.salesConstruct(formatHospitalSalesReports);
 
-				doubleCircleHosp = detailPaper.get('salesReports').slice(-2).map(ele => {
+				doubleCircleHosp = paper.get('salesReports').slice(-2).map(ele => {
 					let summary = ele.hospitalSalesReportSummary;
 
 					return {
@@ -78,38 +96,76 @@ export default Route.extend({
 				// 医院销售趋势图
 				barLineDataHosp = handler.salesTrend(barLineKeys, formatHospitalSalesReports, tmpHeadQ);
 
-				let hospCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`,
-					`YTD销售额`];
+				let hospCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`, `YTD销售额`],
+					lastSeasonReports = formatHospitalSalesReports.slice(-1).lastObject.dataReports;
 
 				tableHeadHosp.push('医院名称', '代表', '患者数量', '药品准入情况');
 				tableHeadHosp = handler.generateTableHead(tableHeadHosp, tmpHeadQ, hospCustomHead);
-				tableBodyHosp = destConfigHospitals.map(ele => {
-					let lastSeasonReports = formatHospitalSalesReports.slice(-1).lastObject.dataReports,
-						currentItem = lastSeasonReports.findBy('hospital.id', ele.get('hospitalConfig.hospital.id')),
-						currentItemReport = currentItem.report,
-						currentItemTotalSeason = formatHospitalSalesReports.map(item => {
-							return item.dataReports.findBy('hospital.id', ele.get('hospitalConfig.hospital.id'));
-						}),
-						result = A([]);
+				tableBodyHosp = handler.generateHospitalTableData(destConfigHospitals, lastSeasonReports, formatHospitalSalesReports);
 
-					result = [
-						ele.get('hospitalConfig.hospital.name'),
-						currentItemReport.get('resourceConfig.representativeConfig.representative.name'),
-						currentItemReport.patientCount,
-						currentItemReport.drugEntranceInfo,
-						currentItemReport.quotaContribute,
-						currentItemReport.quotaGrowth,
-						currentItemReport.quotaAchievement,
-						currentItemReport.salesYearOnYear,
-						currentItemReport.salesMonthOnMonth,
-						currentItemReport.salesContribute,
-						currentItemReport.ytdSales
+				// tableBodyHosp = destConfigHospitals.map(ele => {
 
-					];
-					result.push(...currentItemTotalSeason.map(item => item.report.salesQuota));
-					result.push(...currentItemTotalSeason.map(item => item.report.sales));
-					return result;
-				});
+				// 	let currentItems = handler.findCurrentItem(lastSeasonReports, 'hospital.id', ele.get('hospitalConfig.hospital.id')),
+				// 		currentItemsByProds = handler.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', productId),
+				// 		currentValue = EmberObject.create({
+				// 			patientCount: 0,
+				// 			quotaContribute: 0,
+				// 			quotaGrowth: 0,
+				// 			quotaAchievement: 0,
+				// 			salesYearOnYear: 0,
+				// 			salesMonthOnMonth: 0,
+				// 			salesContribute: 0,
+				// 			ytdSales: 0,
+				// 			drugEntranceInfo: '',
+				// 			representative: ''
+				// 		}),
+				// 		currentItemReport = currentItemsByProds.reduce((acc, current) => {
+				// 			acc.patientCount += Number(current.report.patientCount);
+				// 			acc.quotaContribute += current.report.quotaContribute;
+				// 			acc.quotaGrowth += current.report.quotaGrowth;
+				// 			acc.quotaAchievement += current.report.quotaAchievement;
+				// 			acc.salesYearOnYear += current.report.salesYearOnYear;
+				// 			acc.salesMonthOnMonth += current.report.salesMonthOnMonth;
+				// 			acc.salesContribute += current.report.salesContribute;
+				// 			acc.ytdSales += current.report.ytdSales;
+				// 			acc.drugEntranceInfo = current.report.drugEntranceInfo;
+
+				// 			return acc;
+				// 		}, currentValue),
+				// 		currentItemTotalSeason = formatHospitalSalesReports.map(item => {
+				// 			let currentSeason = handler.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+				// 				currentSeasonByProds = handler.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', productId),
+				// 				values = EmberObject.create({
+				// 					salesQuota: 0,
+				// 					sales: 0
+				// 				});
+
+				// 			return currentSeasonByProds.reduce((acc, current) => {
+				// 				acc.salesQuota += current.report.salesQuota;
+				// 				acc.sales += current.report.sales;
+				// 				return acc;
+				// 			}, values);
+				// 		}),
+				// 		result = A([]);
+
+				// 	result = [
+				// 		ele.get('hospitalConfig.hospital.name'),
+				// 		currentItemsByProds.firstObject.resourceConfig.get('representativeConfig.representative.name'),
+				// 		currentItemReport.patientCount,
+				// 		currentItemReport.drugEntranceInfo,
+				// 		currentItemReport.quotaContribute,
+				// 		currentItemReport.quotaGrowth,
+				// 		currentItemReport.quotaAchievement,
+				// 		currentItemReport.salesYearOnYear,
+				// 		currentItemReport.salesMonthOnMonth,
+				// 		currentItemReport.salesContribute,
+				// 		currentItemReport.ytdSales
+
+				// 	];
+				// 	result.push(...currentItemTotalSeason.map(item => item.salesQuota));
+				// 	result.push(...currentItemTotalSeason.map(item => item.sales));
+				// 	return result;
+				// });
 				return hash({
 					selfGoodsConfigs,
 					destConfigHospitals,

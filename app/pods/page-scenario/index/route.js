@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import { A } from '@ember/array';
-import RSVP, { hash } from 'rsvp';
+import RSVP, { hash, all } from 'rsvp';
 
 export default Route.extend({
 	eachArray(array, key) {
@@ -18,14 +18,11 @@ export default Route.extend({
 	},
 	model() {
 		const pageScenarioModel = this.modelFor('page-scenario'),
-			paper = pageScenarioModel.paper,
-			goodsConfigs = pageScenarioModel.goodsConfigs,
-			navs = pageScenarioModel.navs;
+			{ paper, goodsConfigs, navs } = pageScenarioModel;
 
 		let seasons = A([]),
 			tmpData = A([]),
-			tmpRepData = A([]),
-			tmpHospData = A([]),
+			productConfigs = A([]),
 			tmpHead = A([]),
 			lineColorTm = A(['#57D9A3', '#79E2F2', '#FFE380', '#8777D9 ']);
 
@@ -57,11 +54,7 @@ export default Route.extend({
 
 			}).then(result => {
 				let promiseArray = A([]),
-					repPromiseArray = A([]),
-					hospPromiseArray = A([]),
-					data = result.productSalesReports,
-					repData = result.representativeSalesReports,
-					hospData = result.hospitalSalesReports;
+					data = result.productSalesReports;
 
 				tmpHead = result.seasons.map(ele => {
 					let name = ele.get('name') || '';
@@ -83,68 +76,54 @@ export default Route.extend({
 						productNames
 					};
 				});
-				tmpRepData = repData.map((representativeSalesReports) => {
-					let resourceConfigIds = representativeSalesReports.map(ele => ele.get('resourceConfig'));
 
-					repPromiseArray = resourceConfigIds;
-					return {
-						resourceConfigIds
-					};
-				});
-				tmpHospData = hospData.map((hospitalSalesReports) => {
-
-					let destConfigIds = hospitalSalesReports.filter(ele => ele.destConfigId !== '-1').map(ele => ele.get('destConfig'));
-
-					hospPromiseArray = destConfigIds;
-					return {
-						destConfigIds
-					};
-				});
-				// return RSVP.Promise.all(promiseArray);
-				return hash({
-					goodsConfigIds: RSVP.Promise.all(promiseArray),
-					resourceConfigIds: RSVP.Promise.all(repPromiseArray),
-					destConfigIds: RSVP.Promise.all(hospPromiseArray)
-				});
+				return RSVP.Promise.all(promiseArray);
+				// return hash({
+				// 	goodsConfigIds: RSVP.Promise.all(promiseArray),
+				// 	resourceConfigIds: RSVP.Promise.all(repPromiseArray),
+				// 	destConfigIds: RSVP.Promise.all(hospPromiseArray)
+				// });
 			}).then(data => {
-				let promiseArray = data.goodsConfigIds.map(ele => {
-						return ele.get('productConfig');
-					}),
-					repPromiseArray = data.resourceConfigIds.map(ele => {
-						return ele.get('representativeConfig');
-					}),
-					hospPromiseArray = data.destConfigIds.map(ele => {
-						return ele.get('hospitalConfig');
-					});
-
-				// return RSVP.Promise.all(promiseArray);
-				return hash({
-					productConfig: RSVP.Promise.all(promiseArray),
-					representativeConfig: RSVP.Promise.all(repPromiseArray),
-					hospitalConfig: RSVP.Promise.all(hospPromiseArray)
+				let promiseArray = data.map(ele => {
+					return ele.get('productConfig');
 				});
+
+				// repPromiseArray = data.resourceConfigIds.map(ele => {
+				// 	return ele.get('representativeConfig');
+				// }),
+				// hospPromiseArray = data.destConfigIds.map(ele => {
+				// 	return ele.get('hospitalConfig');
+				// });
+
+				return all(promiseArray);
+				// return hash({
+				// 	productConfig: RSVP.Promise.all(promiseArray),
+				// 	representativeConfig: RSVP.Promise.all(repPromiseArray),
+				// 	hospitalConfig: RSVP.Promise.all(hospPromiseArray)
+				// });
 			}).then(data => {
-				let promiseArray = data.productConfig.map(ele => {
-						return ele.get('product');
-					}),
-					repPromiseArray = data.representativeConfig.map(ele => {
-						return ele.get('representative');
-					}),
-					hospPromiseArray = data.hospitalConfig.map(ele => {
-						return ele.get('hospital');
-					});
+				productConfigs = data;
+				let promiseArray = data.map(ele => ele.get('product'));
 
-				// return RSVP.Promise.all(promiseArray);
-				return hash({
-					productConfig: RSVP.Promise.all(promiseArray),
-					representativeConfig: RSVP.Promise.all(repPromiseArray),
-					hospitalConfig: RSVP.Promise.all(hospPromiseArray)
-				});
+				// repPromiseArray = data.representativeConfig.map(ele => {
+				// 	return ele.get('representative');
+				// }),
+				// hospPromiseArray = data.hospitalConfig.map(ele => {
+				// 	return ele.get('hospital');
+				// });
+
+				return all(promiseArray);
+				// return hash({
+				// 	productConfig: RSVP.Promise.all(promiseArray),
+				// 	representativeConfig: RSVP.Promise.all(repPromiseArray),
+				// 	hospitalConfig: RSVP.Promise.all(hospPromiseArray)
+				// });
 			}).then(data => {
 				// 拼装基于产品的数据
-				let lineData = data.productConfig.map((gc, index) => {
+				let lineData = data.map((gc, index) => {
 					return {
 						name: gc.get('name'),
+						treatmentArea: productConfigs[index].get('treatmentArea'),
 						date: tmpHead,
 						data: tmpData.map(item => item.shareData[index])
 					};
@@ -160,10 +139,15 @@ export default Route.extend({
 					salesConfigs: pageScenarioModel.salesConfigs,
 					resourceConfRep: pageScenarioModel.resourceConfRep,
 					resourceConfigManager: pageScenarioModel.resourceConfigManager,
-					lineDataTm: lineData,
-					lineColorTm
+					lineData,
+					lineColorTm,
+					treatmentArea: lineData.uniqBy('treatmentArea')
 				});
 			});
+	},
+	setupController(controller, model) {
+		this._super(...arguments);
+		controller.set('productTreatmentArea', model.treatmentArea.firstObject);
 	}
 	// beforeModel(transition) {
 	// 	let resourceConfig = this.modelFor('page-scenario'),
