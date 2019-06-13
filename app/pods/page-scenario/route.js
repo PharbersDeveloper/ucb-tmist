@@ -111,6 +111,7 @@ export default Route.extend({
 			selfGoodsConfigs = A([]),
 			competeGoodsConfigs = A([]),
 			increaseSalesReports = A([]),
+			goodsInputs = A([]),
 			managerConfig = null;
 
 		return detailProposal.get('proposal')
@@ -150,15 +151,19 @@ export default Route.extend({
 				managerConfig = data;
 				return all(businessInputs.map(ele => ele.get('goodsinputs')));
 			}).then(data => {
-				let totalGoodsInputs = data.reduce((acc, cur) => {
+				goodsInputs = data.reduce((acc, cur) => {
 					let inside = cur.reduce((iacc, icur) => iacc.concat(icur), []);
 
 					return acc.concat(inside);
 				}, []);
 
+				return all(destConfigHospitals.map(ele => ele.get('hospitalConfig')));
+			}).then(data => {
+				return all(data.map(ele => ele.get('hospital')));
+			}).then(() => {
 				return hash({
 					businessInputs,
-					goodsInputs: totalGoodsInputs,
+					goodsInputs,
 					tmpHeadQ,
 					barLineKeys,
 					increaseSalesReports,

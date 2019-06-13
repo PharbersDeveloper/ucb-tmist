@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import EmberObject from '@ember/object';
-import { hash } from 'rsvp';
+import { hash, all } from 'rsvp';
 import { A } from '@ember/array';
 
 export default Route.extend({
@@ -28,8 +28,9 @@ export default Route.extend({
 			cities = data;
 			citiesName = data.map(ele => ele.get('name'));
 
-			return data.map(ele => ele.get('hospitalConfigs'));
+			return all(data.map(ele => ele.get('hospitalConfigs')));
 		}).then(data => {
+
 			let hospitalNumbers = data.map((ele, index) => {
 					return {
 						cityName: citiesName[index],
