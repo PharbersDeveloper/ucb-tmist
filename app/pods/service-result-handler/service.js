@@ -10,7 +10,7 @@ export default Service.extend({
 	 * @param  {Number} pointNumber
 	 * @param  {Number} fixed=2 要保留的小数位
 	 */
-	formatPercent(pointNumber, fixed = 2) {
+	formatPercent(pointNumber, fixed = 1) {
 		let str = Number(pointNumber * 100).toFixed(fixed);
 
 		if (Number(pointNumber) === 0) {
@@ -24,7 +24,7 @@ export default Service.extend({
 	 * @param  {Number} fixed=2	保留小数点
 	 * @return {String}
 	 */
-	formatThousand(number, unit = '', fixed = 2) {
+	formatThousand(number, unit = '', fixed = 0) {
 		if (isEmpty(number)) {
 			return '';
 		}

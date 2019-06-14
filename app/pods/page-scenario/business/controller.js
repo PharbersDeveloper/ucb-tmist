@@ -42,7 +42,7 @@ export default Controller.extend({
 		switch (true) {
 		case illegal:
 			warning.open = true;
-			warning.title = '非法值警告inBusinessCOntroller';
+			warning.title = '非法值警告';
 			warning.detail = '请输入数字！';
 			return warning;
 		case !isEmpty(overTotalIndicators):

@@ -41,10 +41,6 @@
 							{{bp-icon icon='down'}}
 						{{/dd.button}}
 						{{#dd.menu as |menu|}}
-							{{#menu.option value=''
-								onClick=(action (mut tmpGc))}}
-								全部药品
-							{{/menu.option}}
 							{{#each model.goodsConfigs as |gc|}}
 								{{#unless gc.productConfig.productType}}
 									{{#menu.option value=gc

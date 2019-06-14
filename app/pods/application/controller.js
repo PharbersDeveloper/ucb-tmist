@@ -10,47 +10,61 @@ export default Controller.extend({
 	cookies: service(),
 	oauthService: service('oauth_service'),
 	sendInput(state) {
-		const ajax = this.get('ajax'),
-			store = this.get('store'),
-			{ paper, scenario, proposal } = this.getProperties('paper', 'scenario', 'proposal'),
-			applicationAdapter = store.adapterFor('application');
+		// const ajax = this.get('ajax'),
+		const { store } = this,
+			// applicationAdapter = store.adapterFor('application'),
+			scenario = this.get('scenario'),
+			paper = this.paper;
 
 		//	正常逻辑
-		let version = `${applicationAdapter.get('namespace')}`,
-			paperId = paper.get('id'),
+		// let version = `${applicationAdapter.get('namespace')}`,
+		let paperId = paper.id,
 			paperinputs = paper.get('paperinputs').sortBy('time'),
 			paperinput = paperinputs.get('lastObject'),
 			reDeploy = Number(localStorage.getItem('reDeploy')),
 			phase = scenario.get('phase'),
-			promiseArray = A([]);
+			businessinputs = store.peekAll('businessinput'),
+			goodsinputs = store.peekAll('goodsinput');
 
-		promiseArray = A([
-			store.peekAll('businessinput').save()
-		]);
-
-		RSVP.Promise.all(promiseArray)
+		goodsinputs.save()
 			.then(data => {
-				if (paper.state === 1 && reDeploy === 1 || paper.state !== 1 && paper.state !== 4) {
+				businessinputs.forEach(ele => {
+					let currentGoodsinputs = data.filterBy('destConfigId', ele.get('destConfig.id'));
+
+					ele.set('goodsinputs', currentGoodsinputs);
+				});
+
+				return businessinputs.save();
+			})
+			// rsvp.Promise.all(promiseArray)
+			.then(data => {
+				// 当点击重新部署按钮(reDeploy === 1 true)
+				// 当前周期是未开始(0)/有已经做完的周期，新的周期还未开始(2)/所有周期都已经结束(3)
+				// 或者 [1,4].indexOf(paper.state)<0 关卡内没有一个周期是做完的(1)
+				//	关卡内有做完的周期但是新的周期还未做完(4)
+				if (reDeploy === 1 || [0, 2, 3].indexOf(paper.get('state')) >= 0) {
 					return store.createRecord('paperinput', {
 						paperId,
 						phase,
 						scenario: scenario,
 						time: new Date().getTime(),
-						businessinputs: data[0]
+						businessinputs: data
 					}).save();
 				}
+
 				paperinput.setProperties({
-					phase,
 					time: new Date().getTime(),
-					businessinputs: data[0]
+					businessinputs: data
 				});
 				return paperinput.save();
 			}).then(data => {
 				paper.get('paperinputs').pushObject(data);
-				paper.set('state', state);
+				if (state === 1 || state === 4) {
+					paper.set('state', state);
+				}
 				paper.set('endTime', new Date().getTime());
 
-				if (paper.state !== 1) {
+				if (paper.state !== 1 || paper.state !== 4) {
 					paper.set('startTime', localStorage.getItem('startTime'));
 				}
 				return paper.save();
@@ -60,28 +74,34 @@ export default Controller.extend({
 
 				localStorage.clear();
 				localStorage.setItem('notice', notice);
-				if (state === 1) {
+				if (state === 1 || state === 4) {
 					window.location = this.get('oauthService').redirectUri;
+					return null;
+				}
+				return 'test';
+				// TODO 无R计算的逻辑
+				// return ajax.request(`${version}/CallRCalculate`, {
+				// 	method: 'POST',
+				// 	data: JSON.stringify({
+				// 		'proposal-id': this.get('model').proposal.id,
+				// 		'account-id': this.get('cookies').read('account_id')
+				// 	})
+				// }).then((response) => {
+				// 	if (response.status === 'Success') {
+				// 		return that.updatePaper(store, paperId, state, that);
+				// 	}
+				// 	return response;
+			}).then((data) => {
+				if (!isEmpty(data)) {
+					this.transitionToRoute('page-result');
 					return;
 				}
-				return ajax.request(`${version}/CallRCalculate`, {
-					method: 'POST',
-					data: JSON.stringify({
-						'proposal-id': proposal.get('id'),
-						'account-id': this.get('cookies').read('account_id')
-					})
-				}).then((response) => {
-					if (response.status === 'Success') {
-						this.transitionToRoute('page-result');
-						return;
-					}
 
-					return response;
-				}).catch(err => {
-					window.console.log('error');
-					window.console.log(err);
-				});
+			}).catch(err => {
+				window.console.log('error');
+				window.console.log(err);
 			});
+		// });
 	},
 	judgeOauth() {
 		let oauthService = this.get('oauthService'),
@@ -144,10 +164,10 @@ export default Controller.extend({
 
 			this.set('exitMission', false);
 			if (scenario.get('phase') === 1) {
-				// this.sendInput(1);
+				this.sendInput(1);
 				return null;
 			}
-			// this.sendInput(4);
+			this.sendInput(4);
 		}
 	}
 });
