@@ -12,15 +12,23 @@
 				{{/left.item}}
 			{{/body.left}}
 			{{#body.right}}
-				{{#bp-button classNames='mr-2'
+				{{#if (bp-not-eq model.scenario.phase model.detailProposal.proposal.totalPhase)}}
+					{{#bp-button classNames='mr-2'
+					type='primary'
+					onClick=(action 'continueTest') }}
+						进入下一季度
+					{{/bp-button}}
+				{{else}}
+					{{#bp-button classNames='mr-2'
 					disabled=false
 					onClick=(action 'checkManagerReport') }}
-					导出数据
-				{{/bp-button}}
-				{{#bp-button
+						导出数据
+					{{/bp-button}}
+					{{#bp-button
 					onClick=(action 'checkManagerReport') }}
-					查看测评综合表现
-				{{/bp-button}}
+						查看测评综合表现
+					{{/bp-button}}
+				{{/if}}
 			{{/body.right}}
 		{{/ph.body}}
 	{{/bp-page-header}}

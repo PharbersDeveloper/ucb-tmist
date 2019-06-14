@@ -51,6 +51,7 @@ Router.map(function () {
   });
   this.route('page-report', { path: 'report' });
   this.route('page-history-report', { path: 'history/:paper_id' });
+  this.route('page-scenario-loading');
 });
 
 export default Router;
