@@ -91,11 +91,6 @@
 					{{format-number sc.patientCount}}
 				</td>
 				<td class="pl-2 border-0 text-right">
-					{{!-- {{#each sc.salesReport.hospitalSalesReports as |hsr|}}
-						{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.destConfig.hospitalConfig.hospital.id)}}
-							{{item.goodsConfig.productConfig.priceType}}{{format-number hsr.sales 0}}
-						{{/if}}
-					{{/each}} --}}
 					{{#each lastSales as |item|}}
 						{{#if (bp-eq item.goodsConfig.productConfig.product.id sc.goodsConfig.productConfig.product.id)}}
 							{{item.goodsConfig.productConfig.priceType}}

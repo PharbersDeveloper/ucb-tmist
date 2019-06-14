@@ -36,9 +36,9 @@ export default Route.extend({
 		error(error, transition) {
 			window.console.log(error);
 			window.console.log(transition);
-			// if (ENV.environment === 'production') {
-			// 	window.location = ENV.redirectUri;
-			// }
+			if (ENV.environment === 'production') {
+				window.location = ENV.redirectUri;
+			}
 		}
 	}
 });
