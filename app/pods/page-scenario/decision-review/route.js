@@ -18,7 +18,7 @@ export default Route.extend({
 
 		tableData = businessinputs.map(ele => {
 			let biHospitalId = ele.get('destConfig.hospitalConfig.hospital.id'),
-				currentSalesConfig = salesConfigs.findBy('destConfig.hospitalConfig.hospital.id',biHospitalId),
+				currentSalesConfig = salesConfigs.findBy('destConfig.hospitalConfig.hospital.id', biHospitalId),
 				sales = 0;
 
 			lastSeasonHospitalSalesReports.forEach(item => {
@@ -58,10 +58,10 @@ export default Route.extend({
 					goodsConfigs: pageScenarioModel.goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0)
 				});
 			});
+	},
+	setupController(controller, model) {
+		this._super(...arguments);
+		controller.set('tmpGc', model.goodsConfigs.get('firstObject'));
+		// controller.set('tmpSr', A([]));
 	}
-	// setupController(controller, model) {
-	// 	this._super(...arguments);
-	// 	// controller.set('tmpGc', model.goodsConfigs.get('firstObject'));
-	// 	controller.set('tmpSr', A([]));
-	// }
 });

@@ -55,36 +55,12 @@ export default Route.extend({
 				// 城市销售趋势图
 				barLineDataCity = handler.salesTrend(barLineKeys, formatCitySalesReports, tmpHeadQ);
 
-				let cityCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`,
-					`YTD销售额`];
+				let cityCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`, `YTD销售额`],
+					lastSeasonReports = formatCitySalesReports.slice(-1).lastObject.dataReports;
 
 				tableHeadCity.push('城市名称', '患者数量');
 				tableHeadCity = handler.generateTableHead(tableHeadCity, tmpHeadQ, cityCustomHead);
-				tableBodyCity = cities.map(ele => {
-					let lastSeasonReports = formatCitySalesReports.slice(-1).lastObject.dataReports,
-						currentCity = lastSeasonReports.findBy('city.id', ele.get('id')),
-						currentCityReport = currentCity.report,
-						currentCityTotalSeason = formatCitySalesReports.map(item => {
-							return item.dataReports.findBy('city.id', ele.get('id'));
-						}),
-						result = A([]);
-
-					result = [
-						ele.get('name'),
-						currentCityReport.patientCount,
-						currentCityReport.quotaContribute,
-						currentCityReport.quotaGrowth,
-						currentCityReport.quotaAchievement,
-						currentCityReport.salesYearOnYear,
-						currentCityReport.salesMonthOnMonth,
-						currentCityReport.salesContribute,
-						currentCityReport.ytdSales
-
-					];
-					result.push(...currentCityTotalSeason.map(item => item.report.salesQuota));
-					result.push(...currentCityTotalSeason.map(item => item.report.sales));
-					return result;
-				});
+				tableBodyCity = handler.generateRegionTableData(cities, lastSeasonReports, formatCitySalesReports);
 				return hash({
 					formatCitySalesReports,
 					cities,

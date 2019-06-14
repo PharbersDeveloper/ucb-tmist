@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import EmberObject from '@ember/object';
 // import { isEmpty } from '@ember/utils';
 import { all, hash } from 'rsvp';
 import { A } from '@ember/array';
@@ -63,65 +62,8 @@ export default Route.extend({
 
 				tableHeadRep.push('代表名称', '患者数量');
 				tableHeadRep = handler.generateTableHead(tableHeadRep, tmpHeadQ, repCustomHead);
+				tableBodyRep = handler.generateRepTableData(resourceConfigRepresentatives, lastSeasonReports, formatRepresentativeSalesReports);
 
-				tableBodyRep = resourceConfigRepresentatives.map(ele => {
-					let currentItems = handler.findCurrentItem(lastSeasonReports, 'representative.id', ele.get('representativeConfig.representative.id')),
-						currentItemsByProds = handler.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', ''),
-						currentRepValue = EmberObject.create({
-							patientCount: 0,
-							quotaContribute: 0,
-							quotaGrowth: 0,
-							quotaAchievement: 0,
-							salesYearOnYear: 0,
-							salesMonthOnMonth: 0,
-							salesContribute: 0,
-							ytdSales: 0
-						}),
-						currentItemReport = currentItemsByProds.reduce((acc, current) => {
-
-							acc.patientCount += Number(current.report.patientCount);
-							acc.quotaContribute += current.report.quotaContribute;
-							acc.quotaGrowth += current.report.quotaGrowth;
-							acc.quotaAchievement += current.report.quotaAchievement;
-							acc.salesYearOnYear += current.report.salesYearOnYear;
-							acc.salesMonthOnMonth += current.report.salesMonthOnMonth;
-							acc.salesContribute += current.report.salesContribute;
-							acc.ytdSales += current.report.ytdSales;
-							return acc;
-						}, currentRepValue),
-
-						currentItemTotalSeason = formatRepresentativeSalesReports.map(item => {
-							let currentSeason = handler.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
-								currentSeasonByProds = handler.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', ''),
-								values = EmberObject.create({
-									salesQuota: 0,
-									sales: 0
-								});
-
-							return currentSeasonByProds.reduce((acc, current) => {
-								acc.salesQuota += current.report.salesQuota;
-								acc.sales += current.report.sales;
-								return acc;
-							}, values);
-						}),
-						result = A([]);
-
-					result = [
-						ele.get('representativeConfig.representative.name'),
-						currentItemReport.patientCount,
-						currentItemReport.quotaContribute,
-						currentItemReport.quotaGrowth,
-						currentItemReport.quotaAchievement,
-						currentItemReport.salesYearOnYear,
-						currentItemReport.salesMonthOnMonth,
-						currentItemReport.salesContribute,
-						currentItemReport.ytdSales
-
-					];
-					result.push(...currentItemTotalSeason.map(item => item.salesQuota));
-					result.push(...currentItemTotalSeason.map(item => item.sales));
-					return result;
-				});
 				return hash({
 					selfGoodsConfigs,
 					resourceConfigRepresentatives,

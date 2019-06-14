@@ -16,11 +16,11 @@
 			</p>
 		{{/unless}}
 		{{#bp-layout local-class="operating"}}
-			{{#if tmpRc.id}}
+			{{#if tmpRc.representativeConfig.representative.images.firstObject.img}}
 				<img src={{tmpRc.representativeConfig.representative.images.firstObject.img}} local-class="avatar"
-					alt="" class="mr-4">
+					class="rounded-circle" alt="" class="mr-4">
 			{{else}}
-				<img src="/assets/images/img_placeholder.png" local-class="avatar" alt="" class="mr-4">
+				<img src="/assets/images/img_placeholder.png" local-class="avatar" alt="" class="mr-4 rounded-circle">
 			{{/if}}
 			{{#bp-layout direction="col"}}
 				<p local-class="title" class="mb-3">医院代表</p>
@@ -30,7 +30,7 @@
 						{{#if tmpRc.id}}
 							<p>{{tmpRc.representativeConfig.representative.name}}</p>
 						{{else}}
-							未分配代表
+							请分配代表
 						{{/if}}
 						{{bp-icon icon='down'}}
 					{{/dd.button}}
@@ -41,9 +41,15 @@
 									onClick=(action 'changedRep')
 									local-class="representative-info"}}
 									{{#bp-layout cross="center"}}
-										<img width="24" height="24"
-											src={{rc.representativeConfig.representative.images.firstObject.img}}
-											alt="avatar" class="mr-2">
+										{{#if rc.representativeConfig.representative.images.firstObject.img}}
+											<img width="24" height="24"
+												src={{rc.representativeConfig.representative.images.firstObject.img}}
+												alt={{rc.representativeConfig.representative.name}}
+												class="mr-2 rounded-circle">
+										{{else}}
+											<img width="24" height="24" src="/assets/images/img_placeholder.png" alt=''
+												class="mr-2 rounded-circle">
+										{{/if}}
 										<span local-class="name" class="mr-2">
 											{{rc.representativeConfig.representative.name}}
 										</span>
