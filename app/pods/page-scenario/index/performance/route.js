@@ -77,17 +77,17 @@ export default Route.extend({
 
 					result = [
 						ele.get('productConfig.product.name'),
-						currentGoodsReport.quotaContribute,
-						currentGoodsReport.quotaGrowth,
-						currentGoodsReport.quotaAchievement,
-						currentGoodsReport.salesYearOnYear,
-						currentGoodsReport.salesMonthOnMonth,
-						currentGoodsReport.salesContribute,
-						currentGoodsReport.ytdSales
+						handler.formatPercent(currentGoodsReport.quotaContribute),
+						handler.formatPercent(currentGoodsReport.quotaGrowth),
+						handler.formatPercent(currentGoodsReport.quotaAchievement),
+						handler.formatPercent(currentGoodsReport.salesYearOnYear),
+						handler.formatPercent(currentGoodsReport.salesMonthOnMonth),
+						handler.formatPercent(currentGoodsReport.salesContribute),
+						handler.formatThousand(currentGoodsReport.ytdSales, '￥')
 
 					];
-					result.push(...currentGoodsTotalSeason.map(item => item.report.salesQuota));
-					result.push(...currentGoodsTotalSeason.map(item => item.report.sales));
+					result.push(...currentGoodsTotalSeason.map(item => handler.formatThousand(item.report.salesQuota, '￥')));
+					result.push(...currentGoodsTotalSeason.map(item => handler.formatThousand(item.report.sales, '￥')));
 					return result;
 				});
 				return hash({

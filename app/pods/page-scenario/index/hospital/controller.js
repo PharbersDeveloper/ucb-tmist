@@ -23,5 +23,22 @@ export default Controller.extend({
 			findGoodsKey = 'goodsConfig.productConfig.product.id';
 
 		return handler.changeTrendData(model.barLineDataHosp, formatHospitalSalesReports, findHospItemKey, findHospItemValue, findGoodsKey, findGoodsValue);
+	}),
+	tableData: computed('chooseProdTable', function () {
+		if (ENV.environment === 'development') {
+			window.console.log('recomputed 医院销售数据表');
+		}
+		const { model, handler } = this,
+			{ formatHospitalSalesReports, destConfigHospitals } = model;
+
+		let lastSeasonReports = formatHospitalSalesReports.slice(-1).lastObject.dataReports,
+			chooseProdTable = this.chooseProdTable,
+			productId = '';
+
+		if (isEmpty(chooseProdTable)) {
+			return model.tableBodyHosp;
+		}
+		productId = chooseProdTable.get('productConfig.product.id');
+		return handler.generateHospitalTableData(destConfigHospitals, lastSeasonReports, formatHospitalSalesReports, productId);
 	})
 });
