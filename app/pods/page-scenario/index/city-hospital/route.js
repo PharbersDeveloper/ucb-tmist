@@ -18,7 +18,7 @@ export default Route.extend({
 
 		let regionConfig = destConfigRegions.firstObject.get('regionConfig'),
 			cities = A([]),
-			citiesName = A([]);
+			citiesArray = A([]);
 
 		return regionConfig.then(data => {
 			return data.get('region');
@@ -26,25 +26,28 @@ export default Route.extend({
 			return data.get('cities');
 		}).then(data => {
 			cities = data;
-			citiesName = data.map(ele => ele.get('name'));
+			citiesArray = data.map(ele => ele);
 
 			return all(data.map(ele => ele.get('hospitalConfigs')));
 		}).then(data => {
 
 			let hospitalNumbers = data.map((ele, index) => {
+					let city = citiesArray[index];
+
 					return {
-						cityName: citiesName[index],
+						city,
 						thirdLevel: ele.filterBy('hospital.hospitalLevel', '三级'),
 						secondLevel: ele.filterBy('hospital.hospitalLevel', '二级'),
-						firstLevel: ele.filterBy('hospital.hospitalLevel', '一级')
+						firstLevel: ele.filterBy('hospital.hospitalLevel', '一级'),
+						hospitalConfigs: city.get('hospitalConfigs')
 					};
 				}),
-				initTotal = EmberObject.create({ thirdLevel: 0, secondLevel: 0, firstLevel: 0 }),
+				initTotal = EmberObject.create({ thirdLevel: 0, secondLevel: 0, firstLevel: 0, hospitals: 0 }),
 				total = hospitalNumbers.reduce((acc, current) => {
 					acc.thirdLevel += current.thirdLevel.length;
 					acc.secondLevel += current.secondLevel.length;
 					acc.firstLevel += current.firstLevel.length;
-
+					acc.hospitals += current.hospitalConfigs.length;
 					return acc;
 				}, initTotal);
 
@@ -53,7 +56,8 @@ export default Route.extend({
 				hospitalNumbers,
 				city: cities.firstObject,
 				destConfigRegion: destConfigRegions.firstObject,
-				salesConfigs
+				salesConfigs,
+				currentHospitalConfig: cities.firstObject.get('hospitalConfigs').firstObject
 			});
 		});
 	}

@@ -1,104 +1,156 @@
-{{#bp-layout local-class="overview" classNames="mb-4"}}
-	{{#bp-layout direction="col" local-class="item" classNames="mr-2 bg-white"}}
-		{{#bp-layout tagName="h2" cross="center"
-			local-class="title" classNames="px-4 pt-3"}}
-			地区简介
-		{{/bp-layout}}
-		{{#bp-layout tagName="p" local-class="content"
-			classNames="p-4"}}
-			{{model.destConfigRegion.regionConfig.region.describe}}
-		{{/bp-layout}}
-	{{/bp-layout}}
-	{{#bp-layout direction="col" local-class="item" classNames="bg-white"}}
-		{{#bp-layout tagName="h2" cross="center"
-			local-class="title"  classNames="px-4 pt-3"}}
-			各市医院数分布
-		{{/bp-layout}}
-		{{#bp-layout local-class="content"
-			classNames="p-4"}}
-			<table class="table">
-				<thead class='border-bottom'>
-					<th>城市</th>
-					<th>三级</th>
-					<th>二级</th>
-					<th>一级</th>
-				</thead>
-				<tbody>
-					{{#each model.hospitalNumbers as |ch|}}
-						<tr >
-							<td>{{ch.cityName}}</td>
-							<td>{{ch.thirdLevel.length}}</td>
-							<td>{{ch.secondLevel.length}}</td>
-							<td>{{ch.firstLevel.length}}</td>
-						</tr>
-					{{/each}}
-					<tr>
-						<td>总计</td>
-						<td>{{model.total.thirdLevel}}</td>
-						<td>{{model.total.secondLevel}}</td>
-						<td>{{model.total.firstLevel}}</td>
-					</tr>
-					<tr></tr>
-				</tbody>
-			</table>
-		{{/bp-layout}}
-	{{/bp-layout}}
+{{#bp-layout tagName="h2" cross="center"
+	local-class="title" classNames="m-0 px-4 bg-white"}}
+	地区城市医院概况
 {{/bp-layout}}
+{{#bp-layout local-class="overview" classNames="mb-4"}}
+	<table local-class='table' class="table m-0 bg-white">
+		<thead class='border-bottom'>
+			<th class="pl-4">城市</th>
+			<th>城市类型</th>
+			<th>城市战略地位</th>
+			<th>本地患者占比</th>
+			<th>外地患者占比</th>
+			<th>三级</th>
+			<th>二级</th>
+			<th>一级</th>
+			<th>医院总数</th>
+		</thead>
+		<tbody>
+			{{#each model.hospitalNumbers as |ch|}}
+				<tr>
+					<td class="pl-4">{{ch.city.name}}</td>
+					<td>{{ch.city.type}}</td>
+					<td>{{ch.city.level}}</td>
+					<td>{{ch.city.localPatientRatio}}</td>
+					<td>{{ch.city.nonlocalPatientRatio}}</td>
+					<td>{{ch.thirdLevel.length}}</td>
+					<td>{{ch.secondLevel.length}}</td>
+					<td>{{ch.firstLevel.length}}</td>
+					<td>{{ch.hospitalConfigs.length}}</td>
+				</tr>
+			{{/each}}
+			<tr>
+				<td class="pl-4">汇总</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>{{model.total.thirdLevel}}</td>
+				<td>{{model.total.secondLevel}}</td>
+				<td>{{model.total.firstLevel}}</td>
+				<td>{{model.total.hospitals}}</td>
+			</tr>
+			<tr></tr>
+		</tbody>
+	</table>
+{{/bp-layout}}
+{{#bp-layout tagName="h2" cross="center"
+	local-class="title" classNames="m-0 px-4 bg-white"}}
+	城市医院详情
+{{/bp-layout}}
+{{#bp-button-group value=salesGroupValue type="radio" 
+	onChange=(action (mut salesGroupValue))
+	local-class='button-container'
+	classNames='mb-2 px-4 bg-white' as |bg|}}
+	{{#each model.hospitalNumbers as |city index|}}
+		{{#bg.button type="default" value=index
+			classNames='mr-3 rounded'
+			onClick=(action 'changeSalesValue' city index)}}
+			{{city.city.name}}
+		{{/bg.button}}
+	{{/each}}
+{{/bp-button-group}}
 {{#bp-layout local-class="cities-container"}}
 	{{#bp-layout tagName="ul" direction="col" local-class="nav"
-				classNames="mr-4 p-4 bg-white"}}
-		{{#each model.destConfigRegion.regionConfig.region.cities as |city index|}}
+		classNames="mr-4 p-4 bg-white"}}
+		{{#each model.city.hospitalConfigs as |hospitalConfig index|}}
 			{{#bp-layout tagName="li" cross="center"
-					local-class=(if (bp-eq salesGroupValue index) "active")
-					classNames="px-4"}}
-				<span {{action 'changeSalesValue' city index}}>
-					{{city.name}}
+					local-class=(if (bp-eq model.currentHospitalConfig.hospital.id hospitalConfig.hospital.id) "active")
+					classNames="pl-4"}}
+				<span {{action 'changeHospital' hospitalConfig index}}>
+					{{hospitalConfig.hospital.name}}
 				</span>
 			{{/bp-layout}}
 		{{/each}}
 	{{/bp-layout}}
 	{{#bp-layout direction="col" local-class="content"}}
-		{{#bp-layout direction="col" local-class="city-infos"}}
-			{{#bp-layout direction='col' classNames='bg-white' class='mb-4'}}
-				{{#bp-layout direction='row' main='between' cross='center' local-class="title"}}
-					<h3 local-class='main' class="mx-4 mt-3">
-						{{model.city.name}}
-					</h3>
+		{{#bp-layout tagName="h3" cross="center"
+			local-class="title" classNames="m-0 px-4 bg-white"}}
+			{{model.currentHospitalConfig.hospital.name}}
+		{{/bp-layout}}
+		{{#bp-layout main='between' local-class='content' classNames='py-4 bg-white'}}
+			{{#bp-layout direction='col' classNames='px-4' local-class='info-item'}}
+				<img src={{model.currentHospitalConfig.hospital.images.firstObject.img}}
+					alt={{model.currentHospitalConfig.hospital.name}} height="160" class="mb-4">
+				{{#bp-layout classNames='mb-4'}}
+					{{#bp-layout direction='col' local-class='keys' classNames='mr-2'}}
+						<p class="mb-2">医院类型</p>
+						<p class="m-0">医院等级</p>
+					{{/bp-layout}}
+					{{#bp-layout direction='col' local-class='values'}}
+						<p class="mb-2">{{model.currentHospitalConfig.hospital.hospitalCategory}}</p>
+						<p class="m-0">{{model.currentHospitalConfig.hospital.hospitalLevel}}</p>
+					{{/bp-layout}}
 				{{/bp-layout}}
-				{{#bp-layout direction='row' main='between' cross='start'}}
-					{{#bp-layout direction='col' main='center' classNames='m-4'}}
-						<p local-class="sub-key">总医院数量</p>
-						<p local-class='sub-value-num'>{{model.city.hospitalConfigs.length}}<span local-class='sub-num'
-								class="ml-1">家</span></p>
+				{{#bp-layout classNames='pt-3'}}
+					{{#bp-layout direction='col' classNames='mr-4 pr-3'}}
+						<p local-class='keys' class="mb-2">医生数量</p>
+						<p local-class='values' class="m-0">{{format-number model.currentHospitalConfig.doctorNumber}}
+						</p>
 					{{/bp-layout}}
-					{{#bp-layout direction='col' main='center' classNames='m-4'}}
-						<p local-class="sub-key">城市类型</p>
-						<p local-class='sub-value'>{{model.city.type}}</p>
+					{{#bp-layout direction='col'  classNames='mr-4 pr-3'}}
+						<p local-class='keys' class="mb-2">病床数量</p>
+						<p local-class='values' class="m-0">{{format-number model.currentHospitalConfig.bedNumber}}</p>
 					{{/bp-layout}}
-					{{#bp-layout direction='col' main='center' classNames='m-4'}}
-						<p local-class="sub-key">城市战略定位</p>
-						<p local-class='sub-value'>{{model.city.level}}</p>
-					{{/bp-layout}}
-					{{#bp-layout direction='col' main='center' classNames='m-4'}}
-						<p local-class="sub-key">患者占比</p>
-						{{#bp-layout direction='row' cross='center'}}
-							{{#bp-layout direction='col' classNames='mr-4'}}
-								<p local-class="sub-value" class="mb-1">{{model.city.localPatientRatio}}</p>
-								<p local-class='sub-num'>本地患者</p>
-							{{/bp-layout}}
-							{{#bp-layout direction='col'}}
-								<p local-class="sub-value" class="mb-1">{{model.city.nonlocalPatientRatio}}</p>
-								<p local-class='sub-num'>外地患者</p>
-							{{/bp-layout}}
-						{{/bp-layout}}
+					{{#bp-layout direction='col'}}
+						<p local-class='keys' class="mb-2">自费病人比例</p>
+						<p local-class='values' class="m-0">{{model.currentHospitalConfig.selfCostRatio}}</p>
 					{{/bp-layout}}
 				{{/bp-layout}}
 			{{/bp-layout}}
+			{{#bp-layout direction='col' classNames='px-4 border-left' local-class='info-item'}}
+				{{#bp-layout tagName="h3" cross="center"
+					local-class="title no-height" classNames="mb-3 bg-white"}}
+					医院药况
+				{{/bp-layout}}
+				<table local-class='table' class="table pb-4">
+					<thead class='border-bottom'>
+						<th>药品名</th>
+						<th>治疗领域</th>
+						<th>药品准入状态</th>
+						<th>患者数量</th>
+					</thead>
+					<tbody>
+						{{#each currentSalesConfigs as | salesConfig|}}
+							<tr>
+								<td class="py-1">{{salesConfig.goodsConfig.productConfig.product.name}}</td>
+								<td class="py-1">{{salesConfig.goodsConfig.productConfig.treatmentArea }}</td>
+								<td class="py-1">
+									{{#each salesConfig.salesReport.hospitalSalesReports as |hsr|}}
+										{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.currentHospitalConfig.hospital.id)}}
+											{{hsr.drugEntranceInfo}}
+										{{/if}}
+									{{/each}}
+								</td>
+								<td class="py-1">{{format-number salesConfig.patientCount}}</td>
+							</tr>
+						{{/each}}
+					</tbody>
+				</table>
+				{{#bp-layout tagName="h3" cross="center"
+			local-class="title no-height" classNames="mb-3 bg-white"}}
+					医院动态
+				{{/bp-layout}}
+				{{#each model.currentHospitalConfig.policies as |policy|}}
+					<p local-class='keys'>
+						{{policy.describe}}
+					</p>
+				{{else}}
+					<p local-class='keys'>
+						无动态
+					</p>
+				{{/each}}
+			{{/bp-layout}}
 		{{/bp-layout}}
-		{{#each model.city.hospitalConfigs as |hospitalConfig|}}
-			{{hospital-info
-				hospitalConfig=hospitalConfig
-				salesConfigs=model.salesConfigs}}
-		{{/each}}
 	{{/bp-layout}}
 {{/bp-layout}}

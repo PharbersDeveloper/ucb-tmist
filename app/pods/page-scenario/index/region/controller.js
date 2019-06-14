@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import ENV from 'ucb-tmist/config/environment';
-import EmberObject, { computed } from '@ember/object';
+import { computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
 
