@@ -3,8 +3,7 @@
 	{{model.destConfig.hospitalConfig.hospital.name}}
 	{{#bp-button onClick=(action 'reInput')}}重置{{/bp-button}}
 {{/bp-layout}}
-{{#bp-layout direction="col" local-class="reps-allocate" 
-	classNames="mb-2 bg-white"}}
+{{#bp-layout direction="col" classNames="mb-2 bg-white"}}
 	{{#bp-layout tagName="h5" cross="center" 
 			local-class="title" classNames="px-4 m-0"}}
 		代表和时间分配
@@ -15,12 +14,13 @@
 				第一周期提交后，后续周期中将不可更改医院代表，只能进行药品相关资源设定
 			</p>
 		{{/unless}}
-		{{#bp-layout local-class="operating"}}
+		{{#bp-layout}}
 			{{#if tmpRc.representativeConfig.representative.images.firstObject.img}}
 				<img src={{tmpRc.representativeConfig.representative.images.firstObject.img}} local-class="avatar"
-					class="rounded-circle" alt="" class="mr-4">
+					class="mr-4 rounded-circle" width='88' height='88' alt="">
 			{{else}}
-				<img src="/assets/images/img_placeholder.png" local-class="avatar" alt="" class="mr-4 rounded-circle">
+				<img src="/assets/images/img_placeholder.png" width='88' height="88" local-class="avatar" alt=""
+					class="mr-4 rounded-circle">
 			{{/if}}
 			{{#bp-layout direction="col"}}
 				<p local-class="title" class="mb-3">医院代表</p>

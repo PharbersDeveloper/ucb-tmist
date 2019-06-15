@@ -234,30 +234,29 @@ export default Controller.extend({
 					});
 					return null;
 				}
-				return 'test';
-				// TODO 无R计算的逻辑
-				// return ajax.request(`${version}/CallRCalculate`, {
-				// 	method: 'POST',
-				// 	data: JSON.stringify({
-				// 		'proposal-id': this.get('model').proposal.id,
-				// 		'account-id': this.get('cookies').read('account_id')
-				// 	})
-				// }).then((response) => {
-				// 	if (response.status === 'Success') {
-				// 		return that.updatePaper(store, paperId, state, that);
-				// 	}
-				// 	return response;
-			}).then((data) => {
-				if (!isEmpty(data)) {
-					this.transitionToRoute('page-result');
-					return;
-				}
+				return ajax.request(`${version}/CallRCalculate`, {
+					method: 'POST',
+					data: JSON.stringify({
+						'proposal-id': this.get('model').proposal.id,
+						'account-id': this.get('cookies').read('account_id'),
+						'scenario-id': scenario.get('id')
+					})
+				}).then((response) => {
+					if (response.status === 'Success') {
+						return that.updatePaper(store, paperId, state, that);
+					}
+					return response;
+				}).then((data) => {
+					if (!isEmpty(data)) {
+						this.transitionToRoute('page-result');
+						return;
+					}
 
-			}).catch(err => {
-				window.console.log('error');
-				window.console.log(err);
+				}).catch(err => {
+					window.console.log('error');
+					window.console.log(err);
+				});
 			});
-		// });
 	},
 
 	updatePaper(store, paperId, state, context) {

@@ -3009,6 +3009,11 @@ continuable-cache@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/continuable-cache/-/continuable-cache-0.3.1.tgz#bd727a7faed77e71ff3985ac93351a912733ad0f"
 
+converse.js@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/converse.js/-/converse.js-4.2.0.tgz#e3a762f489ef4eae4fe760e5e16966b53f378ba4"
+  integrity sha512-s+cIIHIxFFlD6Je7TD3n1WMLrNrDFTuBlONycmo/PVzC+jxdulhTada4V/Ddp4iJGPjkUTQX9DC0duzqVmug5Q==
+
 convert-source-map@^1.1.0, convert-source-map@^1.5.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-1.6.0.tgz#51b537a8c43e0f04dec1993bffcdd504e758ac20"

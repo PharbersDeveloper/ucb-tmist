@@ -2,6 +2,7 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import ENV from 'ucb-tmist/config/environment';
 import { isEmpty } from '@ember/utils';
+// import converse from 'converse';
 // import { A } from '@ember/array';
 // import RSVP from 'rsvp';
 
@@ -28,6 +29,14 @@ export default Route.extend({
 
 		let accountId = cookies.read('account_id');
 
+		// converse.initialize({
+		// 	authentication: 'login', // 认证方式，默认为 'login'
+		// 	'bosh_service_url': 'http://123.56.179.133:7070/http-bind/',
+		// 	'show_controlbox_by_default': false,
+		// 	'auto_login': true,
+		// 	jid: 'swang@max.logic',
+		// 	password: 'swang'
+		// });
 		if (isEmpty(accountId)) {
 			return;
 		}
