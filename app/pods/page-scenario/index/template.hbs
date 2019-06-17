@@ -20,7 +20,7 @@
 						local-class="title" classNames="m-0 px-4 bg-white"}}
 							<p local-class="main" class="m-0">
 								<span class="mr-2">产品份额竞争趋势</span>
-								<span local-class="sub-title">全国</span>
+								<span local-class="sub-title">地区</span>
 							</p>
 							{{#bp-layout cross="center" 
 								local-class="choose-area" classNames="px-4"}}
@@ -68,6 +68,10 @@
 				{{/each}}
 			</div>
 		{{else if (bp-eq groupValue 'performance')}}
+			{{#bp-layout main='between' cross='center' local-class='output-container' classNames='mb-2 px-4 bg-white'}}
+				<span>往期业绩表现</span>
+				{{#bp-button onClick=(action 'outputData' 'business')}}导出数据{{/bp-button}}
+			{{/bp-layout}}
 			{{#bp-layout main='between' local-class='result-container'}}
 				<nav local-class='nav' class="nav flex-column mr-4 p-4 bg-white">
 					{{#each model.navs as |nav|}}

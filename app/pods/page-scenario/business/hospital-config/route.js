@@ -1,6 +1,7 @@
 import Route from '@ember/routing/route';
-import { hash } from 'rsvp';
 import { isEmpty } from '@ember/utils';
+import { A } from '@ember/array';
+import { hash, all } from 'rsvp';
 
 export default Route.extend({
 	model(params) {
@@ -8,15 +9,15 @@ export default Route.extend({
 			pageScenarioModel = this.modelFor('page-scenario'),
 			managerConf = pageScenarioModel.resourceConfigManager,
 			repConfs = pageScenarioModel.resourceConfRep,
-			salesConfigs = pageScenarioModel.salesConfigs,
-			scenario = pageScenarioModel.scenario,
+			{ salesConfigs, scenario, increaseSalesReports } = pageScenarioModel,
 			currentController = this.controllerFor('page-scenario.business.hospitalConfig');
 
 		let dCId = params['destConfig_id'],
 			destConfig = store.peekRecord('destConfig', dCId),
 			// businessController = this.controllerFor('page-scenario.index'),
 			businessInputs = pageScenarioModel.businessInputs,
-			businessinput = null;
+			businessinput = null,
+			lastSeasonHospitalSalesReports = A([]);
 
 		/**
 		 * 当前的业务决策实例
@@ -51,9 +52,21 @@ export default Route.extend({
 						}
 					});
 				}
-			})
-			.then(() => {
+				return increaseSalesReports.lastObject.get('hospitalSalesReports');
+			}).then(data => {
+				lastSeasonHospitalSalesReports = data;
+				return all(data.map(ele => ele.get('destConfig')));
+			}).then(data => {
+				return all(data.map(ele => ele.get('hospitalConfig')));
+			}).then(data => {
+				return all(data.map(ele => ele.get('hospital')));
+			}).then(() => {
+				// let hospitalId = destConfig.get('hospitalConfig.hospital.id'),
+				// 	currentHospitalSalesReports = lastSeasonHospitalSalesReports.filterBy('destConfig.hospitalConfig.hospital.id', hospitalId);
+
 				return hash({
+					lastSeasonHospitalSalesReports,
+					// currentHospitalSalesReports,
 					scenario,
 					notFirstPhase: scenario.get('phase') !== 1,
 					managerConf,

@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import ENV from 'ucb-tmist/config/environment';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 // import { A } from '@ember/array';
 // import { all } from 'rsvp';
@@ -9,6 +9,7 @@ import { isEmpty } from '@ember/utils';
 export default Controller.extend({
 	ajax: service(),
 	cookies: service(),
+	converse: service('service-converse'),
 	verify: service('service-verify'),
 	oauthService: service('oauth_service'),
 	testBtn: computed(function () {
@@ -16,6 +17,50 @@ export default Controller.extend({
 			return true;
 		}
 		return false;
+	}),
+	xmppResult: observer('xmppMessage.status', function () {
+
+		let clientId = ENV.clientId,
+			accountId = this.get('cookies').read('account_id'),
+			proposalId = this.get('model').proposal.id,
+			paperinputId = this.get('paperinputId') || null,
+			scenarioId = this.get('model').scenario.id,
+			xmppMessage = this.xmppMessage;
+
+
+		// if (xmppMessage['client-id'] !== clientId ||
+		// 	xmppMessage['account-id'] !== accountId ||
+		// 	xmppMessage['proposal-id'] !== proposalId ||
+		// 	xmppMessage['paperinput-id'] !== paperinputId ||
+		// 	xmppMessage['scenario-id'] !== scenarioId) {
+		// 	return;
+		// }
+		if (xmppMessage['client-id'] !== clientId) {
+			window.console.log('client-id error');
+			return;
+		} else if (xmppMessage['account-id'] !== accountId) {
+			window.console.log('account-id error');
+			return;
+
+		} else if (xmppMessage['proposal-id'] !== proposalId) {
+			window.console.log('proposal-id error');
+			return;
+
+		} else if (xmppMessage['paperInput-id'] !== paperinputId) {
+			window.console.log('paperInput-id error');
+			return;
+		} else if (xmppMessage['scenario-id'] !== scenarioId) {
+			window.console.log('scenario-id error');
+			return;
+
+		}
+		if (xmppMessage.status === 'ok') {
+			window.console.log('ok');
+
+			return this.updatePaper(this.paperId, this.state);
+		}
+		window.console.log('error');
+
 	}),
 	allVerifySuccessful() {
 		let scenario = this.get('model.scenario');
@@ -162,6 +207,7 @@ export default Controller.extend({
 
 	sendInput(state) {
 		const ajax = this.get('ajax'),
+			converse = this.get('converse'),
 			applicationAdapter = this.get('store').adapterFor('application'),
 			store = this.get('store'),
 			model = this.get('model'),
@@ -210,6 +256,7 @@ export default Controller.extend({
 				});
 				return paperinput.save();
 			}).then(data => {
+				this.set('paperinputId', data.get('id'));
 				paper.get('paperinputs').pushObject(data);
 				if (state === 1 || state === 4) {
 					paper.set('state', state);
@@ -234,41 +281,52 @@ export default Controller.extend({
 					});
 					return null;
 				}
-				return 'test';
-				// TODO 无R计算的逻辑
-				// return ajax.request(`${version}/CallRCalculate`, {
-				// 	method: 'POST',
-				// 	data: JSON.stringify({
-				// 		'proposal-id': this.get('model').proposal.id,
-				// 		'account-id': this.get('cookies').read('account_id')
-				// 	})
-				// }).then((response) => {
+				return ajax.request(`${version}/CallRCalculate`, {
+					method: 'POST',
+					data: JSON.stringify({
+						'proposal-id': this.get('model').proposal.id,
+						'account-id': this.get('cookies').read('account_id'),
+						'scenario-id': scenario.get('id')
+					})
+				}).then((response) => {
+
+					if (response.status === 'ok') {
+						window.console.log('calculating');
+					}
+					this.set('state', state);
+					this.set('paperId', paperId);
+
+					return this.xmppResult;
+				});
+
 				// 	if (response.status === 'Success') {
 				// 		return that.updatePaper(store, paperId, state, that);
 				// 	}
 				// 	return response;
-			}).then((data) => {
-				if (!isEmpty(data)) {
-					this.transitionToRoute('page-result');
-					return;
-				}
+				// }).then((data) => {
+				// 	if (!isEmpty(data)) {
+				// 		this.transitionToRoute('page-result');
+				// 		return;
+				// 	}
 
-			}).catch(err => {
-				window.console.log('error');
-				window.console.log(err);
+				// }).catch(err => {
+				// 	window.console.log('error');
+				// 	window.console.log(err);
+				// });
 			});
-		// });
 	},
 
-	updatePaper(store, paperId, state, context) {
-		store.findRecord('paper', paperId, { reload: true })
+	updatePaper(paperId, state) {
+		const that = this;
+
+		this.store.findRecord('paper', paperId, { reload: true })
 			.then(data => {
 				data.set('state', state);
 				return data.save();
 			}).then(() => {
 				this.set('loadingForSubmit', false);
 
-				context.transitionToRoute('page-result');
+				that.transitionToRoute('page-result');
 				return null;
 			});
 	},

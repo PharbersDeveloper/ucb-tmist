@@ -9,6 +9,7 @@ module.exports = function (environment) {
 		locationType: 'auto',
 		redirectUri: 'http://ucb.pharbers.com',
 		host: 'http://oauth.pharbers.com',
+		clientId: '5cbe7ab8f4ce4352ecb082a3',
 		EmberENV: {
 			FEATURES: {
 				// Here you can enable experimental features on an ember canary build
