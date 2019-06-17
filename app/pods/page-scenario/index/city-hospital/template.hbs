@@ -10,9 +10,9 @@
 			<th>城市战略地位</th>
 			<th>本地患者占比</th>
 			<th>外地患者占比</th>
-			<th>三级</th>
-			<th>二级</th>
-			<th>一级</th>
+			<th>三级数量</th>
+			<th>二级数量</th>
+			<th>一级数量</th>
 			<th>医院总数</th>
 		</thead>
 		<tbody>
@@ -104,7 +104,7 @@
 					{{/bp-layout}}
 					{{#bp-layout direction='col'}}
 						<p local-class='keys' class="mb-2">自费病人比例</p>
-						<p local-class='values' class="m-0">{{model.currentHospitalConfig.selfCostRatio}}</p>
+						<p local-class='values' class="m-0">{{bp-percent model.currentHospitalConfig.selfCostRatio}}</p>
 					{{/bp-layout}}
 				{{/bp-layout}}
 			{{/bp-layout}}
@@ -121,14 +121,16 @@
 						<th>患者数量</th>
 					</thead>
 					<tbody>
-						{{#each currentSalesConfigs as | salesConfig|}}
+						{{#each currentSalesConfigs as |salesConfig|}}
 							<tr>
 								<td class="py-1">{{salesConfig.goodsConfig.productConfig.product.name}}</td>
 								<td class="py-1">{{salesConfig.goodsConfig.productConfig.treatmentArea }}</td>
 								<td class="py-1">
 									{{#each salesConfig.salesReport.hospitalSalesReports as |hsr|}}
 										{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.currentHospitalConfig.hospital.id)}}
-											{{hsr.drugEntranceInfo}}
+											{{#if (bp-eq hsr.goodsConfig.productConfig.product.id salesConfig.goodsConfig.productConfig.product.id)}}
+												{{hsr.drugEntranceInfo}}
+											{{/if}}
 										{{/if}}
 									{{/each}}
 								</td>

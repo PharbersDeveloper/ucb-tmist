@@ -11,7 +11,7 @@ export default Service.extend({
 	router: service(),
 	groupName: '',
 	version: 'v0',
-	clientId: '5cbe7ab8f4ce4352ecb082a3',
+	clientId: ENV.clientId,
 	clientSecret: '5c90db71eeefcc082c0823b2',
 	status: 'self',
 	scope: 'APP/UCB',
@@ -74,6 +74,7 @@ export default Service.extend({
 							domain: '.pharbers.com',
 							path: '/',
 							expires: expiry
+							// maxAge: 10
 						};
 
 					cookies.write('token', response.access_token, options);
@@ -83,36 +84,13 @@ export default Service.extend({
 					cookies.write('token_type', response.token_type, options);
 					cookies.write('scope', response.scope, options);
 					cookies.write('expiry', response.expiry, options);
-					converse.initialize({
-						authentication: 'login', // 认证方式，默认为 'login'
-						'bosh_service_url': 'http://123.56.179.133:7070/http-bind/',
-						'show_controlbox_by_default': false,
-						'auto_login': true,
-						jid: 'swang@max.logic',
-						password: 'swang',
-						i18n: 'zh',
-						// 'auto_join_rooms':
-						// 'view_mode': 'embedded',
-						'show_desktop_notifications': false
-					});
+
 					this.get('router').transitionTo('index');
 				})
 				.catch(() => {
 					this.get('router').transitionTo('index');
 				});
 		} else {
-			converse.initialize({
-				authentication: 'login', // 认证方式，默认为 'login'
-				'bosh_service_url': 'http://123.56.179.133:7070/http-bind/',
-				'show_controlbox_by_default': false,
-				'auto_login': true,
-				jid: 'swang@max.logic',
-				password: 'swang',
-				i18n: 'zh',
-				// 'auto_join_rooms':
-				'view_mode': 'embedded',
-				'show_desktop_notifications': false
-			});
 			this.get('router').transitionTo('index');
 		}
 	},

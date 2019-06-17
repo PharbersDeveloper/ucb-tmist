@@ -14,20 +14,18 @@ export default Route.extend({
 
 		let businessinputs = store.peekAll('businessinput'),
 			tableData = A([]),
-			usableSeasons = A([]);
+			usableSeasons = A([]),
+			goodsConfigs = pageScenarioModel.goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
 
 		tableData = businessinputs.map(ele => {
 			let biHospitalId = ele.get('destConfig.hospitalConfig.hospital.id'),
 				currentSalesConfig = salesConfigs.findBy('destConfig.hospitalConfig.hospital.id', biHospitalId),
-				sales = 0;
+				sales = 0,
+				firstProduct = goodsConfigs.firstObject,
+				currentHospitalSalesReports = lastSeasonHospitalSalesReports.filterBy('destConfig.hospitalConfig.hospital.id', biHospitalId),
+				currentReport = currentHospitalSalesReports.findBy('goodsConfig.productConfig.product.id', firstProduct.get('productConfig.product.id'));
 
-			lastSeasonHospitalSalesReports.forEach(item => {
-				let dataHosopitalId = item.get('destConfig.hospitalConfig.hospital.id');
-
-				if (dataHosopitalId === biHospitalId) {
-					sales = item.get('sales');
-				}
-			});
+			sales = currentReport.get('sales');
 
 			return {
 				hospitalName: ele.get('destConfig.hospitalConfig.hospital.name'),
@@ -39,7 +37,8 @@ export default Route.extend({
 				salesTarget: isEmpty(ele.get('totalSalesTarget')) ? '-' : ele.get('totalSalesTarget'),
 				totalBudget: isEmpty(ele.get('totalBudget')) ? '-' : ele.get('totalBudget'),
 				budget: isEmpty(ele.get('totalBudget')) ? '-' : ele.get('totalBudget'),
-				goodsInputs: ele.get('goodsinputs')
+				goodsInputs: ele.get('goodsinputs'),
+				lastSeasonProductSales: currentHospitalSalesReports
 			};
 		});
 		return paper.get('paperinputs')

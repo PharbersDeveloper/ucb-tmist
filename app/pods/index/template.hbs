@@ -230,3 +230,20 @@
 		{{#bp-button type="primary" onClick=(action 'reDeploy')}}重新部署{{/bp-button}}
 	{{/modal.footer}}
 {{/bp-modal}}
+{{#bp-modal
+		open=fromFirstPhase
+		position='center'
+		onHidden=(action (mut fromFirstPhase) false) as |modal|}}
+	{{#modal.header closeButton=false}}
+		<h4 class="modal-title">
+			重新开始
+		</h4>
+	{{/modal.header}}
+	{{#modal.body classNames='desc'}}
+		第二周期即将开放，现在将从第一周期重新开始。
+	{{/modal.body}}
+	{{#modal.footer}}
+		{{#bp-button type="link" onClick=(action modal.close)}}取消{{/bp-button}}
+		{{#bp-button type="primary" onClick=(action 'fromFirstPhase' model.detailPaper.id)}}重新开始{{/bp-button}}
+	{{/modal.footer}}
+{{/bp-modal}}

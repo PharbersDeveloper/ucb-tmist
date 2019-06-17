@@ -65,6 +65,7 @@ export default Route.extend({
 				// 	currentHospitalSalesReports = lastSeasonHospitalSalesReports.filterBy('destConfig.hospitalConfig.hospital.id', hospitalId);
 
 				return hash({
+					lastSeasonHospitalSalesReports,
 					// currentHospitalSalesReports,
 					scenario,
 					notFirstPhase: scenario.get('phase') !== 1,

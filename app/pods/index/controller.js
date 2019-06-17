@@ -3,6 +3,7 @@ import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 // import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
+import ENV from 'ucb-tmist/config/environment';
 
 export default Controller.extend({
 	// notice: localStorage.getItem('notice') !== 'false',
@@ -74,7 +75,11 @@ export default Controller.extend({
 	actions: {
 		startDeploy(proposalId) {
 			// localStorage.setItem('notice', false);
-			this.entryMission(proposalId);
+			if (this.model.scenario.phase > 1) {
+				this.set('fromFirstPhase', true);
+			} else {
+				this.entryMission(proposalId);
+			}
 			// this.transitionToRoute('page-notice', proposalId);
 		},
 		reDeploy() {
@@ -86,16 +91,16 @@ export default Controller.extend({
 			this.entryMission(proposalId);
 
 			// this.transitionToRoute('page-notice', proposalId);
+		},
+		fromFirstPhase(paperId) {
+			this.store.findRecord('paper', paperId, { reload: true })
+				.then(data => {
+					data.set('state', 3);
+					return data.save();
+				}).then(() => {
+					window.location = ENV.redirectUri;
+					return null;
+				});
 		}
-		// closeNotice() {
-		// 	this.set('notice', false);
-		// },
-		// chooseItem(item) {
-		// 	if (item.length > 0) {
-		// 		localStorage.setItem('notice', false);
-		// 	} else {
-		// 		localStorage.setItem('notice', true);
-		// 	}
-		// }
 	}
 });

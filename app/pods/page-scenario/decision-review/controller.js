@@ -26,6 +26,7 @@ export default Controller.extend({
 						ele.budget = item.get('budget');
 					}
 				});
+				ele.sales = ele.lastSeasonProductSales.findBy('goodsConfig.productConfig.product.id', tmpGc.get('productConfig.product.id')).get('sales');
 				return ele;
 			});
 

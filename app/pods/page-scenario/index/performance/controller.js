@@ -59,20 +59,7 @@ export default Controller.extend({
 				this.set('doubleCircleData', this.get('hospDoubleCircleProduct'));
 				this.set('barLineData', this.get('hospBarLineData'));
 			}
-			//  else {
-			// 	this.set('doubleCircleData', this.get('repDoubleCircleProduct'));
-			// 	this.set('barLineData', this.get('repBarLineData'));
-			// }
 		}
-	}
 
-	// reCalProd() {
-	// 	if (this.tmpRsr.id === '0') {
-	// 		this.set('doubleCircleData', this.get('proDoubleCircleProduct'));
-	// 	} else {
-	// 		// test
-	// 		// this.set('doubleCircleData', this.get('regDoubleCircleProduct'));
-	// 		this.set('doubleCircleData', this.get('proDoubleCircleProduct'));
-	// 	}
-	// }
+	}
 });

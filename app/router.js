@@ -29,25 +29,25 @@ Router.map(function () {
   });
   this.route('page-notice', { path: 'notice/:proposal_id' });
   this.route('page-scenario', { path: 'scenario/:proposal_id' }, function () {
-      this.route('reference', function () {
-          this.route('hospital');
-          this.route('member');
-          this.route('performance');
-      });
-      this.route('decision-review');
+    this.route('reference', function () {
+      this.route('hospital');
+      this.route('performance');
+    });
+    this.route('decision-review');
 
-      this.route('index', function () {
-        this.route('hospital-config', { path: 'hospital/:destConfig_id' });
-        this.route('member');
-        this.route('performance');
-        this.route('city-hospital');
-        this.route('region');
-        this.route('representative');
-        this.route('hospital');
-      });
-      this.route('business', function () {
-          this.route('hospitalConfig', { path: 'hospital/:destConfig_id' });
-      });
+    this.route('index', function () {
+      this.route('hospital-config', { path: 'hospital/:destConfig_id' });
+      this.route('member');
+      this.route('performance');
+      this.route('city-hospital');
+      this.route('region');
+      this.route('representative');
+      this.route('hospital');
+    });
+    this.route('business', function () {
+        this.route('hospitalConfig', { path: 'hospital/:destConfig_id' });
+    });
+    this.route('index-loading');
   });
   this.route('page-report', { path: 'report' });
   this.route('page-history-report', { path: 'history/:paper_id' });

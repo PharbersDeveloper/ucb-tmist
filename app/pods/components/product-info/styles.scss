@@ -1,87 +1,75 @@
 .product {
 
-	.title {
-		line-height: 52px;
-		@extend %header-small;
+    .title {
+        line-height: 52px;
+        @extend %header-small;
 
-		button {
-			height: auto;
-		}
+        button {
+            height: auto;
+        }
 
-		.icon {
-			cursor: pointer;
-		}
+        .icon {
+            cursor: pointer;
+        }
 
-		span.type {
-			margin: 0 12px 0 8px;
-			padding: $spacing-compact 3*$spacing-compact;
-			@extend %defaultRadius;
+        span.type {
+            margin: 0 12px 0 8px;
+            padding: $spacing-compact 3*$spacing-compact;
+            @extend %defaultRadius;
 
-			&.self {
-				@extend %p-secondary;
-				color: #0049B0;
-				background-color: #B3D4FF;
-			}
+            &.self {
+                @extend %p-secondary;
+                color: #0049B0;
+                background-color: #B3D4FF;
+            }
 
-			&.compete {
-				@extend %p-secondary;
-				background-color: $n030;
-			}
-		}
+            &.compete {
+                @extend %p-secondary;
+                background-color: $n030;
+            }
+        }
 
-		span.cycle {
-			@extend %p-secondary;
-		}
-	}
+        span.cycle {
+            @extend %p-secondary;
+        }
+    }
 
 
-	.product-content {
+    .product-content {
 
-		.left {
-			flex: 0 0 500px;
-			margin-right: 74px;
+        .left {
+            flex: 0 0 500px;
+            margin-right: 74px;
 
-			img {
-				flex: 0 0 133px;
-				height: 133px;
-			}
+            img {
+                flex: 0 0 160px;
+                height: 160px;
+            }
 
-			.product-infos {
-				flex: 1;
-				font-size: 0;
+            .product-infos {
+                flex: 1;
+                font-size: 0;
 
-				.values {
-					@extend %p-secondary;
-				}
+                .values {
+                    @extend %p-secondary;
+                }
 
-				.keys {
-					@extend %p-primary;
-				}
+                .keys {
+                    @extend %p-primary;
+                }
+            }
+        }
 
-				// p>span:first-child {
-				// 	flex: 0 0 56px;
-				// 	margin-right: 2*$spacing;
-				// 	@extend %p-primary;
-				// }
+        .right {
+            span.keys {
+                flex: 0 0 56px;
+                @extend %p-primary;
+            }
 
-				// p span:last-child {
-				// 	flex: 1;
-				// 	@extend %p-secondary;
-				// }
-
-			}
-		}
-
-		.right {
-			span.keys {
-				flex: 0 0 56px;
-				@extend %p-primary;
-			}
-
-			span.values {
-				flex: 1;
-				@extend %p-secondary;
-			}
-		}
-	}
+            span.values {
+                flex: 1;
+                @extend %p-secondary;
+            }
+        }
+    }
 }
