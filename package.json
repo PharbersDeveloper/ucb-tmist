@@ -1,8 +1,8 @@
 {
 	"name": "ucb-tmist",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"private": true,
-	"description": "tmist for ucb",
+	"description": "For UCB company.",
 	"repository": "",
 	"license": "MIT",
 	"author": "",
@@ -23,6 +23,7 @@
 		"bootstrap": "^4.3.1",
 		"broccoli-asset-rev": "^2.7.0",
 		"ember-ajax": "^3.1.0",
+		"ember-axios": "^0.0.3",
 		"ember-bootstrap": "^2.6.1",
 		"ember-cli": "~3.4.4",
 		"ember-cli-app-version": "^3.2.0",
@@ -55,7 +56,8 @@
 		"sass": "^1.19.0"
 	},
 	"dependencies": {
-		"bp-components": "*"
+		"bp-components": "*",
+		"converse.js": "^4.2.0"
 	},
 	"engines": {
 		"node": "6.* || 8.* || >= 10.*"

@@ -6,6 +6,7 @@ import { hash, all } from 'rsvp';
 
 export default Route.extend({
 	cookies: service(),
+	converse: service('serviceConverse'),
 	/**
 	 * 判断是否有 businessinput
 	 * @param  {model} scenario
@@ -36,16 +37,17 @@ export default Route.extend({
 
 		promiseArray = destConfigHospitals.map(ele => {
 			let goodsInputs = selfGoodsConfigs.map(item => {
-				return store.createRecord('goodsinput', {
-					destConfigId: ele.get('id'),
-					goodsConfig: item,
-					salesTarget: '',	// 销售目标设定
-					budget: ''	//预算设定
+					return store.createRecord('goodsinput', {
+						destConfigId: ele.get('id'),
+						goodsConfig: item,
+						salesTarget: '',	// 销售目标设定
+						budget: ''	//预算设定
 					// TODO 测试，用后删除
-					// salesTarget: 70,	// 销售目标设定
-					// budget: 4	//预算设定
-				});
-			});
+					// salesTarget: 88,	// 销售目标设定
+					// budget: 6	//预算设定
+					});
+				}),
+				businessinput = null;
 
 			if (isEmpty(lastSeasonHospitalSalesReports)) {
 				return store.createRecord('businessinput', {
@@ -62,9 +64,9 @@ export default Route.extend({
 					visitTime: ''
 				});
 			}
-			lastSeasonHospitalSalesReports.forEach(element => {
+			lastSeasonHospitalSalesReports.uniqBy('destConfig.hospitalConfig.hospital.id').forEach(element => {
 				if (element.get('destConfig.hospitalConfig.hospital.id') === ele.get('hospitalConfig.hospital.id')) {
-					return store.createRecord('businessinput', {
+					businessinput = store.createRecord('businessinput', {
 						destConfig: ele,
 						destConfigId: ele.id,
 						representativeId: element.get('resourceConfig.representativeConfig.representative.id'),
@@ -79,6 +81,7 @@ export default Route.extend({
 					});
 				}
 			});
+			return businessinput;
 		});
 		return promiseArray;
 	},
@@ -136,10 +139,55 @@ export default Route.extend({
 
 				lastSeasonHospitalSalesReports = data[1].sortBy('potential').reverse();
 
+				if (scenario.get('phase') > 1) {
+					return all(lastSeasonHospitalSalesReports.map(ele => ele.get('destConfig')));
+				}
+				return null;
+			}).then(data => {
+				if (isEmpty(data)) {
+					return null;
+				}
+				return all(data.map(ele => ele.get('hospitalConfig')));
+			}).then(data => {
+				if (isEmpty(data)) {
+					return null;
+				}
+				return all(data.map(ele => ele.get('hospital')));
+			}).then(data => {
+				if (isEmpty(data)) {
+					return null;
+				}
+				return all(lastSeasonHospitalSalesReports.map(ele => ele.get('resourceConfig')));
+
+			}).then(data => {
+				if (isEmpty(data)) {
+					return null;
+				}
+				return all(data.map(ele => ele.get('representativeConfig')));
+
+			}).then(data => {
+				if (isEmpty(data)) {
+					return null;
+				}
+				return all(data.map(ele => ele.get('representative')));
+
+			}).then(data => {
+				if (isEmpty(data)) {
+					return null;
+				}
+				return all(destConfigHospitals.map(ele => ele.get('hospitalConfig')));
+			}).then(data => {
+				if (isEmpty(data)) {
+					return null;
+				}
+				return all(data.map(ele => ele.get('hospital')));
+
+			}).then(() => {
 				return destConfigHospitals.map(ele => ele);
 			}).then(data => {
 				selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
 				competeGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 1);
+
 
 				if (scenario.get('phase') > 1) {
 					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs, lastSeasonHospitalSalesReports);
@@ -209,23 +257,30 @@ export default Route.extend({
 	},
 	setupController(controller, model) {
 		this._super(...arguments);
+		let converse = this.converse;
+
 		controller.set('businessInputs', model.businessInputs);
 
 		if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
 			controller.set('notice', true);
 		}
+		if (!controller.get('hasPlugin')) {
+			converse.initialize();
+
+
+			window.converse.plugins.add('chat_plugin', {
+				initialize: function () {
+					controller.set('hasPlugin', true);
+					this._converse.api.listen.on('message', obj => {
+						let message = obj.stanza.textContent;
+
+						if (!isEmpty(message)) {
+							controller.set('xmppMessage', JSON.parse(message));
+							return JSON.parse(message);
+						}
+					});
+				}
+			});
+		}
 	}
-	// seasonQ(seasonText) {
-	// 	let season = isEmpty(seasonText) ? '' : seasonText;
-
-	// 	if (season === '') {
-	// 		return season;
-	// 	}
-	// 	season = season.replace('第一季度', 'Q1');
-	// 	season = season.replace('第二季度', 'Q2');
-	// 	season = season.replace('第三季度', 'Q3');
-	// 	season = season.replace('第四季度', 'Q4');
-
-	// 	return season;
-	// }
 });

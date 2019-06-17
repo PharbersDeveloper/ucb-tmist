@@ -1,114 +1,103 @@
 h4.title {
-	height: 54px;
-	@extend %header-medium;
+    height: 54px;
+    @extend %header-medium;
 }
 
 h5.title {
-	height: 52px;
-	@extend %header-small;
+    height: 52px;
+    @extend %header-small;
 }
 
 .prod {
-	table-layout: fixed;
+    table-layout: fixed;
 
-	thead {
-		th {
-			@extend %p-small;
-		}
-	}
+    thead {
+        th {
+            @extend %p-small;
+        }
+    }
 
-	tbody {
-		tr {
+    tbody {
+        tr {
 
-			td {
-				align-self: center;
-				padding: 2*$spacing 0;
-				vertical-align: middle;
-				@extend %p-primary;
-			}
-		}
-	}
+            td {
+                align-self: center;
+                padding: 2*$spacing 0;
+                vertical-align: middle;
+                @extend %p-primary;
+            }
+        }
+    }
 }
 
-.reps-allocate {
-	.description {
-		@extend %p-small;
-	}
+.description {
+    @extend %p-small;
+}
 
-	.operating {
-		img.avatar {
-			width: 88px;
-			height: 88px;
-			border-radius: 50%;
-		}
-
-		.title {
-			@extend %p-primary;
-		}
-	}
+.title {
+    @extend %p-primary;
 }
 
 .prod .input-prepend {
-	position: relative;
+    position: relative;
 
-	input {
-		padding-left: 30px;
-	}
+    input {
+        padding-left: 30px;
+    }
 
-	&::after {
-		position: absolute;
-		left: 8px;
-		top: 50%;
-		transform: translateY(-50%);
-		@extend %p-secondary;
+    &::after {
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        @extend %p-secondary;
+    }
 
-	}
+    &.input-money {
+        input {
+            max-width: 100% !important;
+            padding-left: 8px;
+            padding-right: 30px;
+        }
 
-	&.input-money {
-		input {
-			max-width: 100% !important;
-			padding-left: 8px;
-			padding-right: 30px;
-		}
-
-		&::after {
-			left: auto;
-			right: 8px;
-			top: 50%;
-			transform: translateY(-50%);
-			content: '￥';
-		}
-	}
+        &::after {
+            left: auto;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            content: '￥';
+        }
+    }
 }
 
 .disabled {
-	color: $n060 !important;
+    color: $n060 !important;
 
-	.input-prepend {
-		&::after {
-			color: $n060;
-		}
-	}
+    .input-prepend {
+        &::after {
+            color: $n060;
+        }
+    }
 
-	thead {
-		th {
-			color: $n060;
-		}
-	}
+    thead {
+        th {
+            color: $n060;
+        }
+    }
 
-	tbody {
-		tr {
-			td {
-				color: $n060;
+    tbody {
+        tr {
+            td {
+                color: $n060;
 
-				.percent {
-					color: $n060;
-				}
-			}
-		}
-	}
+                .percent {
+                    color: $n060;
+                }
+            }
+        }
+    }
 
-	input {
-		color: $n060 !important;
-	}
+    input {
+        color: $n060 !important;
+    }
 }

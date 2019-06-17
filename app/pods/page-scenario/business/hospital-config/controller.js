@@ -42,17 +42,15 @@ export default Controller.extend({
 	// 	};
 	// }),
 	lastSales: computed('model.destConfig', function () {
-		const { destConfig, salesConfigs } = this.model;
+		const { destConfig, salesConfigs, lastSeasonHospitalSalesReports } = this.model;
 
-		let hospitalId = destConfig.get('hospitalConfig.hospital.id');
+		let hospitalId = destConfig.get('hospitalConfig.hospital.id'),
+			currentHospitalSalesReports = lastSeasonHospitalSalesReports.filterBy('destConfig.hospitalConfig.hospital.id', hospitalId);
 
 		return salesConfigs.map(ele => {
-			let hosps = ele.get('salesReport.hospitalSalesReports').filter(item => item.get('destConfigId') !== '-1'),
-				currents = hosps.filterBy('destConfig.hospitalConfig.hospital.id', hospitalId);
-
 			return {
 				goodsConfig: ele.get('goodsConfig'),
-				report: currents.findBy('goodsConfig.productConfig.product.id', ele.get('goodsConfig.productConfig.product.id'))
+				report: currentHospitalSalesReports.findBy('goodsConfig.productConfig.product.id', ele.get('goodsConfig.productConfig.product.id'))
 			};
 		});
 

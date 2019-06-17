@@ -1,7 +1,0 @@
-{{#each model as |rep|}}
-	{{#bp-layout cross="center" local-class="rep-info" classNames="mb-3 px-4 py-3 bg-white"}}
-		<img src={{rep.representativeConfig.representative.images.firstObject.img}} alt={{rep.representativeConfig.representative.name}}
-		 width="40" class="mr-2 rounded-circle">
-		<h3 class="m-0">{{rep.representativeConfig.representative.name}}</h3>
-	{{/bp-layout}}
-{{/each}}

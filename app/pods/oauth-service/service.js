@@ -11,7 +11,7 @@ export default Service.extend({
 	router: service(),
 	groupName: '',
 	version: 'v0',
-	clientId: '5cbe7ab8f4ce4352ecb082a3',
+	clientId: ENV.clientId,
 	clientSecret: '5c90db71eeefcc082c0823b2',
 	status: 'self',
 	scope: 'APP/UCB',
@@ -74,6 +74,7 @@ export default Service.extend({
 							domain: '.pharbers.com',
 							path: '/',
 							expires: expiry
+							// maxAge: 10
 						};
 
 					cookies.write('token', response.access_token, options);
