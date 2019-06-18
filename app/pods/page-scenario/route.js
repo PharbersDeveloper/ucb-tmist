@@ -40,11 +40,11 @@ export default Route.extend({
 					return store.createRecord('goodsinput', {
 						destConfigId: ele.get('id'),
 						goodsConfig: item,
-						salesTarget: '',	// 销售目标设定
-						budget: ''	//预算设定
-					// TODO 测试，用后删除
-					// salesTarget: 88,	// 销售目标设定
-					// budget: 6	//预算设定
+						// salesTarget: '',	// 销售目标设定
+						// budget: ''	//预算设定
+						// TODO 测试，用后删除
+						salesTarget: 88,	// 销售目标设定
+						budget: 6	//预算设定
 					});
 				}),
 				businessinput = null;
@@ -261,9 +261,9 @@ export default Route.extend({
 
 		controller.set('businessInputs', model.businessInputs);
 
-		if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
-			controller.set('notice', true);
-		}
+		// if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
+		controller.set('notice', true);
+		// }
 		if (!controller.get('hasPlugin')) {
 			converse.initialize();
 

@@ -75,11 +75,11 @@ export default Controller.extend({
 	actions: {
 		startDeploy(proposalId) {
 			// localStorage.setItem('notice', false);
-			if (this.model.scenario.phase > 1) {
-				this.set('fromFirstPhase', true);
-			} else {
-				this.entryMission(proposalId);
-			}
+			// if (this.model.scenario.phase > 1) {
+				// this.set('fromFirstPhase', true);
+			// } else {
+			this.entryMission(proposalId);
+			// }
 			// this.transitionToRoute('page-notice', proposalId);
 		},
 		reDeploy() {
