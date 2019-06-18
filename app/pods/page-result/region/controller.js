@@ -23,10 +23,11 @@ export default Controller.extend({
 
 		return handler.changeTrendData(model.barLineDataCity, formatCitySalesReports, findCityItemKey, findCityItemValue, findGoodsKey, findGoodsValue);
 	}),
-	tableData: computed('chooseProdTable', function () {
+	tableData: computed('chooseProdTable.id', function () {
 		if (ENV.environment === 'development') {
 			window.console.log('recomputed 区域销售数据表');
 		}
+
 		const { model, handler } = this,
 			{ formatCitySalesReports, cities } = model;
 

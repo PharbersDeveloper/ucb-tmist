@@ -62,6 +62,9 @@ h2.title {
             }
 
             tbody {
+				tr td:first-child {
+					white-space: nowrap;
+				}
                 td {
                     padding: 0;
                     padding-left: $spacing-2;

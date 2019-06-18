@@ -37,7 +37,7 @@ h2.title {
 		.table-container {
 			th:first-child, td:first-child{
 				position:sticky;
-				left:0px;
+				left:0;
 				background-color: #fff;
 			}
 			thead {
@@ -59,6 +59,9 @@ h2.title {
 			}
 
 			tbody {
+				tr td:first-child {
+					white-space: nowrap;
+				}
 				td {
 					padding: 0;
 					padding-left: $spacing-2;

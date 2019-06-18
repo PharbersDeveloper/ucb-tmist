@@ -74,11 +74,11 @@ export default Route.extend({
 					tableBodyCity
 				});
 			});
-	},
-	setupController(controller, model) {
-		this._super(controller, model);
-		this.controller.set('doubleCircleData', model.doubleCircleCity);
-		this.controller.set('tableHead', model.tableHeadCity);
-		this.controller.set('tableBody', model.tableBodyCity);
 	}
+	// setupController(controller, model) {
+	// 	this._super(controller, model);
+	// 	// this.controller.set('doubleCircleData', model.doubleCircleCity);
+	// 	// this.controller.set('tableHead', model.tableHeadCity);
+	// 	// this.controller.set('tableBody', model.tableBodyCity);
+	// }
 });

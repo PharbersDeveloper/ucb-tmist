@@ -109,11 +109,11 @@ export default Route.extend({
 					uniqByProducts
 				});
 			});
-	},
-	setupController(controller, model) {
-		this._super(controller, model);
-		this.controller.set('doubleCircleData', model.doubleCircleHosp);
-		this.controller.set('tableHead', model.tableHeadHosp);
-		this.controller.set('tableBody', model.tableBodyHosp);
 	}
+	// setupController(controller, model) {
+	// 	this._super(controller, model);
+	// 	this.controller.set('doubleCircleData', model.doubleCircleHosp);
+	// 	// this.controller.set('tableHead', model.tableHeadHosp);
+	// 	this.controller.set('tableBody', model.tableBodyHosp);
+	// }
 });

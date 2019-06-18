@@ -134,3 +134,19 @@
 		{{/bp-layout}}
 	{{/modal.body}}
 {{/bp-modal}}
+{{#bp-modal
+		open=calculateR 
+		position='center'
+		backdropClose=false
+ 		onHidden=(action (mut calculateR) false) as |modal|}}
+	{{#modal.header}}
+		<h4 class="modal-title">
+			正在计算...
+		</h4>
+	{{/modal.header}}
+	{{#modal.body}}
+		<p class="desc">
+			正在计算，请稍候...
+		</p>
+	{{/modal.body}}
+{{/bp-modal}}

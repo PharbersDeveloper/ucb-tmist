@@ -272,8 +272,9 @@ export default Route.extend({
 				initialize: function () {
 					controller.set('hasPlugin', true);
 					this._converse.api.listen.on('message', obj => {
-						let message = obj.stanza.textContent;
+						let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
 
+						window.console.log(JSON.parse(message).msg);
 						if (!isEmpty(message)) {
 							controller.set('xmppMessage', JSON.parse(message));
 							return JSON.parse(message);
