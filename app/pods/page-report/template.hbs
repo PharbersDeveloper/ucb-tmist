@@ -12,11 +12,11 @@
 				{{/left.item}}
 			{{/body.left}}
 			{{#body.right}}
-				{{#bp-button disabled=true class='mr-1'}}
+				{{#bp-button onClick=(action 'outputData' 'assessment') class='mr-1'}}
 					导出测试数据
 				{{/bp-button}}
 				{{#bp-button type='default' disabled=true }}
-					返回报告
+					查看执行结果报告
 				{{/bp-button}}
 			{{/body.right}}
 		{{/ph.body}}
@@ -30,7 +30,8 @@
 			{{/bp-layout}}
 			{{#bp-layout direction='col' class='pt-4' local-class='level-content'}}
 				<p local-class='level-content-title' class="mb-3">等级评价</p>
-				<p local-class='level-contetn-text'>您还需要花更多的精力，完善自己在报表与数据理解上的能力，透过科学化的分析，能使您在部署战略上，了解全局现状，洞察问题关键，预判发展趋势。从数据中你将收获宏观的视野，掌握全局。</p>
+				<p local-class='level-contetn-text'>
+					您还需要花更多的精力，完善自己在报表与数据理解上的能力，透过科学化的分析，能使您在部署战略上，了解全局现状，洞察问题关键，预判发展趋势。从数据中你将收获宏观的视野，掌握全局。</p>
 			{{/bp-layout}}
 		{{/bp-layout}}
 	{{/bp-layout}}

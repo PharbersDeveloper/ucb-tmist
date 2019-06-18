@@ -1,25 +1,36 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>UcbTmist</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {{content-for "head"}}
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>UCBTmist</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{{content-for "head"}}
+	<link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css">
+	<link integrity="" rel="stylesheet" href="{{rootURL}}assets/ucb-tmist.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="https://cdn.conversejs.org/css/converse.min.css">
+	{{content-for "head-footer"}}
+</head>
 
-    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css">
-    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/ucb-tmist.css">
+<body>
+	{{content-for "body"}}
+	<!-- <script src="https://cdn.conversejs.org/dist/converse.min.js"></script> -->
+	<script src="{{rootURL}}assets/vendor.js"></script>
+	<script src="{{rootURL}}assets/ucb-tmist.js"></script>
+	<script>
+		// converse.initialize({
+		// 	authentication: 'login', // 认证方式，默认为 'login'
+		// 	bosh_service_url: 'http://123.56.179.133:7070/http-bind/',
+		// 	show_controlbox_by_default: false,
+		// 	auto_login: true,
+		// 	jid: 'swang@max.logic',
+		// 	password: 'swang'
+		// });
 
-    {{content-for "head-footer"}}
-  </head>
-  <body>
-    {{content-for "body"}}
+	</script>
+	{{content-for "body-footer"}}
+</body>
 
-    <script src="{{rootURL}}assets/vendor.js"></script>
-    <script src="{{rootURL}}assets/ucb-tmist.js"></script>
-
-    {{content-for "body-footer"}}
-  </body>
 </html>

@@ -15,7 +15,7 @@
 		classNames="p-4" }}
 		{{#bp-layout main="between" local-class="left" }}
 			{{#each goods.productConfig.product.images as |item|}}
-				<img src={{item.img}} alt={{goods.productConfig.product.name}} class="mr-4">
+				<img src={{item.img}} width='160' alt={{goods.productConfig.product.name}} class="mr-4 rounded">
 			{{/each}}
 			{{#bp-layout local-class="product-infos"}}
 				{{#bp-layout direction="col"}}

@@ -18,7 +18,7 @@ export default Route.extend({
 	},
 	model() {
 		const pageScenarioModel = this.modelFor('page-scenario'),
-			{ paper, goodsConfigs, navs } = pageScenarioModel;
+			{ paper, goodsConfigs, navs, scenario } = pageScenarioModel;
 
 		let seasons = A([]),
 			tmpData = A([]),
@@ -133,6 +133,7 @@ export default Route.extend({
 					navs,
 					paper,
 					goodsConfigs,
+					scenario,
 					selfGoodsConfigs: pageScenarioModel.selfGoodsConfigs,
 					competeGoodsConfigs: pageScenarioModel.competeGoodsConfigs,
 					destConfigHospitals: pageScenarioModel.destConfigHospitals,
