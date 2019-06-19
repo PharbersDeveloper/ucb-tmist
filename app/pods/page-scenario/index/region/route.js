@@ -74,7 +74,6 @@ export default Route.extend({
 				});
 
 				// 城市销售结构分布图
-				console.log(formatCitySalesReports);
 				doubleCircleCity = handler.salesConstruct(formatCitySalesReports, 'city.name');
 				// 城市销售趋势图
 				barLineDataCity = handler.salesTrend(barLineKeys, formatCitySalesReports, tmpHeadQ);

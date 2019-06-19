@@ -201,9 +201,16 @@ export default Service.extend({
 		});
 	},
 	generateHospitalTableData(destConfigHospitals, lastSeasonReports, formatHospitalSalesReports, productId = '') {
+		let total = { salesQuota: 0, sales: 0 },
+			totalValue = lastSeasonReports.reduce((acc, current) => {
+				acc.salesQuota += current.report.salesQuota;
+				acc.sales += current.report.sales;
+				return acc;
+			}, total);
+
 		return destConfigHospitals.map(ele => {
 
-			let currentItems = this.findCurrentItem(lastSeasonReports, 'hospital.id', ele.get('hospitalConfig.hospital.id')),
+			let currentItems = this.findCurrentItem(lastSeasonReports, 'hospital.name', ele.get('hospitalConfig.hospital.name')),
 				currentItemsByProds = this.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', productId),
 				currentValue = EmberObject.create({
 					patientCount: 0,
@@ -232,21 +239,22 @@ export default Service.extend({
 				}, currentValue),
 				currentItemsByProdsUniqBy = currentItemsByProds.uniqBy('goodsConfig.productConfig.treatmentArea'),
 				currentItemTotalSeason = formatHospitalSalesReports.map(item => {
-					let currentSeason = this.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+					let currentSeason = this.findCurrentItem(item.dataReports, 'hospital.id', ele.get('hospitalConfig.hospital.id')),
 						currentSeasonByProds = this.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', productId),
 						values = EmberObject.create({
 							salesQuota: 0,
 							sales: 0
-						}),
-						currentSeasonByProdsByHosp = currentSeasonByProds.filterBy('hospital.id', ele.get('hospitalConfig.hospital.id'));
+						});
+					// currentSeasonByProdsByHosp = currentSeasonByProds.filterBy('hospital.id', ele.get('hospitalConfig.hospital.id'));
 
-					return currentSeasonByProdsByHosp.reduce((acc, current) => {
+					return currentSeasonByProds.reduce((acc, current) => {
 						acc.salesQuota += current.report.salesQuota;
 						acc.sales += current.report.sales;
 						return acc;
 					}, values);
 				}),
-				result = A([]);
+				result = A([]),
+				rates = this.calculcateRate(currentItemTotalSeason, totalValue, currentItemReport, productId);
 
 			currentItemReport.patientCount = currentItemsByProdsUniqBy.reduce((acc, cur) => acc + Number(cur.report.patientCount), 0);
 			result = [
@@ -254,12 +262,12 @@ export default Service.extend({
 				currentItemsByProds.firstObject.resourceConfig.get('representativeConfig.representative.name'),
 				this.formatThousand(currentItemReport.patientCount, '', 0),
 				isEmpty(productId) ? '-' : currentItemReport.drugEntranceInfo,
-				this.formatPercent(currentItemReport.quotaContribute),
-				this.formatPercent(currentItemReport.quotaGrowth),
-				this.formatPercent(currentItemReport.quotaAchievement),
-				this.formatPercent(currentItemReport.salesYearOnYear),
-				this.formatPercent(currentItemReport.salesMonthOnMonth),
-				this.formatPercent(currentItemReport.salesContribute),
+				rates.quotaContribute,
+				rates.quotaGrowth,
+				rates.quotaAchievement,
+				rates.salesYearOnYear,
+				rates.salesMonthOnMonth,
+				rates.salesContribute,
 				this.formatThousand(currentItemReport.ytdSales, '￥')
 
 			];
@@ -269,10 +277,17 @@ export default Service.extend({
 		});
 	},
 	generateRegionTableData(cities, lastSeasonReports, formatCitySalesReports, productId = '') {
+		let total = { salesQuota: 0, sales: 0 },
+			totalValue = lastSeasonReports.reduce((acc, current) => {
+				acc.salesQuota += current.report.salesQuota;
+				acc.sales += current.report.sales;
+				return acc;
+			}, total);
+
 		return cities.map(ele => {
 			let currentItems = this.findCurrentItem(lastSeasonReports, 'name', ele.get('name')),
 				currentItemsByProds = this.findCurrentItem(currentItems, 'productId', productId),
-				currentRepValue = EmberObject.create({
+				currentValue = EmberObject.create({
 					patientCount: 0,
 					quotaContribute: 0,
 					quotaGrowth: 0,
@@ -293,45 +308,56 @@ export default Service.extend({
 					acc.salesContribute += current.report.salesContribute;
 					acc.ytdSales += current.report.ytdSales;
 					return acc;
-				}, currentRepValue),
+				}, currentValue),
+				currentItemsByProdsUniqBy = currentItemsByProds.uniqBy('goodsConfig.productConfig.treatmentArea'),
 
 				currentItemTotalSeason = formatCitySalesReports.map(item => {
-					let currentSeason = this.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+					let currentSeason = this.findCurrentItem(item.dataReports, 'city.name', ele.get('name')),
 						currentSeasonByProds = this.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', productId),
 						values = EmberObject.create({
 							salesQuota: 0,
 							sales: 0
-						}),
-						currentSeasonByProdsByCity = currentSeasonByProds.filterBy('city.id', ele.get('id'));
+						});
 
-					return currentSeasonByProdsByCity.reduce((acc, current) => {
+					// currentSeasonByProdsByCity = currentSeasonByProds.filterBy('city.name', ele.get('name'));
+					return currentSeasonByProds.reduce((acc, current) => {
 						acc.salesQuota += current.report.salesQuota;
 						acc.sales += current.report.sales;
 						return acc;
 					}, values);
 				}),
-				result = A([]);
+				result = A([]),
+				rates = this.calculcateRate(currentItemTotalSeason, totalValue, currentItemReport, productId);
+
+			currentItemReport.patientCount = currentItemsByProdsUniqBy.reduce((acc, cur) => acc + Number(cur.report.patientCount), 0);
 
 			result = [
 				ele.get('name'),
 				this.formatThousand(currentItemReport.patientCount, '', 0),
-				this.formatPercent(currentItemReport.quotaContribute),
-				this.formatPercent(currentItemReport.quotaGrowth),
-				this.formatPercent(currentItemReport.quotaAchievement),
-				this.formatPercent(currentItemReport.salesYearOnYear),
-				this.formatPercent(currentItemReport.salesMonthOnMonth),
-				this.formatPercent(currentItemReport.salesContribute),
+				rates.quotaContribute,
+				rates.quotaGrowth,
+				rates.quotaAchievement,
+				rates.salesYearOnYear,
+				rates.salesMonthOnMonth,
+				rates.salesContribute,
 				this.formatThousand(currentItemReport.ytdSales, '￥')
-
 			];
+
 			result.push(...currentItemTotalSeason.map(item => this.formatThousand(item.salesQuota, '￥')));
 			result.push(...currentItemTotalSeason.map(item => this.formatThousand(item.sales, '￥')));
 			return result;
 		});
 	},
 	generateRepTableData(resourceConfigRepresentatives, lastSeasonReports, formatRepresentativeSalesReports, productId = '') {
+		let total = { salesQuota: 0, sales: 0 },
+			totalValue = lastSeasonReports.reduce((acc, current) => {
+				acc.salesQuota += current.report.salesQuota;
+				acc.sales += current.report.sales;
+				return acc;
+			}, total);
+
 		return resourceConfigRepresentatives.map(ele => {
-			let currentItems = this.findCurrentItem(lastSeasonReports, 'representative.id', ele.get('representativeConfig.representative.id')),
+			let currentItems = this.findCurrentItem(lastSeasonReports, 'representative.name', ele.get('representativeConfig.representative.name')),
 				currentItemsByProds = this.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', productId),
 				currentRepValue = EmberObject.create({
 					patientCount: 0,
@@ -343,6 +369,7 @@ export default Service.extend({
 					salesContribute: 0,
 					ytdSales: 0
 				}),
+				currentItemsByProdsUniqBy = currentItemsByProds.uniqBy('goodsConfig.productConfig.treatmentArea'),
 				currentItemReport = currentItemsByProds.reduce((acc, current) => {
 
 					acc.patientCount += Number(current.report.patientCount);
@@ -370,17 +397,20 @@ export default Service.extend({
 						return acc;
 					}, values);
 				}),
-				result = A([]);
+				result = A([]),
+				rates = this.calculcateRate(currentItemTotalSeason, totalValue, currentItemReport, productId);
+
+			currentItemReport.patientCount = currentItemsByProdsUniqBy.reduce((acc, cur) => acc + Number(cur.report.patientCount), 0);
 
 			result = [
 				ele.get('representativeConfig.representative.name'),
 				this.formatThousand(currentItemReport.patientCount, '', 0),
-				this.formatPercent(currentItemReport.quotaContribute),
-				this.formatPercent(currentItemReport.quotaGrowth),
-				this.formatPercent(currentItemReport.quotaAchievement),
-				this.formatPercent(currentItemReport.salesYearOnYear),
-				this.formatPercent(currentItemReport.salesMonthOnMonth),
-				this.formatPercent(currentItemReport.salesContribute),
+				rates.quotaContribute,
+				rates.quotaGrowth,
+				rates.quotaAchievement,
+				rates.salesYearOnYear,
+				rates.salesMonthOnMonth,
+				rates.salesContribute,
 				this.formatThousand(currentItemReport.ytdSales, '￥')
 
 			];
@@ -388,5 +418,24 @@ export default Service.extend({
 			result.push(...currentItemTotalSeason.map(item => this.formatThousand(item.sales, '￥')));
 			return result;
 		});
+	},
+	calculcateRate(currentItemTotalSeason, totalValue, currentItemReport, productId) {
+		let seasonLength = currentItemTotalSeason.length,
+			lastSeasonTotalData = currentItemTotalSeason.lastObject,
+			quotaContribute = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.salesQuota / totalValue.salesQuota) : this.formatPercent(currentItemReport.quotaContribute),
+			quotaGrowth = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.salesQuota / currentItemTotalSeason[seasonLength - 2].sales - 1) : this.formatPercent(currentItemReport.quotaGrowth),
+			quotaAchievement = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.sales / lastSeasonTotalData.salesQuota) : this.formatPercent(currentItemReport.quotaAchievement),
+			salesYearOnYear = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.sales / currentItemTotalSeason[seasonLength - 5].sales - 1) : this.formatPercent(currentItemReport.salesYearOnYear),
+			salesMonthOnMonth = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.sales / currentItemTotalSeason[seasonLength - 2].sales - 1) : this.formatPercent(currentItemReport.salesMonthOnMonth),
+			salesContribute = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.sales / totalValue.sales) : this.formatPercent(currentItemReport.salesContribute);
+
+		return {
+			quotaContribute,
+			quotaGrowth,
+			quotaAchievement,
+			salesYearOnYear,
+			salesMonthOnMonth,
+			salesContribute
+		};
 	}
 });
