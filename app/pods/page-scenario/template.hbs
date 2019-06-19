@@ -8,7 +8,7 @@
 				{{/left.item}}
 				{{#left.item}}
 					{{model.scenario.name}}
-					{{!-- 关卡进度 {{model.scenario.phase}} / {{model.proposal.totalPhase}} --}}
+					关卡进度 {{model.scenario.phase}} / {{model.proposal.totalPhase}}
 				{{/left.item}}
 			{{/body.left}}
 			{{#body.right}}
@@ -87,17 +87,23 @@
 		<h3 local-class='title' class="mb-4">
 			请仔细阅读“参考信息”并通过“业务决策”完成以下任务
 		</h3>
+		{{#if (bp-eq model.scenario.phase 1)}}
+			{{#bp-layout cross='center' classNames='mb-3'}}
+				{{bp-icon icon="mission-1"}}
+				<h4 local-class='title' class="ml-2 mb-0">
+					完成区域划分
+					<span>(只需在首个季度完成)</span></h4>
+			{{/bp-layout}}
+			<p local-class='content' class="mb-4">
+				为所有医院分配代表，请确保每个代表都有负责的目标医院
+			</p>
+		{{/if}}
 		{{#bp-layout cross='center' classNames='mb-3'}}
-			{{bp-icon icon="mission-1"}}
-			<h4 local-class='title' class="ml-2 mb-0">
-				完成区域划分
-				<span>(只需在首个季度完成)</span></h4>
-		{{/bp-layout}}
-		<p local-class='content' class="mb-4">
-			为所有医院分配代表，请确保每个代表都有负责的目标医院
-		</p>
-		{{#bp-layout cross='center' classNames='mb-3'}}
-			{{bp-icon icon="mission-2"}}
+			{{#if (bp-eq model.scenario.phase 1)}}
+				{{bp-icon icon="mission-2"}}
+			{{else}}
+				{{bp-icon icon="mission-1"}}
+			{{/if}}
 			<h4 local-class='title' class="ml-2 mb-0">
 				分配业务指标
 			</h4>
@@ -116,7 +122,11 @@
 			{{/each}}
 		{{/bp-layout}}
 		{{#bp-layout cross='center' classNames='mb-3'}}
-			{{bp-icon icon="mission-3"}}
+			{{#if (bp-eq model.scenario.phase 1)}}
+				{{bp-icon icon="mission-3"}}
+			{{else}}
+				{{bp-icon icon="mission-2"}}
+			{{/if}}
 			<h4 local-class='title' class="ml-2 mb-0">
 				分配预算
 			</h4>
@@ -132,5 +142,20 @@
 				{{/bp-layout}}
 			{{/each}}
 		{{/bp-layout}}
+	{{/modal.body}}
+{{/bp-modal}}
+{{#bp-modal
+		open=loading 
+		position='center'
+		local-class='modal-loading'
+		backdropClose=false
+		onHidden=(action (mut loading) false) as |modal|}}
+	{{!-- {{#modal.header tagName='h2'}}
+		任务介绍（{{model.scenario.name}}）
+	{{/modal.header}} --}}
+	{{#modal.body classNames="p-4"}}
+		<div local-class="loading">
+			<p local-class="text">PHARBERS</p>
+		</div>
 	{{/modal.body}}
 {{/bp-modal}}

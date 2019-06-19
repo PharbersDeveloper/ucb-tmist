@@ -13,12 +13,6 @@ export default Controller.extend({
 	tmpRep: null,
 	tmpReg: null,
 
-	// handleProdChange: computed('tmpRsr', function () {
-	// 	// debugger
-	// 	this.reCalProd();
-	// 	return null;
-	// }),
-
 	handler: service('serviceResultHandler'),
 	barLineData: computed('productChooseProduct.id', function () {
 		if (ENV.environment === 'development') {

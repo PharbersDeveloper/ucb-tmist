@@ -7,6 +7,7 @@ import { all, hash } from 'rsvp';
 export default Route.extend({
 	cookies: service(),
 	ajax: service(),
+	serviceCycle: service(),
 	activate() {
 		this._super(...arguments);
 		let applicationController = this.controllerFor('application');
@@ -134,4 +135,9 @@ export default Route.extend({
 			});
 		});
 	}
+	// afterModel(model) {
+	// 	if (this.serviceCycle.needRedirectToSce) {
+	// 		this.transitionTo('page-scenario', model.detailProposal.get('proposal.id'));
+	// 	}
+	// }
 });

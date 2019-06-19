@@ -2,7 +2,7 @@
 	医院销售结构分布图
 {{/bp-layout}}
 {{#bp-layout main='between' local-class='double-circle-title' classNames='bg-white'}}
-	{{#each doubleCircleData as |item|}}
+	{{#each model.doubleCircleHosp as |item|}}
 		{{#bp-layout cross='center' tagName='h3' local-class='title' classNames='m-0 px-4'}}
 			{{item.seriesName}}销售额
 		{{/bp-layout}}
@@ -10,7 +10,7 @@
 {{/bp-layout}}
 <div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
 	{{bp-circle-double eid="circleHosp"	circleSize=circlePie
-		circleData=doubleCircleData
+		circleData=model.doubleCircleHosp
 		showSeriesName=false}}
 </div>
 {{#bp-layout tagName="h2" cross="center" local-class="title" classNames="m-0 bg-white px-4"}}
@@ -111,7 +111,7 @@
 	<div class="table-responsive" local-class='table-content'>
 		<table local-class="table-container" class="table">
 			<thead>
-				{{#each tableHead as |tcontent|}}
+				{{#each model.tableHeadHosp as |tcontent|}}
 					<th class="text-center bg-white">{{tcontent}}</th>
 				{{/each}}
 			</thead>

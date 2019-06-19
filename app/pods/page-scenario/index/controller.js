@@ -51,16 +51,15 @@ export default Controller.extend({
 						method: 'get',
 						responseType: 'blob'
 					});
-
 				}));
 			}).then(data => {
 				data.forEach((res, index) => {
-					const content = res,
-						blob = new Blob([content]),
-						fileName = fileNames[index];
+					let content = res.data,
+						blob = new Blob([content], { type: 'text/csv' }),
+						fileName = fileNames[index].split('=')[1];
 
 					if ('download' in document.createElement('a')) { // 非IE下载
-						const elink = document.createElement('a');
+						let elink = document.createElement('a');
 
 						elink.download = fileName;
 						elink.style.display = 'none';

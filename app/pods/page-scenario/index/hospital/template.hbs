@@ -2,7 +2,7 @@
 	医院销售结构分布图
 {{/bp-layout}}
 {{#bp-layout main='between' local-class='double-circle-title' classNames='bg-white'}}
-	{{#each doubleCircleData as |item|}}
+	{{#each model.doubleCircleHosp as |item|}}
 		{{#bp-layout cross='center' tagName='h3' local-class='title' classNames='m-0 px-4'}}
 			{{item.seriesName}}销售额
 		{{/bp-layout}}
@@ -10,7 +10,7 @@
 {{/bp-layout}}
 <div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
 	{{bp-circle-double eid="circleHosp"	circleSize=circlePie
-		circleData=doubleCircleData
+		circleData=model.doubleCircleHosp
 		showSeriesName=false}}
 </div>
 {{#bp-layout tagName="h2" cross="center" local-class="title" classNames="m-0 bg-white px-4"}}
@@ -85,8 +85,8 @@
 		<span local-class="keys" class="mr-4">产品</span>
 		{{#bp-dropdown widthSize="auto" as |dd|}}
 			{{#dd.button}}
-				{{#if hospChooseProdTable.id}}
-					<p>{{hospChooseProdTable.productConfig.product.name}}</p>
+				{{#if chooseProdTable.id}}
+					<p>{{chooseProdTable.productConfig.product.name}}</p>
 				{{else}}
 					全部总值
 				{{/if}}
@@ -94,12 +94,12 @@
 			{{/dd.button}}
 			{{#dd.menu as |menu|}}
 				{{#menu.option value=''
-					onClick=(action (mut hospChooseProdTable))}}
+					onClick=(action (mut chooseProdTable))}}
 					全部总值
 				{{/menu.option}}
 				{{#each model.uniqByProducts as |goodsConfig|}}
 					{{#menu.option value=goodsConfig.goodsConfig
-						onClick=(action (mut hospChooseProdTable))}}
+						onClick=(action (mut chooseProdTable))}}
 						{{goodsConfig.goodsConfig.productConfig.product.name}}
 					{{/menu.option}}
 				{{/each}}
@@ -111,12 +111,12 @@
 	<div class="table-responsive" local-class='table-content'>
 		<table local-class="table-container" class="table">
 			<thead>
-				{{#each tableHead as |tcontent|}}
+				{{#each model.tableHeadHosp as |tcontent|}}
 					<th class="text-center bg-white">{{tcontent}}</th>
 				{{/each}}
 			</thead>
 			<tbody class="bg-white">
-				{{#each tableBody as |tableTr|}}
+				{{#each tableData as |tableTr|}}
 					<tr>
 						{{#each tableTr as |tableTd|}}
 							<td>{{tableTd}}</td>

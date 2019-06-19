@@ -43,8 +43,8 @@ export default Route.extend({
 						salesTarget: '',	// 销售目标设定
 						budget: ''	//预算设定
 					// TODO 测试，用后删除
-					// salesTarget: 88,	// 销售目标设定
-					// budget: 6	//预算设定
+					// salesTarget: 888,	// 销售目标设定
+					// budget: 88	//预算设定
 					});
 				}),
 				businessinput = null;
@@ -261,9 +261,11 @@ export default Route.extend({
 
 		controller.set('businessInputs', model.businessInputs);
 
-		if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
+		// if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
+		if (isEmpty(controller.get('notice'))) {
 			controller.set('notice', true);
 		}
+		// }
 		if (!controller.get('hasPlugin')) {
 			converse.initialize();
 
@@ -272,8 +274,9 @@ export default Route.extend({
 				initialize: function () {
 					controller.set('hasPlugin', true);
 					this._converse.api.listen.on('message', obj => {
-						let message = obj.stanza.textContent;
+						let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
 
+						window.console.log(JSON.parse(message).msg);
 						if (!isEmpty(message)) {
 							controller.set('xmppMessage', JSON.parse(message));
 							return JSON.parse(message);

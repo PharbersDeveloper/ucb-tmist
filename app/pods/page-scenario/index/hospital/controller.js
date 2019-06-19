@@ -16,10 +16,10 @@ export default Controller.extend({
 			{ formatHospitalSalesReports } = model,
 			handler = this.handler;
 
-		let { hospChooseHosp, chooseGoods } = this,
+		let { hospChooseHosp, chooseProd } = this,
 			findHospItemValue = isEmpty(hospChooseHosp) ? hospChooseHosp : hospChooseHosp.get('hospitalConfig.hospital.id'),
 			findHospItemKey = 'hospital.id',
-			findGoodsValue = isEmpty(chooseGoods) ? chooseGoods : chooseGoods.get('productConfig.product.id'),
+			findGoodsValue = isEmpty(chooseProd) ? chooseProd : chooseProd.get('productConfig.product.id'),
 			findGoodsKey = 'goodsConfig.productConfig.product.id';
 
 		return handler.changeTrendData(model.barLineDataHosp, formatHospitalSalesReports, findHospItemKey, findHospItemValue, findGoodsKey, findGoodsValue);

@@ -148,6 +148,7 @@ export default Route.extend({
 	},
 	setupController(controller, model) {
 		this._super(...arguments);
+		// controller.set('notice', true);
 		controller.set('productTreatmentArea', model.treatmentArea.firstObject);
 	}
 	// beforeModel(transition) {

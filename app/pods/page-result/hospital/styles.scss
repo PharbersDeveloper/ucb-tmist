@@ -40,6 +40,8 @@ h2.title {
     .table-content {
         margin: 0 24px;
         width: auto;
+        height: 400px;
+        overflow-y: auto;
 
         .table-container {
 
@@ -54,9 +56,9 @@ h2.title {
                 background-color: #fff;
 
                 th {
-					position: sticky;
-					top: 0;
-					z-index: 1;
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
                     padding-left: $spacing-2;
                     border: 0;
                     @extend %p-small;
@@ -66,17 +68,20 @@ h2.title {
                     border-bottom: 1px solid rgba(9, 30, 66, 0.08);
 
                     &:first-child {
-						z-index: 3;
+                        z-index: 3;
                         min-width: 144px;
                     }
                 }
             }
 
             tbody {
+                tr td:first-child {
+                    white-space: nowrap;
+                }
+
                 td {
                     padding: 0;
                     padding-left: $spacing-2;
-
                     height: 52px;
                     line-height: 52px;
                     @extend %p-primary;

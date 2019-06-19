@@ -11,7 +11,7 @@ export default Service.extend({
 	router: service(),
 	groupName: '',
 	version: 'v0',
-	clientId: ENV.clientId,
+	clientId: '5cbe7ab8f4ce4352ecb082a3',
 	clientSecret: '5c90db71eeefcc082c0823b2',
 	status: 'self',
 	scope: 'APP/UCB',

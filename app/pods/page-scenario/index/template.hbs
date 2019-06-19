@@ -89,104 +89,73 @@
 		{{/if}}
 	</div>
 {{/bp-layout}}
-{{!-- {{#bp-layout direction="col" local-class="business-container"
-	classNames="pt-4"}}
-
-	{{#bp-layout main="between" local-class="overviews" classNames='mb-4'}}
-		<div local-class="item">
-			{{#bp-layout tagName="h2" cross="center" classNames="px-4 py-3"}}
-				药品销售额指标
-			{{/bp-layout}}
-			<div class="p-4">
-				{{#each indicatorsData as |indicator|}}
-					{{#bp-layout main='between'}}
-						<span local-class='keys'>
-							{{indicator.name}}
-						</span>
-						<span local-class='values'>
-							{{indicator.value}}*/{{indicator.total}}
-						</span>
-					{{/bp-layout}}
-					{{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
-						{{p.bar value=indicator.value maxValue=indicator.total}}
-					{{/bp-progress}}
-				{{/each}}
-			</div>
-		</div>
-		<div local-class="item" class="mx-2">
-			{{#bp-layout tagName="h2" cross="center" classNames="px-4 py-3"}}
-				总预算
-			{{/bp-layout}}
-			<div class="p-4">
-				<p local-class="info" class="mb-4">
-					{{format-number total.usedBudget}} /
-					￥{{format-number model.resourceConfigManager.managerConfig.totalBudgets}}
-				</p>
-				<div local-class='circle-container'>
-					{{bp-circle-double
-						eid="totalBudget"
-						circleData=budgetData
-						circleSize=circleSize}}
-				</div>
-			</div>
-		</div>
-	{{/bp-layout}}
-	{{#bp-layout local-class="hospitals"}}
-		{{#bp-layout direction="col"
-				local-class="hospitals-configs"
-				classNames="mr-4 px-4 bg-white"}}
-			{{#bp-layout tagName="h3" cross="center" main="between"
-				local-class="title" classNames="m-0"}}
-				<span>目标医院({{overallFilterData.length}})</span>
-				{{#bp-dropdown widthSize="auto" local-class="dd-hosp" as |dd|}}
-					{{#dd.button type="link-subtle" }}
-						{{#if currentHospState.name}}
-							<p>{{currentHospState.name}}</p>
-						{{else}}
-							请选择
-						{{/if}}
-						{{bp-icon icon='down'}}
-					{{/dd.button}}
-					{{#dd.menu as |menu|}}
-						{{#each hospitalState as |hs|}}
-							{{#menu.option value=hs
-								onClick=(action (mut currentHospState))}}
-								{{hs.name}}
-							{{/menu.option}}
-						{{/each}}
-					{{/dd.menu}}
-				{{/bp-dropdown}}
-			{{/bp-layout}}
-			{{#each overallFilterData as |dc|}}
-				{{#link-to "page-scenario.index.hospital-config" dc.id
-						activeClass="current-hospital"}}
-					{{hospital-overall
-							hospitalName=dc.hospitalConfig.hospital.name
-							businessInputs=model.businessInputs
-							overallFilterData=dc}}
-				{{/link-to}}
-			{{/each}}
-		{{/bp-layout}}
-		{{#bp-layout direction="col" local-class="hospital" class="mb-2"}}
-			{{outlet}}
-		{{/bp-layout}}
-	{{/bp-layout}}
-{{/bp-layout}}
 {{#bp-modal
-		open=warning.open
+		open=notice 
 		position='center'
-		onHidden=(action (mut warning.open) false) as |modal|}}
-	{{#modal.header}}
-		<h4 class="modal-title">
-			{{warning.title}}
-		</h4>
+		local-class='modal-welcome'
+		backdropClose=false
+		onHidden=(action (mut notice) false) as |modal|}}
+	{{#modal.header tagName='h2'}}
+		任务介绍（{{model.scenario.name}}）
 	{{/modal.header}}
 	{{#modal.body classNames="p-4"}}
-		<p class="desc m-0">
-			{{warning.detail}}
-		</p>
+		<h3 local-class='title' class="mb-4">
+			请仔细阅读“参考信息”并通过“业务决策”完成以下任务
+		</h3>
+		{{#if (bp-eq model.scenario.phase 1)}}
+			{{#bp-layout cross='center' classNames='mb-3'}}
+				{{bp-icon icon="mission-1"}}
+				<h4 local-class='title' class="ml-2 mb-0">
+					完成区域划分
+					<span>(只需在首个季度完成)</span></h4>
+			{{/bp-layout}}
+			<p local-class='content' class="mb-4">
+				为所有医院分配代表，请确保每个代表都有负责的目标医院
+			</p>
+		{{/if}}
+		{{#bp-layout cross='center' classNames='mb-3'}}
+			{{#if (bp-eq model.scenario.phase 1)}}
+				{{bp-icon icon="mission-2"}}
+			{{else}}
+				{{bp-icon icon="mission-1"}}
+			{{/if}}
+			<h4 local-class='title' class="ml-2 mb-0">
+				分配业务指标
+			</h4>
+		{{/bp-layout}}
+		{{#bp-layout direction='col' local-class='content' }}
+			{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |mgc|}}
+				{{#bp-layout cross='center' classNames='mb-3'}}
+					{{bp-icon icon='pill'}}
+					<span local-class='keys' class="ml-2 mr-4">
+						{{mgc.goodsConfig.productConfig.product.name}}
+					</span>
+					<span local-class='values'>
+						{{mgc.goodsConfig.productConfig.priceType}}{{format-number mgc.goodsSalesTarget}}
+					</span>
+				{{/bp-layout}}
+			{{/each}}
+		{{/bp-layout}}
+		{{#bp-layout cross='center' classNames='mb-3'}}
+			{{#if (bp-eq model.scenario.phase 1)}}
+				{{bp-icon icon="mission-3"}}
+			{{else}}
+				{{bp-icon icon="mission-2"}}
+			{{/if}}
+			<h4 local-class='title' class="ml-2 mb-0">
+				分配预算
+			</h4>
+		{{/bp-layout}}
+		{{#bp-layout direction='col' local-class='content'}}
+			{{#each model.resourceConfigManager.managerConfig.managerGoodsConfigs as |mgc|}}
+				{{#bp-layout cross='center' classNames='mb-3'}}
+					{{bp-icon icon='pill'}}
+					<span local-class='keys' class="ml-2 mr-4">{{mgc.goodsConfig.productConfig.product.name}}</span>
+					<span local-class='values'>
+						{{mgc.goodsConfig.productConfig.priceType}}{{format-number mgc.goodsSalesBudgets}}
+					</span>
+				{{/bp-layout}}
+			{{/each}}
+		{{/bp-layout}}
 	{{/modal.body}}
-	{{#modal.footer}}
-		{{#bp-button type="primary" onClick=(action modal.close)}}好的{{/bp-button}}
-	{{/modal.footer}}
-{{/bp-modal}} --}}
+{{/bp-modal}}

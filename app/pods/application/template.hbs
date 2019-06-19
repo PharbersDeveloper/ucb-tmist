@@ -31,7 +31,7 @@
 					{{bp-icon icon='nav-person'}}
 				{{/dd.button}}
 				{{#dd.menu align="right" as |menu|}}
-					{{#menu.option onClick=(action 'logout')}}
+					{{#menu.option }}
 						账号设置
 					{{/menu.option}}
 					{{#menu.option onClick=(action 'logout')}}
@@ -45,28 +45,6 @@
 <section local-class={{if showNavbar 'container' 'container-height'}}>
 	{{outlet}}
 </section>
-{{!-- {{#bp-modal
-		open=rules 
-		position='center'
-		onHidden=(action (mut rules) false) as |modal|}}
-	{{#modal.header classNames='px-4 py-3 border-0'}}
-		规则介绍
-	{{/modal.header}}
-	{{#modal.body classNames="p-4"}}
-		<p class="mb-3 desc">
-			1. 经理需完成 业务决策 后才能提交任务。
-		</p>
-		<p class="mb-3 desc">
-			2. 第一周期，经理需为每个医院分配代表，之后周期代表将固定不变更。
-		</p>
-		<p class="mb-3 desc">
-			3.必须向每一家医院分配销售额指标和预算，且总销售指标需要被达成，总预算需要被用尽。（若不分配资源可设定数值为0）。
-		</p>
-		<p class="mb-3 desc">
-			4.每一周期决策提交后将不可再修改，当期决策可在“决策回顾”中查看。
-		</p>
-	{{/modal.body}}
-{{/bp-modal}} --}}
 {{#bp-modal
 		open=exitMission 
 		position='center'
