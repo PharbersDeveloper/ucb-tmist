@@ -262,7 +262,7 @@ export default Route.extend({
 		controller.set('businessInputs', model.businessInputs);
 
 		// if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
-		controller.set('notice', true);
+		// controller.set('notice', true);
 		// }
 		if (!controller.get('hasPlugin')) {
 			converse.initialize();
