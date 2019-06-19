@@ -209,7 +209,6 @@ export default Service.extend({
 			}, total);
 
 		return destConfigHospitals.map(ele => {
-
 			let currentItems = this.findCurrentItem(lastSeasonReports, 'hospital.name', ele.get('hospitalConfig.hospital.name')),
 				currentItemsByProds = this.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', productId),
 				currentValue = EmberObject.create({
