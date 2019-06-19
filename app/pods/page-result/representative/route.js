@@ -21,10 +21,13 @@ export default Route.extend({
 			tableHeadRep = A([]),
 			tableBodyRep = A([]),
 			doubleCircleRep = A([]),
+			increaseSalesReportsIncludeRep = A([]),
 			barLineDataRep = A([]);
 
 		return all(increaseSalesReports.map(ele => ele.get('representativeSalesReports')))
 			.then(data => {
+				increaseSalesReportsIncludeRep = data;
+
 				let representativeSalesReportIds = handler.getReportIds(data);
 
 				// 通过 representativeSalesReport 的 id，获取其关联的 resourceConfig
@@ -52,7 +55,26 @@ export default Route.extend({
 				uniqByProducts = representativeSalesReportsReps.uniqBy('goodsConfig.productConfig.product.id');
 
 				// 整理季度数据
-				formatRepresentativeSalesReports = handler.formatReports(tmpHeadQ, representativeSalesReportsReps, resourceConfigRepresentatives.length * uniqByProducts.length);
+				// formatRepresentativeSalesReports = handler.formatReports(tmpHeadQ, representativeSalesReportsReps, resourceConfigRepresentatives.length * uniqByProducts.length);
+				formatRepresentativeSalesReports = increaseSalesReportsIncludeRep.map((ele, index) => {
+					let season = tmpHeadQ[index],
+						dataReports = A(ele).map(item => {
+							return {
+								name: item.get('resourceConfig.representativeConfig.representative.name'),
+								representative: item.get('resourceConfig.representativeConfig.representative'),
+								resourceConfig: item.get('resourceConfig'),
+								hospital: item.get('destConfig.hospitalConfig.hospital'),
+								productId: item.get('goodsConfig.productConfig.product.id'),
+								goodsConfig: item.get('goodsConfig'),
+								report: item
+							};
+						});
+
+					return {
+						season,
+						dataReports
+					};
+				});
 				doubleCircleRep = handler.salesConstruct(formatRepresentativeSalesReports, 'representative.name');
 				barLineDataRep = handler.salesTrend(barLineKeys, formatRepresentativeSalesReports, tmpHeadQ);
 
