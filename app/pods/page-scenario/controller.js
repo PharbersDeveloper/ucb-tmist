@@ -19,7 +19,6 @@ export default Controller.extend({
 		return false;
 	}),
 	xmppResult: observer('xmppMessage.status', function () {
-
 		let clientId = ENV.clientId,
 			accountId = this.get('cookies').read('account_id'),
 			proposalId = this.get('model').proposal.id,
@@ -27,39 +26,58 @@ export default Controller.extend({
 			scenarioId = this.get('model').scenario.id,
 			xmppMessage = this.xmppMessage;
 
+		// if (ENV.environment === 'development') {
 
-		// if (xmppMessage['client-id'] !== clientId ||
-		// 	xmppMessage['account-id'] !== accountId ||
-		// 	xmppMessage['proposal-id'] !== proposalId ||
-		// 	xmppMessage['paperinput-id'] !== paperinputId ||
-		// 	xmppMessage['scenario-id'] !== scenarioId) {
-		// 	return;
-		// }
 		if (xmppMessage['client-id'] !== clientId) {
-			window.console.log('client-id error');
+			if (ENV.environment === 'development') {
+				window.console.log('client-id error');
+			}
 			return;
 		} else if (xmppMessage['account-id'] !== accountId) {
-			window.console.log('account-id error');
+			if (ENV.environment === 'development') {
+				window.console.log('账户 error');
+			}
 			return;
 
 		} else if (xmppMessage['proposal-id'] !== proposalId) {
-			window.console.log('proposal-id error');
+			if (ENV.environment === 'development') {
+				window.console.log('proposal-id error');
+			}
 			return;
 
 		} else if (xmppMessage['paperInput-id'] !== paperinputId) {
-			window.console.log('paperInput-id error');
+			if (ENV.environment === 'development') {
+				window.console.log('输入 error');
+			}
 			return;
 		} else if (xmppMessage['scenario-id'] !== scenarioId) {
-			window.console.log('scenario-id error');
+			if (ENV.environment === 'development') {
+				window.console.log('关卡 error');
+			}
 			return;
 
 		}
 		if (xmppMessage.status === 'ok') {
-			window.console.log('ok');
-
+			if (ENV.environment === 'development') {
+				window.console.log('结果已经返回');
+			}
 			return this.updatePaper(this.paperId, this.state);
 		}
-		window.console.log('error');
+		window.console.log('计算错误');
+		// }
+		// switch (true) {
+		// case xmppMessage['client-id'] !== clientId:
+		// case xmppMessage['account-id'] !== accountId:
+		// case xmppMessage['proposal-id'] !== proposalId:
+		// case xmppMessage['paperInput-id'] !== paperinputId:
+		// case xmppMessage['scenario-id'] !== scenarioId:
+		// 	return;
+		// case xmppMessage.status === 'ok':
+		// 	return this.updatePaper(this.paperId, this.state);
+		// default:
+		// 	return;
+		// }
+
 
 	}),
 	allVerifySuccessful() {
@@ -207,12 +225,11 @@ export default Controller.extend({
 
 	sendInput(state) {
 		const ajax = this.get('ajax'),
-			converse = this.get('converse'),
+			// converse = this.get('converse'),
 			applicationAdapter = this.get('store').adapterFor('application'),
 			store = this.get('store'),
 			model = this.get('model'),
-			{ paper, scenario } = model,
-			that = this;
+			{ paper, scenario } = model;
 
 		//	正常逻辑
 		let version = `${applicationAdapter.get('namespace')}`,
@@ -291,28 +308,15 @@ export default Controller.extend({
 				}).then((response) => {
 
 					if (response.status === 'ok') {
-						window.console.log('calculating');
+						if (ENV.environment === 'development') {
+							window.console.log('等待 R 返回中...');
+						}
 					}
 					this.set('state', state);
 					this.set('paperId', paperId);
 
 					return this.xmppResult;
 				});
-
-				// 	if (response.status === 'Success') {
-				// 		return that.updatePaper(store, paperId, state, that);
-				// 	}
-				// 	return response;
-				// }).then((data) => {
-				// 	if (!isEmpty(data)) {
-				// 		this.transitionToRoute('page-result');
-				// 		return;
-				// 	}
-
-				// }).catch(err => {
-				// 	window.console.log('error');
-				// 	window.console.log(err);
-				// });
 			});
 	},
 

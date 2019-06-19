@@ -42,9 +42,9 @@ export default Route.extend({
 						goodsConfig: item,
 						salesTarget: '',	// 销售目标设定
 						budget: ''	//预算设定
-						// TODO 测试，用后删除
-						// salesTarget: 88,	// 销售目标设定
-						// budget: 6	//预算设定
+					// TODO 测试，用后删除
+					// salesTarget: 888,	// 销售目标设定
+					// budget: 88	//预算设定
 					});
 				}),
 				businessinput = null;

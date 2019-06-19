@@ -35,7 +35,6 @@ export default Controller.extend({
 						method: 'get',
 						responseType: 'blob'
 					});
-
 				}));
 			}).then(data => {
 				data.forEach((res, index) => {
@@ -59,15 +58,6 @@ export default Controller.extend({
 				});
 			}).catch(() => {
 			});
-
-			// v0 / GenerateCSV
-			// {
-			// 	"proposal-id": "5cfca8685458460c4b42262c",
-			// 		"account-id": "5cd51df9f4ce43ee2495d4dd",
-			// 			"scenario-id": "5cfca9115458460c4b422631",
-			// 				"download-type": "business"
-			// }
-
 		}
 	}
 });

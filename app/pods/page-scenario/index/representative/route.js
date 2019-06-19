@@ -57,7 +57,7 @@ export default Route.extend({
 				barLineDataRep = handler.salesTrend(barLineKeys, formatRepresentativeSalesReports, tmpHeadQ);
 
 				let repCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`,
-						`YTD销售额`],
+					`YTD销售额`],
 					lastSeasonReports = formatRepresentativeSalesReports.slice(-1).lastObject.dataReports;
 
 				tableHeadRep.push('代表名称', '患者数量');
