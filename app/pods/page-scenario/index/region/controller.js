@@ -16,10 +16,13 @@ export default Controller.extend({
 			{ formatCitySalesReports } = model,
 			handler = this.handler;
 
-		let findCityItemValue = isEmpty(regionChooseCity) ? regionChooseCity : regionChooseCity.get('id'),
-			findCityItemKey = 'city.id',
+		// let findCityItemValue = isEmpty(regionChooseCity) ? regionChooseCity : regionChooseCity.get('id'),
+		let findCityItemValue = isEmpty(regionChooseCity) ? regionChooseCity : regionChooseCity.get('name'),
+			findCityItemKey = 'name',
+			// findCityItemKey = 'city.id',
 			findGoodsValue = isEmpty(chooseProd) ? chooseProd : chooseProd.get('productConfig.product.id'),
-			findGoodsKey = 'goodsConfig.productConfig.product.id';
+			// findGoodsKey = 'goodsConfig.productConfig.product.id';
+			findGoodsKey = 'productId';
 
 		return handler.changeTrendData(model.barLineDataCity, formatCitySalesReports, findCityItemKey, findCityItemValue, findGoodsKey, findGoodsValue);
 	}),

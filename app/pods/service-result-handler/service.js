@@ -73,13 +73,12 @@ export default Service.extend({
 						// 	currentEles.resuce((acc, cur) => {
 						// 	return acc +cur.report.sales
 						// },0)
-						productId = isEmpty(item.goodsConfig) ? '' : item.goodsConfig.get('productConfig.product.id');
+						productId = isEmpty(item.goodsConfig) ? '' : item.goodsConfig.get('productConfig.product.id'),
+						value = currentEles.reduce((acc, cur) => acc + cur.report.sales, 0);
 
 					return {
 						// value: item.report.sales,
-						value: currentEles.reduce((acc, cur) => {
-							return acc + cur.report.sales;
-						}, 0),
+						value: Number(value.toFixed(0)),
 						name: item.name,
 						productId
 					};
@@ -111,10 +110,10 @@ export default Service.extend({
 					Quota += sReport.report.salesQuota;
 					// achi += sReport.report.quotaAchievement;
 				});
-				achi = currentSales / Quota;
-				total.sales.push(currentSales);
-				total.salesQuota.push(Number(Quota.toFixed(2)));
-				total.quotaAchievement.push(Number(achi.toFixed(2)));
+				achi = currentSales / Quota * 100;
+				total.sales.push(Number(currentSales.toFixed(0)));
+				total.salesQuota.push(Number(Quota.toFixed(0)));
+				total.quotaAchievement.push(Number(achi.toFixed(0)));
 			});
 			return {
 				key: ele.key,
@@ -166,9 +165,6 @@ export default Service.extend({
 	 * @param  {} findProdValue=''
 	 */
 	changeTrendData(originTrendData, formatReport, findItemKey, findItemValue, findProdKey = '', findProdValue = '') {
-		if (isEmpty(findItemValue)) {
-			return originTrendData;
-		}
 		return originTrendData.map(ele => {
 			let total = {
 				sales: A([]),
@@ -184,15 +180,16 @@ export default Service.extend({
 					currentItem = this.findCurrentItem(item.dataReports, findItemKey, findItemValue),
 					currentItemByProd = this.findCurrentItem(currentItem, findProdKey, findProdValue);
 
+
 				currentItemByProd.reduce((acc, current) => {
 					acc.sales += current.report.sales;
 					acc.salesQuota += current.report.salesQuota;
 					return acc;
 				}, currentTotal);
 
-				total.sales.push(currentTotal.sales);
-				total.salesQuota.push(currentTotal.salesQuota);
-				total.quotaAchievement.push(Number((currentTotal.sales / currentTotal.salesQuota).toFixed(2)));
+				total.sales.push(Number(currentTotal.sales.toFixed(0)));
+				total.salesQuota.push(Number(currentTotal.salesQuota.toFixed(0)));
+				total.quotaAchievement.push(Number((currentTotal.sales / currentTotal.salesQuota * 100).toFixed(0)));
 			});
 			return {
 				key: ele.key,
@@ -233,15 +230,17 @@ export default Service.extend({
 
 					return acc;
 				}, currentValue),
+				currentItemsByProdsUniqBy = currentItemsByProds.uniqBy('goodsConfig.productConfig.treatmentArea'),
 				currentItemTotalSeason = formatHospitalSalesReports.map(item => {
 					let currentSeason = this.findCurrentItem(item.dataReports, 'representative.id', ele.get('representativeConfig.representative.id')),
 						currentSeasonByProds = this.findCurrentItem(currentSeason, 'goodsConfig.productConfig.product.id', productId),
 						values = EmberObject.create({
 							salesQuota: 0,
 							sales: 0
-						});
+						}),
+						currentSeasonByProdsByHosp = currentSeasonByProds.filterBy('hospital.id', ele.get('hospitalConfig.hospital.id'));
 
-					return currentSeasonByProds.reduce((acc, current) => {
+					return currentSeasonByProdsByHosp.reduce((acc, current) => {
 						acc.salesQuota += current.report.salesQuota;
 						acc.sales += current.report.sales;
 						return acc;
@@ -249,11 +248,12 @@ export default Service.extend({
 				}),
 				result = A([]);
 
+			currentItemReport.patientCount = currentItemsByProdsUniqBy.reduce((acc, cur) => acc + Number(cur.report.patientCount), 0);
 			result = [
 				ele.get('hospitalConfig.hospital.name'),
 				currentItemsByProds.firstObject.resourceConfig.get('representativeConfig.representative.name'),
 				this.formatThousand(currentItemReport.patientCount, '', 0),
-				currentItemReport.drugEntranceInfo,
+				isEmpty(productId) ? '-' : currentItemReport.drugEntranceInfo,
 				this.formatPercent(currentItemReport.quotaContribute),
 				this.formatPercent(currentItemReport.quotaGrowth),
 				this.formatPercent(currentItemReport.quotaAchievement),
@@ -270,8 +270,8 @@ export default Service.extend({
 	},
 	generateRegionTableData(cities, lastSeasonReports, formatCitySalesReports, productId = '') {
 		return cities.map(ele => {
-			let currentItems = this.findCurrentItem(lastSeasonReports, 'city.id', ele.get('id')),
-				currentItemsByProds = this.findCurrentItem(currentItems, 'goodsConfig.productConfig.product.id', productId),
+			let currentItems = this.findCurrentItem(lastSeasonReports, 'name', ele.get('name')),
+				currentItemsByProds = this.findCurrentItem(currentItems, 'productId', productId),
 				currentRepValue = EmberObject.create({
 					patientCount: 0,
 					quotaContribute: 0,
@@ -301,9 +301,10 @@ export default Service.extend({
 						values = EmberObject.create({
 							salesQuota: 0,
 							sales: 0
-						});
+						}),
+						currentSeasonByProdsByCity = currentSeasonByProds.filterBy('city.id', ele.get('id'));
 
-					return currentSeasonByProds.reduce((acc, current) => {
+					return currentSeasonByProdsByCity.reduce((acc, current) => {
 						acc.salesQuota += current.report.salesQuota;
 						acc.sales += current.report.sales;
 						return acc;

@@ -19,11 +19,13 @@ export default Route.extend({
 			tableHeadCity = A([]),
 			tableBodyCity = A([]),
 			doubleCircleCity = A([]),
+			increaseSalesReportsIncludeCity = A([]),
 			barLineDataCity = A([]);
 
 		//	获取所有 salesReport 下的地区销售报告 citySalesReport
 		return all(increaseSalesReports.map(ele => ele.get('citySalesReports')))
 			.then(data => {
+				increaseSalesReportsIncludeCity = data;
 				let citySalesReportIds = handler.getReportIds(data);
 
 				// 通过 pcitySalesReport 的 id，获取其关联的 city(cities)
@@ -48,10 +50,32 @@ export default Route.extend({
 				return data.get('region');
 			}).then(data => {
 				cities = data.get('cities');
+				return data.get('cities');
+			}).then(data => {
+				cities = data;
 				// 整理季度数据
-				formatCitySalesReports = handler.formatReports(tmpHeadQ, citySalesReportsCities, cities.length);
+				// formatCitySalesReports = handler.formatReports(tmpHeadQ, citySalesReportsCities, cities.length);
+				formatCitySalesReports = increaseSalesReportsIncludeCity.map((ele, index) => {
+					let season = tmpHeadQ[index],
+						dataReports = A(ele).map(item => {
+							return {
+								name: item.get('city.name'),
+								city: item.get('city'),
+								productId: item.get('goodsConfig.productConfig.product.id'),
+								goodsConfig: item.get('goodsConfig'),
+								report: item
+							};
+						});
+
+					return {
+						season,
+						dataReports
+					};
+				});
+
 				// 城市销售结构分布图
-				doubleCircleCity = handler.salesConstruct(formatCitySalesReports);
+				console.log(formatCitySalesReports);
+				doubleCircleCity = handler.salesConstruct(formatCitySalesReports, 'city.name');
 				// 城市销售趋势图
 				barLineDataCity = handler.salesTrend(barLineKeys, formatCitySalesReports, tmpHeadQ);
 
@@ -71,11 +95,11 @@ export default Route.extend({
 					tableBodyCity
 				});
 			});
-	},
-	setupController(controller, model) {
-		this._super(controller, model);
-		this.controller.set('doubleCircleData', model.doubleCircleCity);
-		this.controller.set('tableHead', model.tableHeadCity);
-		this.controller.set('tableBody', model.tableBodyCity);
 	}
+	// setupController(controller, model) {
+	// 	this._super(controller, model);
+	// 	this.controller.set('doubleCircleData', model.doubleCircleCity);
+	// 	this.controller.set('tableHead', model.tableHeadCity);
+	// 	this.controller.set('tableBody', model.tableBodyCity);
+	// }
 });

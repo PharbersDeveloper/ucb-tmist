@@ -32,18 +32,22 @@ export default Component.extend({
 			label: '医院名称',
 			valuePath: 'hospitalName',
 			sortable: false,
-			width: '150px'
+			width: '190px'
 		}, {
 			label: '医院等级',
 			valuePath: 'hospitalLevel',
 			sortable: false
 		}, {
 			label: '患者数量',
-			valuePath: 'patientNumber'
+			valuePath: 'patientNumber',
+			sortable: false
+
 		}, {
 			label: '上季度销售额',
 			valuePath: 'sales',
-			cellComponent: 'light-table-format-number'
+			cellComponent: 'light-table-format-number',
+			sortable: false
+
 		}, {
 			label: '代表',
 			valuePath: 'representative',
@@ -51,11 +55,15 @@ export default Component.extend({
 		}, {
 			label: '销售目标设定',
 			valuePath: 'salesTarget',
-			cellComponent: 'light-table-format-number'
+			cellComponent: 'light-table-format-number',
+			sortable: false
+
 		}, {
 			label: '预算费用',
 			valuePath: 'budget',
-			cellComponent: 'light-table-format-number'
+			cellComponent: 'light-table-format-number',
+			sortable: false
+
 		}];
 	}),
 

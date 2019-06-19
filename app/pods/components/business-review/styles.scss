@@ -1,16 +1,24 @@
 .table {
-	.thead {
-		table thead th {
-			padding-top: 8px;
-			@extend %p-small;
-		}
-	}
+    .thead {
+        table thead th {
+            padding-top: 8px;
+            @extend %p-small;
+        }
+    }
 
-	.tbody {
-		table tbody td {
-			height: 52px;
-			line-height: 52px;
-			@extend %p-primary;
-		}
-	}
+    .tbody {
+        table tbody {
+            tr td:first-child {
+                white-space: nowrap;
+                padding-right: 16px;
+            }
+
+            td {
+                height: 52px;
+                line-height: 52px;
+                @extend %p-primary;
+
+            }
+        }
+    }
 }

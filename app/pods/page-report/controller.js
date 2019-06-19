@@ -39,8 +39,8 @@ export default Controller.extend({
 				}));
 			}).then(data => {
 				data.forEach((res, index) => {
-					const content = res,
-						blob = new Blob([content]),
+					const content = res.data,
+						blob = new Blob([content], { type: 'text/csv' }),
 						fileName = fileNames[index];
 
 					if ('download' in document.createElement('a')) { // 非IE下载

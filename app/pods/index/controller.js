@@ -76,7 +76,7 @@ export default Controller.extend({
 		startDeploy(proposalId) {
 			// localStorage.setItem('notice', false);
 			// if (this.model.scenario.phase > 1) {
-				// this.set('fromFirstPhase', true);
+			// 	this.set('fromFirstPhase', true);
 			// } else {
 			this.entryMission(proposalId);
 			// }
