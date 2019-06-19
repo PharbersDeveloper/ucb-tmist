@@ -61,6 +61,7 @@ export default Controller.extend({
 			if (ENV.environment === 'development') {
 				window.console.log('结果已经返回');
 			}
+			this.set('loading', false);
 			return this.updatePaper(this.paperId, this.state);
 		}
 		window.console.log('计算错误');
@@ -224,6 +225,7 @@ export default Controller.extend({
 	},
 
 	sendInput(state) {
+		this.set('loading', true);
 		const ajax = this.get('ajax'),
 			// converse = this.get('converse'),
 			applicationAdapter = this.get('store').adapterFor('application'),
