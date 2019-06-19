@@ -94,6 +94,8 @@ export default Route.extend({
 			proposalId = params['proposal_id'],
 			paper = pageIndexModel.detailPaper;
 
+			debugger
+
 		let { detailProposal, destConfigs, destConfigHospitals, destConfigRegions } = pageIndexModel,
 			proposal = null,
 			businessInputs = null,
