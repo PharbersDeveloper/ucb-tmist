@@ -145,18 +145,17 @@
 	{{/modal.body}}
 {{/bp-modal}}
 {{#bp-modal
-		open=calculateR 
+		open=loading 
 		position='center'
+		local-class='modal-loading'
 		backdropClose=false
- 		onHidden=(action (mut calculateR) false) as |modal|}}
-	{{#modal.header}}
-		<h4 class="modal-title">
-			正在计算...
-		</h4>
-	{{/modal.header}}
-	{{#modal.body}}
-		<p class="desc">
-			正在计算，请稍候...
-		</p>
+		onHidden=(action (mut loading) false) as |modal|}}
+	{{!-- {{#modal.header tagName='h2'}}
+		任务介绍（{{model.scenario.name}}）
+	{{/modal.header}} --}}
+	{{#modal.body classNames="p-4"}}
+		<div local-class="loading">
+			<p local-class="text">PHARBERS</p>
+		</div>
 	{{/modal.body}}
 {{/bp-modal}}
