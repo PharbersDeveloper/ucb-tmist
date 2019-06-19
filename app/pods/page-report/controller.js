@@ -9,6 +9,9 @@ export default Controller.extend({
 	cookies: service(),
 	axios: service(),
 	actions: {
+		checkResult() {
+			this.transitionToRoute('page-result');
+		},
 		outputData(type) {
 			const applicationAdapter = this.store.adapterFor('application'),
 				{ ajax, axios } = this;

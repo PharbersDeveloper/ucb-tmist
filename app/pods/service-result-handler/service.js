@@ -425,10 +425,14 @@ export default Service.extend({
 			quotaContribute = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.salesQuota / totalValue.salesQuota) : this.formatPercent(currentItemReport.quotaContribute),
 			quotaGrowth = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.salesQuota / currentItemTotalSeason[seasonLength - 2].sales - 1) : this.formatPercent(currentItemReport.quotaGrowth),
 			quotaAchievement = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.sales / lastSeasonTotalData.salesQuota) : this.formatPercent(currentItemReport.quotaAchievement),
-			salesYearOnYear = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.sales / currentItemTotalSeason[seasonLength - 5].sales - 1) : this.formatPercent(currentItemReport.salesYearOnYear),
+			salesYearOnYear = 0,
+			// salesYearOnYear = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.sales / currentItemTotalSeason[seasonLength - 5].sales - 1) : this.formatPercent(currentItemReport.salesYearOnYear),
 			salesMonthOnMonth = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.sales / currentItemTotalSeason[seasonLength - 2].sales - 1) : this.formatPercent(currentItemReport.salesMonthOnMonth),
 			salesContribute = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.sales / totalValue.sales) : this.formatPercent(currentItemReport.salesContribute);
 
+		if (seasonLength > 4) {
+			salesYearOnYear = isEmpty(productId) ? this.formatPercent(lastSeasonTotalData.sales / currentItemTotalSeason[seasonLength - 5].sales - 1) : this.formatPercent(currentItemReport.salesYearOnYear);
+		}
 		return {
 			quotaContribute,
 			quotaGrowth,

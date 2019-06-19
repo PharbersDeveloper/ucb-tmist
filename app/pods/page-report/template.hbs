@@ -15,7 +15,7 @@
 				{{#bp-button onClick=(action 'outputData' 'assessment') class='mr-1'}}
 					导出测试数据
 				{{/bp-button}}
-				{{#bp-button type='default' disabled=true }}
+				{{#bp-button onClick=(action 'checkResult')}}
 					查看执行结果报告
 				{{/bp-button}}
 			{{/body.right}}
