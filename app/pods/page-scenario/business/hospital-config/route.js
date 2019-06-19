@@ -52,10 +52,10 @@ export default Route.extend({
 						}
 					});
 				}
-				return increaseSalesReports.lastObject.get('hospitalSalesReports');
+				return all([increaseSalesReports.lastObject.get('hospitalSalesReports'), repConfs.map(ele => ele.get('representativeConfig.representative.images'))]);
 			}).then(data => {
-				lastSeasonHospitalSalesReports = data;
-				return all(data.map(ele => ele.get('destConfig')));
+				lastSeasonHospitalSalesReports = data[0];
+				return all(data[0].map(ele => ele.get('destConfig')));
 			}).then(data => {
 				return all(data.map(ele => ele.get('hospitalConfig')));
 			}).then(data => {
