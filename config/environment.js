@@ -48,6 +48,8 @@ module.exports = function (environment) {
 	}
 
 	if (environment === 'production') {
+		// ENV.redirectUri = 'http://ucb.pharbers.com:8082';
+		// ENV.host = 'http://192.168.100.174:9096';
 		ENV.redirectUri = 'http://ucb.pharbers.com';
 		ENV.host = 'http://oauth.pharbers.com';
 		// here you can enable a production-specific feature

@@ -118,8 +118,6 @@ export default Route.extend({
 				// 医院销售趋势图
 				barLineDataHosp = handler.salesTrend(barLineKeys, formatHospitalSalesReports, tmpHeadQ);
 
-				console.log(formatHospitalSalesReports);
-				console.log('=======');
 				let hospCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`, `YTD销售额`],
 					lastSeasonReports = formatHospitalSalesReports.slice(-1).lastObject.dataReports;
 
