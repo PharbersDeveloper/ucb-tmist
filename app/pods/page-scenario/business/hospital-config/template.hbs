@@ -15,8 +15,9 @@
 			</p>
 		{{/unless}}
 		{{#bp-layout}}
-			{{#if tmpRc.representativeConfig.representative.images.firstObject.img}}
-				<img src={{tmpRc.representativeConfig.representative.images.firstObject.img}} local-class="avatar"
+		{{!-- bi.resourceConfig.representativeConfig.representative.name --}}
+			{{#if businessinput.resourceConfig.representativeConfig.representative.images.firstObject.img}}
+				<img src={{businessinput.resourceConfig.representativeConfig.representative.images.firstObject.img}} local-class="avatar"
 					class="mr-4 rounded-circle" width='88' height='88' alt="">
 			{{else}}
 				<img src="/assets/images/img_placeholder.png" width='88' height="88" local-class="avatar" alt=""
@@ -27,8 +28,8 @@
 				{{#bp-dropdown widthSize='auto'
 					local-class="dd-representative" classNames="mb-4" as |dd|}}
 					{{#dd.button disabled=notFirstPhase}}
-						{{#if tmpRc.id}}
-							<p>{{tmpRc.representativeConfig.representative.name}}</p>
+						{{#if businessinput.resourceConfig.id}}
+							<p>{{businessinput.resourceConfig.representativeConfig.representative.name}}</p>
 						{{else}}
 							请分配代表
 						{{/if}}

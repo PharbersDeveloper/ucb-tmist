@@ -134,12 +134,10 @@ export default Route.extend({
 				businessInputs: isEmpty(paperinput) ? null : paperinput.get('businessinputs')
 			});
 		});
-	},
-	afterModel(model) {
-		debugger
-		if (this.serviceCycle.needRedirectToSce) {
-			this.transitionTo('page-scenario', model.detailProposal.get('proposal.id'));
-		}
-		debugger
 	}
+	// afterModel(model) {
+	// 	if (this.serviceCycle.needRedirectToSce) {
+	// 		this.transitionTo('page-scenario', model.detailProposal.get('proposal.id'));
+	// 	}
+	// }
 });
