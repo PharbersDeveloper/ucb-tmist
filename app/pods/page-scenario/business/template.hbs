@@ -40,7 +40,7 @@
 									{{budget.name}}
 								</span>
 								<span local-class='values'>
-									{{budget.priceType}}{{budget.value}}/{{managerGoodsConfig.productConfig.priceType}}{{format-number managerGoodsConfig.goodsSalesBudgets}}
+									{{budget.priceType}}{{format-number budget.value}}/{{managerGoodsConfig.productConfig.priceType}}{{format-number managerGoodsConfig.goodsSalesBudgets}}
 								</span>
 							{{/bp-layout}}
 							{{#bp-progress local-class="progress" classNames="mb-4" as |p|}}

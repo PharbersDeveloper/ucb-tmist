@@ -17,8 +17,12 @@ export default Route.extend({
 			usableSeasons = A([]),
 			goodsConfigs = pageScenarioModel.goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
 
-		return all(lastSeasonHospitalSalesReports.map(ele => ele.get('destConfig')))
+		return all(businessinputs.map(ele => ele.get('resourceConfig.representativeConfig')))
 			.then(data => {
+				return all(data.map(ele => ele.get('representative')));
+			}).then(() => {
+				return all(lastSeasonHospitalSalesReports.map(ele => ele.get('destConfig')));
+			}).then(data => {
 				return all(data.map(ele => ele.get('hospitalConfig')));
 			}).then(data => {
 				return all(data.map(ele => ele.get('hospital')));
