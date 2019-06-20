@@ -20,6 +20,7 @@ export default Route.extend({
 			tableHeadHosp = A([]),
 			tableBodyHosp = A([]),
 			doubleCircleHosp = A([]),
+			increaseSalesReportsIncludeHospital = A([]),
 			barLineDataHosp = A([]);
 
 		return detailProposal.get('proposal')
@@ -39,6 +40,8 @@ export default Route.extend({
 				return all(increaseSalesReports.map(ele => ele.get('hospitalSalesReports')));
 			})
 			.then(data => {
+				increaseSalesReportsIncludeHospital = data;
+
 				let hospitalSalesReportIds = handler.getReportIds(data);
 
 				// 通过 hospitalSalesReport 的 id，获取其关联的 city(cities)
@@ -47,8 +50,10 @@ export default Route.extend({
 				}));
 			})
 			.then(data => {
-				hospitalSalesReports = data.filter(ele => ele.get('destConfigId') !== '-1');
-				return all(hospitalSalesReports.map(ele => ele.get('resourceConfig')));
+				hospitalSalesReports = data;
+
+				// hospitalSalesReports = data.filter(ele => ele.get('destConfigId') !== '-1');
+				return all(data.map(ele => ele.get('resourceConfig')));
 			}).then(data => {
 				return all(data.map(ele => ele.get('representativeConfig')));
 			}).then(data => {
@@ -74,7 +79,25 @@ export default Route.extend({
 				uniqByProducts = hospitalSalesReportsHospitals.uniqBy('goodsConfig.productConfig.product.id');
 
 				// 整理季度数据
-				formatHospitalSalesReports = handler.formatReports(tmpHeadQ, hospitalSalesReportsHospitals, destConfigHospitals.length * uniqByProducts.length);
+				// formatHospitalSalesReports = handler.formatReports(tmpHeadQ, hospitalSalesReportsHospitals, destConfigHospitals.length * uniqByProducts.length);
+				formatHospitalSalesReports = increaseSalesReportsIncludeHospital.map((ele, index) => {
+					let season = tmpHeadQ[index],
+						dataReports = A(ele).map(item => {
+							return {
+								name: item.get('destConfig.hospitalConfig.hospital.name'),
+								resourceConfig: item.get('resourceConfig'),
+								hospital: item.get('destConfig.hospitalConfig.hospital'),
+								productId: item.get('goodsConfig.productConfig.product.id'),
+								goodsConfig: item.get('goodsConfig'),
+								report: item
+							};
+						});
+
+					return {
+						season,
+						dataReports
+					};
+				});
 				// 医院销售结构分布图
 
 				// doubleCircleHosp = handler.salesConstruct(formatHospitalSalesReports);

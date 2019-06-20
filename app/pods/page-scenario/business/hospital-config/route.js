@@ -27,6 +27,7 @@ export default Route.extend({
 		/**
 		 * 获取总业务指标/总预算/总名额
 		 */
+
 		return managerConf.get('managerConfig')
 			.then(mc => {
 				return {
@@ -47,7 +48,7 @@ export default Route.extend({
 					currentController.set('tmpRc', '');
 				} else {
 					repConfs.forEach(ele => {
-						if (ele.id === businessinput.get('resourceConfigId')) {
+						if (ele.get('representativeConfig.representative.id') === businessinput.get('representativeId')) {
 							currentController.set('tmpRc', ele);
 						}
 					});

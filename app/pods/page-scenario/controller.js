@@ -29,7 +29,7 @@ export default Controller.extend({
 		// if (ENV.environment === 'development') {
 
 		if (xmppMessage['client-id'] !== clientId) {
-			if (ENV.environment === 'development') {
+			if (ENV.environment === 'production') {
 				window.console.log('client-id error');
 			}
 			return;
@@ -298,6 +298,7 @@ export default Controller.extend({
 						title: `保存成功`,
 						detail: `保存成功。`
 					});
+					this.set('loading', false);
 					return null;
 				}
 				return ajax.request(`${version}/CallRCalculate`, {
@@ -313,11 +314,10 @@ export default Controller.extend({
 						if (ENV.environment === 'development') {
 							window.console.log('等待 R 返回中...');
 						}
+						this.set('state', state);
+						this.set('paperId', paperId);
+						return this.xmppResult;
 					}
-					this.set('state', state);
-					this.set('paperId', paperId);
-
-					return this.xmppResult;
 				});
 			});
 	},
