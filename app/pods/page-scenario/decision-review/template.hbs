@@ -16,13 +16,11 @@
 							{{bp-icon icon='down'}}
 						{{/dd.button}}
 						{{#dd.menu as |menu|}}
-							{{#each model.usableSeasons as |usableSeason|}}
-								{{#unless usableSeason.scenario.name}}
-									{{#menu.option value=usableSeason.scenario
-												onClick=(action (mut tmpSeason))}}
-										{{usableSeason.scenario.name}}
-									{{/menu.option}}
-								{{/unless}}
+							{{#each model.handleUsableSeasons as |usableSeason|}}
+								{{#menu.option value=usableSeason
+											onClick=(action (mut tmpSeason))}}
+									{{usableSeason.name}}
+								{{/menu.option}}
 							{{/each}}
 						{{/dd.menu}}
 					{{/bp-dropdown}}

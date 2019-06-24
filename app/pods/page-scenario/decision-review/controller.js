@@ -4,10 +4,11 @@ import { computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 
 export default Controller.extend({
-	filterTableData: computed('model.tableData', 'tmpGc', function () {
-		let tableData = copy(this.get('model.tableData')),
+	filterTableData: computed('model.tableDataAll', 'tmpGc', 'tmpSeason', function () {
+		let tableData = copy(this.get('model.tableDataAll')),
 			tmpGc = this.get('tmpGc'),
-			filterTableData = tableData;
+			tmpSeason = this.get('tmpSeason'),
+			filterTableData = tableData.filterBy('scenarioId', tmpSeason.id);
 
 		if (!isEmpty(tmpGc)) {
 			let tmpTableData = filterTableData.map(ele => {
