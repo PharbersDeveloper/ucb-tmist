@@ -2,7 +2,7 @@ import DS from 'ember-data';
 
 export default DS.Model.extend({
 	paperId: DS.attr('string'),
-	scenario: DS.belongsTo(),
+	scenario: DS.belongsTo('scenario'),
 	phase: DS.attr('number'),
 	time: DS.attr('formatDate'),
 	businessinputs: DS.hasMany('businessinput')

@@ -15,6 +15,7 @@ export default Route.extend({
 		let businessinputs = store.peekAll('businessinput'),
 			tableData = A([]),
 			usableSeasons = A([]),
+			handleUsableSeasons = A([]),
 			goodsConfigs = pageScenarioModel.goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
 
 		return all(businessinputs.map(ele => {
@@ -69,11 +70,26 @@ export default Route.extend({
 
 			}).then(data => {
 				return data.filter(ele => ele.get('phase') > 0);
-			})
-			.then(data => {
+			}).then(data => {
 				usableSeasons = data;
+				let tmpArr = A([]);
+
+				usableSeasons.forEach(ele => {
+					let phaseObj = {
+						id: ele.id,
+						name: ele.get('scenario.name')
+					};
+
+					tmpArr.pushObject(phaseObj);
+				});
+				tmpArr.pushObject({
+					id: 0,
+					name: '当前周期'
+				});
+				handleUsableSeasons = tmpArr;
 			}).then(() => {
 				return hash({
+					handleUsableSeasons,
 					usableSeasons,
 					salesConfigs,
 					resourceConfigRepresentatives,

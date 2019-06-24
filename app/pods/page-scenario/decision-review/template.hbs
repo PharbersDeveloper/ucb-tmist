@@ -15,8 +15,10 @@
 							{{/if}}
 							{{bp-icon icon='down'}}
 						{{/dd.button}}
+						{{log phaseGrp}}
+						{{log model.usableSeasons}}
 						{{#dd.menu as |menu|}}
-							{{#each model.usableSeasons as |usableSeason|}}
+							{{#each model.handleUsableSeasons as |usableSeason|}}
 								{{#unless usableSeason.scenario.name}}
 									{{#menu.option value=usableSeason.scenario
 												onClick=(action (mut tmpSeason))}}
