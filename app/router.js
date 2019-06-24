@@ -45,8 +45,8 @@ Router.map(function () {
     });
     this.route('index-loading');
   });
-  this.route('page-report', { path: 'report' });
-  this.route('page-history-report', { path: 'history/:paper_id' });
+  this.route('page-report', { path: 'report/:assReportId' });
+  this.route('page-history-report', { path: 'history' });
   this.route('page-scenario-loading');
 });
 

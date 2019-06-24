@@ -7,7 +7,8 @@
 					测试综合表现
 				{{/left.item}}
 				{{#left.item}}
-					日期：2019-04-10 17:00 用时：50min
+					日期：{{model.assessmentReport.time}}
+					{{!-- 用时：50min --}}
 					{{!-- {{model.scenario.name}} --}}
 				{{/left.item}}
 			{{/body.left}}
@@ -15,9 +16,9 @@
 				{{#bp-button onClick=(action 'outputData' 'assessment') class='mr-1'}}
 					导出测试数据
 				{{/bp-button}}
-				{{#bp-button onClick=(action 'checkResult')}}
+				{{!-- {{#bp-button onClick=(action 'checkResult')}}
 					查看执行结果报告
-				{{/bp-button}}
+				{{/bp-button}} --}}
 			{{/body.right}}
 		{{/ph.body}}
 	{{/bp-page-header}}
@@ -26,12 +27,21 @@
 		{{#bp-layout local-class='sum-up-content' cross='top'}}
 			{{#bp-layout direction='col' cross='center' local-class='level' classNames='mr-4'}}
 				<img src="" alt="" class="mb-4" local-class='level-img'>
-				<p local-class="img-title">A级（优秀）</p>
+				{{#if (bp-eq model.assessmentReport.simplifyResult.levelConfig.level.code 1)}}
+					<p local-class="img-title">S级</p>
+				{{else if (bp-eq model.assessmentReport.simplifyResult.levelConfig.level.code 2)}}
+					<p local-class="img-title">A级</p>
+				{{else if (bp-eq model.assessmentReport.simplifyResult.levelConfig.level.code 3)}}
+					<p local-class="img-title">B级</p>
+				{{else}}
+					<p local-class="img-title">未知级别</p>
+				{{/if}}
 			{{/bp-layout}}
 			{{#bp-layout direction='col' class='pt-4' local-class='level-content'}}
 				<p local-class='level-content-title' class="mb-3">等级评价</p>
 				<p local-class='level-contetn-text'>
-					您还需要花更多的精力，完善自己在报表与数据理解上的能力，透过科学化的分析，能使您在部署战略上，了解全局现状，洞察问题关键，预判发展趋势。从数据中你将收获宏观的视野，掌握全局。</p>
+					{{model.assessmentReport.simplifyResult.levelConfig.level.describe}}
+				</p>
 			{{/bp-layout}}
 		{{/bp-layout}}
 	{{/bp-layout}}
@@ -39,15 +49,13 @@
 		<h2 local-class='result-title' class="mb-3">指标达成结果</h2>
 		{{#bp-layout direction='row'  main='between' cross='center' local-class='result-list'}}
 			<p local-class='result-sub-title'>总达成率</p>
-			<p local-class='result-sub-title'>90%</p>
+			<p local-class='result-sub-title'>{{bp-percent model.assessmentReport.simplifyResult.totalQuotaAchievement 2}}</p>
 		{{/bp-layout}}
-		{{#bp-layout direction='row' main='between' cross='center' local-class='result-list'}}
-			<p local-class='result-list-text'>2019Q1</p>
-			<p local-class='result-list-text'>90%</p>
-		{{/bp-layout}}
-		{{#bp-layout direction='row' main='between' cross='center' local-class='result-list'}}
-			<p local-class='result-list-text'>2019Q1</p>
-			<p local-class='result-list-text'>90%</p>
-		{{/bp-layout}}
+		{{#each model.scenarioResults as |scResult|}}
+			{{#bp-layout direction='row' main='between' cross='center' local-class='result-list'}}
+				<p local-class='result-list-text'>{{scResult.scenario.name}}</p>
+				<p local-class='result-list-text'>{{bp-percent scResult.quotaAchievement 2}}</p>
+			{{/bp-layout}}
+		{{/each}}
 	{{/bp-layout}}
 {{/bp-layout}}
