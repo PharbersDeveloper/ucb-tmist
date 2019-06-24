@@ -11,9 +11,9 @@ export default Route.extend({
 		const cookies = this.get('cookies');
 
 		let paper = this.store.query('paper', {
-			'account-id': cookies.read('account_id')
-		}),
-			assessmentReports = A([]);;
+				'account-id': cookies.read('account_id')
+			}),
+			assessmentReports = A([]);
 
 		return paper.then(data => {
 			return all(data.map(ele => ele.get('assessmentReports')));
@@ -23,12 +23,11 @@ export default Route.extend({
 					assessmentReports.pushObject(ele.firstObject);
 				}
 			});
-		// 	window.console.log(assessmentReports);
-		// 	return all(assessmentReports.map(ele => ele.get('simplifyResult.levelConfig.level')));
-		// }).then(data => {
-		// 	console.log(data);
+			// 	window.console.log(assessmentReports);
+			// 	return all(assessmentReports.map(ele => ele.get('simplifyResult.levelConfig.level')));
+			// }).then(data => {
 			return hash({
-				assessmentReports: assessmentReports
+				assessmentReports
 			});
 		});
 	}

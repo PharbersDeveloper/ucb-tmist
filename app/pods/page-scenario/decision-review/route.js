@@ -79,25 +79,23 @@ export default Route.extend({
 						name: ele.get('scenario.name')
 					};
 				});
-				if (handleUsableSeasons.length === 0) {
-					handleUsableSeasons.push({
-						id: scenario.get('id'),
-						phase: scenario.get('phase'),
-						name: scenario.get('name')
-					});
-				}
+				handleUsableSeasons.push({
+					id: scenario.get('id'),
+					phase: scenario.get('phase'),
+					name: scenario.get('name')
+				});
 				return all(salesReports.slice(-handleUsableSeasons.length).map(ele => {
 					return that.queryDeep(ele);
 				}));
 			}).then(data => {
 				currentSalesReports = data;
 
-				if (usableSeasons.length === 0) {
-					return [{
-						businput: businessinputs,
-						scenarioId: scenario.get('id')
-					}];
-				}
+				// if (usableSeasons.length === 0) {
+				// 	return [{
+				// 		businput: businessinputs,
+				// 		scenarioId: scenario.get('id')
+				// 	}];
+				// }
 				return all(usableSeasons.map(ele => {
 					return hash({
 						businput: ele.get('businessinputs'),
@@ -105,6 +103,10 @@ export default Route.extend({
 					});
 				}));
 			}).then(data => {
+				data.push({
+					businput: businessinputs,
+					scenarioId: scenario.get('id')
+				});
 				tableData = data.map((item, index) => {
 					let scenarioId = item.scenarioId,
 						detailData = A([]);

@@ -4,10 +4,11 @@ import ENV from 'ucb-tmist/config/environment';
 import { computed, observer } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 // import { A } from '@ember/array';
-// import { all } from 'rsvp';
+import { all } from 'rsvp';
 
 export default Controller.extend({
 	ajax: service(),
+	axios: service(),
 	cookies: service(),
 	converse: service('service-converse'),
 	verify: service('service-verify'),
@@ -18,54 +19,98 @@ export default Controller.extend({
 		}
 		return false;
 	}),
-	xmppResult: observer('xmppMessage.status', function () {
+	xmppResult: observer('xmppMessage.time', function () {
 		let clientId = ENV.clientId,
+			axios = this.axios,
 			accountId = this.get('cookies').read('account_id'),
 			proposalId = this.get('model').proposal.id,
-			paperinputId = this.get('paperinputId') || null,
+			// paperinputId = this.get('paperinputId') || null,
 			scenarioId = this.get('model').scenario.id,
 			xmppMessage = this.xmppMessage;
 
 		// if (ENV.environment === 'development') {
+		if (xmppMessage['type'] === 'calc') {
 
-		if (xmppMessage['client-id'] !== clientId) {
-			if (ENV.environment === 'development') {
-				window.console.log('client-id error');
-			}
-			return;
-		} else if (xmppMessage['account-id'] !== accountId) {
-			if (ENV.environment === 'development') {
-				window.console.log('账户 error');
-			}
-			return;
+			if (xmppMessage['client-id'] !== clientId) {
+				if (ENV.environment === 'development') {
+					window.console.log('client-id error');
+				}
+				return;
+			} else if (xmppMessage['account-id'] !== accountId) {
+				if (ENV.environment === 'development') {
+					window.console.log('账户 error');
+				}
+				return;
+			} else if (xmppMessage['proposal-id'] !== proposalId) {
+				if (ENV.environment === 'development') {
+					window.console.log('proposal-id error');
+				}
+				return;
 
-		} else if (xmppMessage['proposal-id'] !== proposalId) {
-			if (ENV.environment === 'development') {
-				window.console.log('proposal-id error');
+			// } else if (xmppMessage['paperInput-id'] !== paperinputId) {
+			// 	if (ENV.environment === 'development') {
+			// 		window.console.log('输入 error');
+			// 	}
+			// 	return;
+			} else if (xmppMessage['scenario-id'] !== scenarioId) {
+				if (ENV.environment === 'development') {
+					window.console.log('关卡 error');
+				}
+				return;
 			}
-			return;
+			if (xmppMessage.status === 'ok') {
+				if (ENV.environment === 'development') {
+					window.console.log('结果已经返回');
+				}
+				this.set('loading', false);
+				return this.updatePaper(this.paperId, this.state);
+			}
+			window.console.log('计算错误');
 
-		} else if (xmppMessage['paperInput-id'] !== paperinputId) {
-			if (ENV.environment === 'development') {
-				window.console.log('输入 error');
+		} else if (xmppMessage['type'] === 'download') {
+			if (xmppMessage['client-id'] !== clientId) {
+				if (ENV.environment === 'development') {
+					window.console.log('client-id error');
+				}
+				return;
+			} else if (xmppMessage['account-id'] !== accountId) {
+				if (ENV.environment === 'development') {
+					window.console.log('账户 error');
+				}
+				return;
 			}
-			return;
-		} else if (xmppMessage['scenario-id'] !== scenarioId) {
-			if (ENV.environment === 'development') {
-				window.console.log('关卡 error');
-			}
-			return;
 
+			let fileNames = xmppMessage['fileNames'];
+
+			return all(fileNames.map(ele => {
+				return axios.axios({
+					url: `${ele}`,
+					method: 'get',
+					responseType: 'blob'
+				});
+			})).then(data => {
+				data.forEach((res, index) => {
+					let content = res.data,
+						blob = new Blob([content], { type: 'text/csv' }),
+						fileName = fileNames[index].split('=')[1];
+
+					if ('download' in document.createElement('a')) { // 非IE下载
+						let elink = document.createElement('a');
+
+						elink.download = fileName;
+						elink.style.display = 'none';
+						elink.href = URL.createObjectURL(blob);
+						document.body.appendChild(elink);
+						elink.click();
+						URL.revokeObjectURL(elink.href); // 释放URL 对象
+						document.body.removeChild(elink);
+					} else { // IE10+下载
+						navigator.msSaveBlob(blob, fileName);
+					}
+				});
+			}).catch(() => {
+			});
 		}
-		if (xmppMessage.status === 'ok') {
-			if (ENV.environment === 'development') {
-				window.console.log('结果已经返回');
-			}
-			this.set('loading', false);
-			return this.updatePaper(this.paperId, this.state);
-		}
-		window.console.log('计算错误');
-		// }
 		// switch (true) {
 		// case xmppMessage['client-id'] !== clientId:
 		// case xmppMessage['account-id'] !== accountId:
@@ -100,43 +145,43 @@ export default Controller.extend({
 			total = verifyService.verifyInput(businessinputs, managerGoodsConfigs, goodsInputs);
 
 		let { overTotalIndicators, overTotalBudgets, illegal, lowTotalIndicators,
-			lowTotalBudgets } = total,
+				lowTotalBudgets } = total,
 			warning = { open: false, title: '', detail: '' };
 
 		switch (true) {
-			case illegal:
-				warning.open = true;
-				warning.title = '非法值警告';
-				warning.detail = '请输入数字！';
-				this.set('warning', warning);
-				return false;
-			case !isEmpty(lowTotalIndicators):
-				warning.open = true;
-				warning.title = '总业务指标未达标';
-				warning.detail = '您的业务销售额指标尚未完成，请完成总业务指标。';
-				this.set('warning', warning);
-				return false;
-			case !isEmpty(lowTotalBudgets):
-				warning.open = true;
-				warning.title = '总预算剩余';
-				warning.detail = '您还有总预算剩余，请分配完毕。';
-				this.set('warning', warning);
-				return false;
-			case !isEmpty(overTotalIndicators):
-				warning.open = true;
-				warning.title = '总业务指标超额';
-				warning.detail = '您的销售额指标设定总值已超出业务总指标限制，请重新分配。';
-				this.set('warning', warning);
-				return false;
-			case !isEmpty(overTotalBudgets):
-				warning.open = true;
-				warning.title = '总预算超额';
-				warning.detail = '您的预算设定总值已超出总预算限制，请重新分配。';
-				this.set('warning', warning);
-				return false;
-			default:
-				this.allVerifySuccessful();
-				return true;
+		case illegal:
+			warning.open = true;
+			warning.title = '非法值警告';
+			warning.detail = '请输入数字！';
+			this.set('warning', warning);
+			return false;
+		case !isEmpty(lowTotalIndicators):
+			warning.open = true;
+			warning.title = '总业务指标未达标';
+			warning.detail = '您的业务销售额指标尚未完成，请完成总业务指标。';
+			this.set('warning', warning);
+			return false;
+		case !isEmpty(lowTotalBudgets):
+			warning.open = true;
+			warning.title = '总预算剩余';
+			warning.detail = '您还有总预算剩余，请分配完毕。';
+			this.set('warning', warning);
+			return false;
+		case !isEmpty(overTotalIndicators):
+			warning.open = true;
+			warning.title = '总业务指标超额';
+			warning.detail = '您的销售额指标设定总值已超出业务总指标限制，请重新分配。';
+			this.set('warning', warning);
+			return false;
+		case !isEmpty(overTotalBudgets):
+			warning.open = true;
+			warning.title = '总预算超额';
+			warning.detail = '您的预算设定总值已超出总预算限制，请重新分配。';
+			this.set('warning', warning);
+			return false;
+		default:
+			this.allVerifySuccessful();
+			return true;
 		}
 
 	},
@@ -231,7 +276,7 @@ export default Controller.extend({
 			applicationAdapter = this.get('store').adapterFor('application'),
 			store = this.get('store'),
 			model = this.get('model'),
-			{ paper, scenario } = model;
+			{ paper, scenario, businessInputs, goodsInputs } = model;
 
 		//	正常逻辑
 		let version = `${applicationAdapter.get('namespace')}`,
@@ -240,10 +285,11 @@ export default Controller.extend({
 			paperinput = paperinputs.get('lastObject'),
 			reDeploy = Number(localStorage.getItem('reDeploy')),
 			phase = scenario.get('phase'),
-			businessinputs = store.peekAll('businessinput'),
-			goodsinputs = store.peekAll('goodsinput');
+			businessinputs = businessInputs,
+			goodsinputs = goodsInputs;
 
-		goodsinputs.save()
+		// goodsinputs.save()
+		all(goodsinputs.map(ele => ele.save()))
 			.then(data => {
 				businessinputs.forEach(ele => {
 					let currentGoodsinputs = data.filterBy('destConfigId', ele.get('destConfig.id'));
@@ -251,7 +297,9 @@ export default Controller.extend({
 					ele.set('goodsinputs', currentGoodsinputs);
 				});
 
-				return businessinputs.save();
+				// return businessinputs.save();
+				return all(businessinputs.map(ele => ele.save()));
+
 			})
 			// rsvp.Promise.all(promiseArray)
 			.then(data => {

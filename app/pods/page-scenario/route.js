@@ -37,16 +37,16 @@ export default Route.extend({
 
 		promiseArray = destConfigHospitals.map(ele => {
 			let goodsInputs = selfGoodsConfigs.map(item => {
-					return store.createRecord('goodsinput', {
-						destConfigId: ele.get('id'),
-						goodsConfig: item,
-						salesTarget: '',	// 销售目标设定
-						budget: ''	//预算设定
+				return store.createRecord('goodsinput', {
+					destConfigId: ele.get('id'),
+					goodsConfig: item,
+					salesTarget: '',	// 销售目标设定
+					budget: ''	//预算设定
 					// TODO 测试，用后删除
 					// salesTarget: 888,	// 销售目标设定
 					// budget: 88	//预算设定
-					});
-				}),
+				});
+			}),
 				businessinput = null;
 
 			if (isEmpty(lastSeasonHospitalSalesReports)) {
@@ -114,6 +114,7 @@ export default Route.extend({
 			competeGoodsConfigs = A([]),
 			increaseSalesReports = A([]),
 			goodsInputs = A([]),
+			goodsInputsModel = A([]),
 			managerConfig = null;
 
 		return detailProposal.get('proposal')
@@ -203,6 +204,7 @@ export default Route.extend({
 				}
 				return all(businessInputsId.map(ele => store.findRecord('businessinput', ele)));
 			}).then(data => {
+				goodsInputsModel = data;
 				let isNewBusinessInputs = businessInputs.every(ele => ele.isNew),
 					goodsinputsIds = A([]);
 
@@ -230,6 +232,7 @@ export default Route.extend({
 				return hash({
 					businessInputs,
 					goodsInputs,
+					goodsInputsModel,
 					tmpHeadQ,
 					barLineKeys,
 					increaseSalesReports,
@@ -270,7 +273,9 @@ export default Route.extend({
 		applicationController.setProperties({
 			proposal: model.proposal,
 			scenario: model.scenario,
-			paper: model.paper
+			paper: model.paper,
+			businessInputs: model.businessInputs,
+			goodsInputs: model.goodsInputs
 		});
 	},
 	setupController(controller, model) {
@@ -286,7 +291,6 @@ export default Route.extend({
 		// }
 		if (!controller.get('hasPlugin')) {
 			converse.initialize();
-
 
 			window.converse.plugins.add('chat_plugin', {
 				initialize: function () {
