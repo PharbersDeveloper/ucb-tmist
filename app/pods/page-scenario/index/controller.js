@@ -1,15 +1,15 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { isEmpty } from '@ember/utils';
+// import { isEmpty } from '@ember/utils';
 // import { alias } from '@ember/object/computed';
 import { computed } from '@ember/object';
-import { all, reject } from 'rsvp';
-import { A } from '@ember/array';
+// import { all, reject } from 'rsvp';
+// import { A } from '@ember/array';
 
 export default Controller.extend({
 	ajax: service(),
 	cookies: service(),
-	axios: service(),
+	// axios: service(),
 	groupValue: 'index',
 	lineData: computed('productTreatmentArea', function () {
 		let { lineData } = this.model,
@@ -27,10 +27,10 @@ export default Controller.extend({
 		},
 		outputData(type) {
 			const applicationAdapter = this.store.adapterFor('application'),
-				{ ajax, axios } = this;
+				{ ajax } = this;
 
-			let version = `${applicationAdapter.get('namespace')}`,
-				fileNames = A([]);
+			let version = `${applicationAdapter.get('namespace')}`;
+			// fileNames = A([]);
 
 			ajax.request(`${version}/GenerateCSV`, {
 				method: 'POST',
@@ -40,40 +40,41 @@ export default Controller.extend({
 					'scenario-id': this.model.scenario.get('id'),
 					'download-type': type
 				})
-			}).then(data => {
-				if (data.status !== 'ok' || isEmpty(data.fileNames)) {
-					return reject();
-				}
-				fileNames = data.fileNames;
-				return all(fileNames.map(ele => {
-					return axios.axios({
-						url: `${ele}`,
-						method: 'get',
-						responseType: 'blob'
-					});
-				}));
-			}).then(data => {
-				data.forEach((res, index) => {
-					let content = res.data,
-						blob = new Blob([content], { type: 'text/csv' }),
-						fileName = fileNames[index].split('=')[1];
-
-					if ('download' in document.createElement('a')) { // 非IE下载
-						let elink = document.createElement('a');
-
-						elink.download = fileName;
-						elink.style.display = 'none';
-						elink.href = URL.createObjectURL(blob);
-						document.body.appendChild(elink);
-						elink.click();
-						URL.revokeObjectURL(elink.href); // 释放URL 对象
-						document.body.removeChild(elink);
-					} else { // IE10+下载
-						navigator.msSaveBlob(blob, fileName);
-					}
-				});
-			}).catch(() => {
 			});
+			// 	.then(data => {
+			// 	if (data.status !== 'ok' || isEmpty(data.fileNames)) {
+			// 		return reject();
+			// 	}
+			// 	fileNames = data.fileNames;
+			// 	return all(fileNames.map(ele => {
+			// 		return axios.axios({
+			// 			url: `${ele}`,
+			// 			method: 'get',
+			// 			responseType: 'blob'
+			// 		});
+			// 	}));
+			// }).then(data => {
+			// 	data.forEach((res, index) => {
+			// 		let content = res.data,
+			// 			blob = new Blob([content], { type: 'text/csv' }),
+			// 			fileName = fileNames[index].split('=')[1];
+
+			// 		if ('download' in document.createElement('a')) { // 非IE下载
+			// 			let elink = document.createElement('a');
+
+			// 			elink.download = fileName;
+			// 			elink.style.display = 'none';
+			// 			elink.href = URL.createObjectURL(blob);
+			// 			document.body.appendChild(elink);
+			// 			elink.click();
+			// 			URL.revokeObjectURL(elink.href); // 释放URL 对象
+			// 			document.body.removeChild(elink);
+			// 		} else { // IE10+下载
+			// 			navigator.msSaveBlob(blob, fileName);
+			// 		}
+			// 	});
+			// }).catch(() => {
+			// });
 		}
 	}
 	// verify: service('service-verify'),

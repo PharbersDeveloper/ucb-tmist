@@ -10,8 +10,8 @@ export default Controller.extend({
 	cookies: service(),
 	axios: service(),
 	actions: {
-		checkResult() {
-			this.transitionToRoute('page-result');
+		checkReport(assessmentReport) {
+			this.transitionToRoute('page-report', assessmentReport.get('id'));
 		},
 		outputData(type) {
 			const applicationAdapter = this.store.adapterFor('application'),
@@ -26,7 +26,7 @@ export default Controller.extend({
 				data: JSON.stringify({
 					'proposal-id': proposalId,
 					'account-id': this.get('cookies').read('account_id'),
-					'scenario-id': this.model.scenario.get('id'),
+					'scenario-id': 'all',
 					'download-type': type
 				})
 			}).then(data => {

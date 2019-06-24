@@ -1,7 +1,11 @@
 .business-container {
+    height: -webkit-calc(100% - 25px);
     height: calc(100% - 25px);
 
     .item {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        -ms-flex: 1;
         flex: 1;
         background-color: $n000;
 
@@ -39,40 +43,27 @@
             }
         }
 
-        .progress:nth-child(6) {    
+        .progress:nth-child(6) {
             .bar {
                 background-color: #998DD9;
             }
         }
-
-        // .progress:first-child {
-        //     .bar {
-        //         background-color: #79F2C0;
-        //     }
-        // }
-
-        // .progress:nth-child(2) {
-        //     height: 16px;
-
-        //     .bar {
-        //         background-color: #79E2F2;
-        //     }
-        // }
-
-        // .progress:nth-child(3) {
-        //     height: 24px;
-
-        //     .bar {
-        //         background-color: #998DD9;
-        //     }
-        // }
     }
 
-    .infos {
-        flex: 0 0 314px;
+    .hospitals-configs {
+        position: relative;
+        -webkit-box-flex: 0;
+        -webkit-flex: 0 0 368px;
+        -ms-flex: 0 0 368px;
+        flex: 0 0 368px;
+        max-height: 552px;
 
         h3.title {
-            flex: 0 0 54px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 54px;
             @extend %header-medium;
 
             .dd-hosp {
@@ -80,70 +71,26 @@
             }
         }
 
-        h4.title {
-            @extend %header-small;
-        }
-
-        .keys {
-            @extend %p-primary;
-        }
-
-        .values {
-            @extend %p-secondary;
-        }
-
-        .hospitals-configs {
-            max-height: 402px;
+        .link-container {
+            margin-top: 54px;
             overflow: auto;
-
-            a:hover {
-                text-decoration: none;
-            }
-
-            :global(.current-hospital) {
-                :global(.hospital-box) {
-                    background-color: $n040a;
-                }
-            }
         }
 
-        .over-all {
-            .values {
-                @extend %p-small;
-                line-height: 20px;
+        a:hover {
+            text-decoration: none;
+        }
+
+        :global(.current-hospital) {
+            :global(.hospital-box) {
+                background-color: $n020a;
             }
         }
     }
 
-    .hospitals {
-
-        .hospitals-configs {
-            flex: 0 0 368px;
-            max-height: 552px;
-            overflow: auto;
-
-            h3.title {
-                flex: 0 0 54px;
-                @extend %header-medium;
-
-                .dd-hosp {
-                    width: 98px;
-                }
-            }
-
-            a:hover {
-                text-decoration: none;
-            }
-
-            :global(.current-hospital) {
-                :global(.hospital-box) {
-                    background-color: $n020a;
-                }
-            }
-        }
-
-        .hospital {
-            flex: 1;
-        }
+    .hospital {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
     }
 }

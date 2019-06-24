@@ -1,7 +1,8 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
-	time: DS.attr('formatDate')
+	time: DS.attr('formatDate'),
+	simplifyResult: DS.belongsTo()
 	// regionalDivisionResult: DS.belongsTo(),
 	// targetAssignsResult: DS.belongsTo(),
 	// resourceAssignsResult: DS.belongsTo(),

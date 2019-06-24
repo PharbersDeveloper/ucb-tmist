@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import ENV from 'ucb-tmist/config/environment';
 import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
-import RSVP from 'rsvp';
+import RSVP, { all } from 'rsvp';
 const { keys } = Object;
 
 export default Controller.extend({
@@ -23,10 +23,11 @@ export default Controller.extend({
 			paperinput = paperinputs.get('lastObject'),
 			reDeploy = Number(localStorage.getItem('reDeploy')),
 			phase = scenario.get('phase'),
-			businessinputs = store.peekAll('businessinput'),
-			goodsinputs = store.peekAll('goodsinput');
+			// 在 page-scenario 页面afterModel hook 中
+			businessinputs = this.get('businessInputs'),
+			goodsinputs = this.get('goodsInputs');
 
-		goodsinputs.save()
+		all(goodsinputs.map(ele => ele.save()))
 			.then(data => {
 				businessinputs.forEach(ele => {
 					let currentGoodsinputs = data.filterBy('destConfigId', ele.get('destConfig.id'));
@@ -34,7 +35,7 @@ export default Controller.extend({
 					ele.set('goodsinputs', currentGoodsinputs);
 				});
 
-				return businessinputs.save();
+				return all(businessinputs.map(ele => ele.save()));
 			})
 			// rsvp.Promise.all(promiseArray)
 			.then(data => {

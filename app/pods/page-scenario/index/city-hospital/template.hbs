@@ -10,10 +10,10 @@
 			<th>城市战略地位</th>
 			<th>本地患者占比</th>
 			<th>外地患者占比</th>
-			<th>三级数量</th>
-			<th>二级数量</th>
-			<th>一级数量</th>
-			<th>医院总数</th>
+			<th>三级目标数量</th>
+			<th>二级目标数量</th>
+			<th>一级目标数量</th>
+			<th>目标医院总数</th>
 		</thead>
 		<tbody>
 			{{#each model.hospitalNumbers as |ch|}}
@@ -126,13 +126,14 @@
 								<td class="py-1">{{salesConfig.goodsConfig.productConfig.product.name}}</td>
 								<td class="py-1">{{salesConfig.goodsConfig.productConfig.treatmentArea }}</td>
 								<td class="py-1">
-									{{#each salesConfig.salesReport.hospitalSalesReports as |hsr|}}
+									{{#each model.lastSeasonHospitalSalesReports as |hsr|}}
 										{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.currentHospitalConfig.hospital.id)}}
 											{{#if (bp-eq hsr.goodsConfig.productConfig.product.id salesConfig.goodsConfig.productConfig.product.id)}}
 												{{hsr.drugEntranceInfo}}
 											{{/if}}
 										{{/if}}
 									{{/each}}
+									{{!-- {{salesConfig.hospitalSalesReport.drugEntranceInfo}} --}}
 								</td>
 								<td class="py-1">{{format-number salesConfig.patientCount}}</td>
 							</tr>

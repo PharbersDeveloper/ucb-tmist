@@ -40,7 +40,7 @@
 									{{budget.name}}
 								</span>
 								<span local-class='values'>
-									{{budget.priceType}}{{budget.value}}/{{managerGoodsConfig.productConfig.priceType}}{{format-number managerGoodsConfig.goodsSalesBudgets}}
+									{{budget.priceType}}{{format-number budget.value}}/{{managerGoodsConfig.productConfig.priceType}}{{format-number managerGoodsConfig.goodsSalesBudgets}}
 								</span>
 							{{/bp-layout}}
 							{{#bp-progress local-class="progress" classNames="mb-4" as |p|}}
@@ -52,9 +52,10 @@
 			</div>
 		</div>
 	{{/bp-layout}}
-	{{#bp-layout local-class="hospitals" }}
+	{{#bp-layout }}
 		{{#bp-layout direction="col" local-class="hospitals-configs" classNames="mr-4 px-4 bg-white" }}
-			{{#bp-layout tagName="h3" cross="center" main="between" local-class="title" classNames="m-0" }}
+			{{#bp-layout tagName="h3" cross="center" main="between" 
+				local-class="title" classNames="m-0 px-4 bg-white" }}
 				<span>目标医院({{overallFilterData.length}})</span>
 				{{#bp-dropdown widthSize="auto" local-class="dd-hosp" as |dd|}}
 					{{#dd.button type="link-subtle" }}
@@ -74,14 +75,16 @@
 					{{/dd.menu}}
 				{{/bp-dropdown}}
 			{{/bp-layout}}
-			{{#each overallFilterData as |dc|}}
-				{{#link-to "page-scenario.business.hospitalConfig" dc.id activeClass="current-hospital" }}
-					{{hospital-overall
+			<div local-class='link-container'>
+				{{#each overallFilterData as |dc|}}
+					{{#link-to "page-scenario.business.hospitalConfig" dc.id activeClass="current-hospital" }}
+						{{hospital-overall
 							businessInputs=model.businessInputs
 							salesConfigs=model.salesConfigs
 							overallFilterData=dc}}
-				{{/link-to}}
-			{{/each}}
+					{{/link-to}}
+				{{/each}}
+			</div>
 		{{/bp-layout}}
 		{{#bp-layout direction="col" local-class="hospital" class="mb-2" }}
 			{{outlet}}

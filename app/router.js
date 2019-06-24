@@ -19,8 +19,6 @@ Router.map(function () {
   this.route('page-login', { path: 'login' });
   this.route('oauth-callback');
   this.route('page-result', { path: 'result' }, function () {
-    this.route('review');
-
     this.route('index', function() {});
     this.route('loading');
     this.route('region');
@@ -29,10 +27,6 @@ Router.map(function () {
   });
   this.route('page-notice', { path: 'notice/:proposal_id' });
   this.route('page-scenario', { path: 'scenario/:proposal_id' }, function () {
-    this.route('reference', function () {
-      this.route('hospital');
-      this.route('performance');
-    });
     this.route('decision-review');
 
     this.route('index', function () {
@@ -49,8 +43,8 @@ Router.map(function () {
     });
     this.route('index-loading');
   });
-  this.route('page-report', { path: 'report' });
-  this.route('page-history-report', { path: 'history/:paper_id' });
+  this.route('page-report', { path: 'report/:assReportId' });
+  this.route('page-history-report', { path: 'history' });
   this.route('page-scenario-loading');
 });
 

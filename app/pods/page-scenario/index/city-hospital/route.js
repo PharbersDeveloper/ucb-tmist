@@ -14,7 +14,7 @@ export default Route.extend({
 	},
 	model() {
 		const pageScenarioModel = this.modelFor('page-scenario'),
-			{ destConfigRegions, salesConfigs } = pageScenarioModel;
+			{ destConfigRegions, salesConfigs, lastSeasonHospitalSalesReports } = pageScenarioModel;
 
 		let regionConfig = destConfigRegions.firstObject.get('regionConfig'),
 			cities = A([]),
@@ -57,6 +57,7 @@ export default Route.extend({
 				city: cities.firstObject,
 				destConfigRegion: destConfigRegions.firstObject,
 				salesConfigs,
+				lastSeasonHospitalSalesReports,
 				currentHospitalConfig: cities.firstObject.get('hospitalConfigs').firstObject
 			});
 		});
