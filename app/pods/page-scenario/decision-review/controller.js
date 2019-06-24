@@ -4,37 +4,11 @@ import { computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 
 export default Controller.extend({
-	phaseGrp: computed('model.usableSeasons', function () {
-		let usableSeasons = this.get('model.usableSeasons'),
-			tmpArr = A([]);
-
-		window.console.log(usableSeasons);
-
-		usableSeasons.forEach(ele => {
-			ele.get('scenario');
-			tmpArr.pushObject(ele);
-		});
-		// for (let i = 0;i < usableSeasons.length;i++) {
-		// 	// let phaseObj = {
-		// 	// 	id: usableSeasons.objectAt(i).id,
-		// 	// 	name: `第${usableSeasons.objectAt(i).phase}周期`
-		// 	// };
-		// 	let phaseObj = usableSeasons.objectAt(i);
-
-		// 	tmpArr.pushObject(phaseObj);
-		// }
-		tmpArr.pushObject({
-			id: 0,
-			name: '当前周期'
-		});
-		window.console.log(tmpArr);
-		return tmpArr;
-	}),
-	// filterTableData: computed('model.tableData', 'tmpRep', 'tmpGc', function () {
-	filterTableData: computed('model.tableData', 'tmpGc', function () {
-		let tableData = copy(this.get('model.tableData')),
+	filterTableData: computed('model.tableDataAll', 'tmpGc', 'tmpSeason', function () {
+		let tableData = copy(this.get('model.tableDataAll')),
 			tmpGc = this.get('tmpGc'),
-			filterTableData = tableData;
+			tmpSeason = this.get('tmpSeason'),
+			filterTableData = tableData.filterBy('scenarioId', tmpSeason.id);
 
 		if (!isEmpty(tmpGc)) {
 			let tmpTableData = filterTableData.map(ele => {
