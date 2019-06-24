@@ -81,7 +81,10 @@
 <div local-class="product-sales chart" class="mb-4 px-4 py-3 bg-white">
 	{{bp-bar-line
 		eid="chartbarLine"
-		chartData=barLineData}}
+		chartData=barLineData
+		rateUnit='%'
+		numberUnit='￥'
+		selfTooltip=true}}
 </div>
 {{#bp-layout tagName="h2" main='between' cross="center" local-class="title" classNames="m-0 bg-white px-4"}}
 	代表销售数据表
