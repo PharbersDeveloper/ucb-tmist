@@ -83,12 +83,19 @@ export default Controller.extend({
 			// this.transitionToRoute('page-notice', proposalId);
 		},
 		reDeploy() {
-			let proposalId = this.get('model').detailProposal.get('proposal.id');
+			let paper = this.get('model.detailPaper');
+			// proposalId = this.get('model').detailProposal.get('proposal.id');
 
-			this.set('reDeploy', false);
-			// reDeploy 为 1 的时候，代表用户选择`重新部署`
+			paper.set('state', 3);
+			paper.save().then(res => {
+				window.console.log(res);
+				window.location = ENV.redirectUri;
+			});
+
+			// this.set('reDeploy', false);
+			// // reDeploy 为 1 的时候，代表用户选择`重新部署`
 			localStorage.setItem('reDeploy', 1);
-			this.entryMission(proposalId);
+			// this.entryMission(proposalId);
 
 			// this.transitionToRoute('page-notice', proposalId);
 		},

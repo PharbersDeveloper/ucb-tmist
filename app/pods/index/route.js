@@ -62,6 +62,9 @@ export default Route.extend({
 			data.forEach(ele => {
 				store.pushPayload(ele);
 			});
+
+			localStorage.setItem('proposalId', useableProposals.get('firstObject').get('proposal.id'));
+
 			return store.query('paper', {
 				'proposal-id': useableProposals.get('firstObject').get('proposal.id'),
 				'account-id': cookies.read('account_id'),

@@ -288,10 +288,12 @@ export default Controller.extend({
 				return paper.save();
 
 			}).then(() => {
-				let notice = localStorage.getItem('notice');
+				let notice = localStorage.getItem('notice'),
+					proposalId = localStorage.getItem('proposalId');
 
 				localStorage.clear();
 				localStorage.setItem('notice', notice);
+				localStorage.setItem('proposalId', proposalId);
 				if (state === 1 || state === 4) {
 					this.set('warning', {
 						open: true,

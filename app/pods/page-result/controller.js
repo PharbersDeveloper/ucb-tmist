@@ -7,6 +7,8 @@ import { A } from '@ember/array';
 
 
 export default Controller.extend({
+	axios: service(),
+	ajax: service(),
 	cookies: service(),
 	serviceCycle: service(),
 	actions: {
@@ -27,12 +29,13 @@ export default Controller.extend({
 				{ ajax, axios } = this;
 
 			let version = `${applicationAdapter.get('namespace')}`,
-				fileNames = A([]);
+				fileNames = A([]),
+				proposalId = localStorage.getItem('proposalId');
 
 			ajax.request(`${version}/GenerateCSV`, {
 				method: 'POST',
 				data: JSON.stringify({
-					'proposal-id': this.get('proposalId'),
+					'proposal-id': proposalId,
 					'account-id': this.get('cookies').read('account_id'),
 					'scenario-id': this.model.scenario.get('id'),
 					'download-type': type
