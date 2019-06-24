@@ -23,12 +23,16 @@
 			{{#each model.assessmentReports as |assessmentReport|}}
 				{{#bp-layout local-class='list-body' classNames='px-4'}}
 					<p class="my-2 text-center">{{bp-string-slice assessmentReport.time 0}}</p>
-					<p class="my-2 text-center">*等级</p>
-					{{#link-to "page-report" assessmentReport tagName='p' classNames='my-2' }}
-						查看
-					{{/link-to}}
-					<p class="my-2 text-center">
-						<a href="#">导出</a>
+					<p class="my-2 text-center">{{assessmentReport.simplifyResult.levelConfig.level.level}}</p>
+					<p class="m-1 text-center">
+						{{#bp-button onClick=(action 'checkReport' assessmentReport) class='mr-1'}}
+							查看
+						{{/bp-button}}
+					</p>
+					<p class="m-1 text-center">
+						{{#bp-button onClick=(action 'outputData' 'assessment') class='mr-1'}}
+							导出测试数据
+						{{/bp-button}}
 					</p>
 				{{/bp-layout}}
 			{{/each}}

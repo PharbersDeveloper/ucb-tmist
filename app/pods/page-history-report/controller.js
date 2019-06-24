@@ -1,30 +1,17 @@
 import Controller from '@ember/controller';
-import ENV from 'ucb-tmist/config/environment';
 import { inject as service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
 import { all, reject } from 'rsvp';
 import { A } from '@ember/array';
 
-
 export default Controller.extend({
 	axios: service(),
 	ajax: service(),
 	cookies: service(),
-	serviceCycle: service(),
+	axios: service(),
 	actions: {
-		continueTest() {
-			// let pageIndexModel = this.modelFor('index');
-
-			window.location = ENV.redirectUri;
-
-			// this.transitionToRoute('index');
-			// this.serviceCycle.set('needRefresh', true);
-			// this.serviceCycle.set('needRedirectToSce', true);
-		},
-		checkManagerReport() {
-			this.model.detailPaper.get('assessmentReports').then(res => {
-				this.transitionToRoute('page-report', res.get('id'));
-			})
+		checkReport(assessmentReport) {
+			this.transitionToRoute('page-report', assessmentReport.get('id'));
 		},
 		outputData(type) {
 			const applicationAdapter = this.store.adapterFor('application'),
@@ -39,7 +26,7 @@ export default Controller.extend({
 				data: JSON.stringify({
 					'proposal-id': proposalId,
 					'account-id': this.get('cookies').read('account_id'),
-					'scenario-id': this.model.scenario.get('id'),
+					'scenario-id': 'all',
 					'download-type': type
 				})
 			}).then(data => {
@@ -56,12 +43,12 @@ export default Controller.extend({
 				}));
 			}).then(data => {
 				data.forEach((res, index) => {
-					let content = res.data,
+					const content = res.data,
 						blob = new Blob([content], { type: 'text/csv' }),
-						fileName = fileNames[index].split('=')[1];
+						fileName = fileNames[index];
 
 					if ('download' in document.createElement('a')) { // 非IE下载
-						let elink = document.createElement('a');
+						const elink = document.createElement('a');
 
 						elink.download = fileName;
 						elink.style.display = 'none';
