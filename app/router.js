@@ -29,10 +29,6 @@ Router.map(function () {
   });
   this.route('page-notice', { path: 'notice/:proposal_id' });
   this.route('page-scenario', { path: 'scenario/:proposal_id' }, function () {
-    this.route('reference', function () {
-      this.route('hospital');
-      this.route('performance');
-    });
     this.route('decision-review');
 
     this.route('index', function () {

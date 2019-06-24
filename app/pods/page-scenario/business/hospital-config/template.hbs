@@ -15,10 +15,10 @@
 			</p>
 		{{/unless}}
 		{{#bp-layout}}
-		{{!-- bi.resourceConfig.representativeConfig.representative.name --}}
+			{{!-- bi.resourceConfig.representativeConfig.representative.name --}}
 			{{#if businessinput.resourceConfig.representativeConfig.representative.images.firstObject.img}}
-				<img src={{businessinput.resourceConfig.representativeConfig.representative.images.firstObject.img}} local-class="avatar"
-					class="mr-4 rounded-circle" width='88' height='88' alt="">
+				<img src={{businessinput.resourceConfig.representativeConfig.representative.images.firstObject.img}}
+					local-class="avatar" class="mr-4 rounded-circle" width='88' height='88' alt="">
 			{{else}}
 				<img src="/assets/images/img_placeholder.png" width='88' height="88" local-class="avatar" alt=""
 					class="mr-4 rounded-circle">
@@ -68,7 +68,8 @@
 	classNames="m-0 px-4 bg-white "}}
 	药品相关资源分配
 {{/bp-layout}}
-<table local-class={{if businessinput.resourceConfig.representativeConfig.representative 'prod' 'prod disabled'}} class="table mb-2 bg-white">
+<table local-class={{if businessinput.resourceConfig.representativeConfig.representative 'prod' 'prod disabled'}}
+	class="table mb-2 bg-white">
 	<thead>
 		<tr>
 			<th class="border-0 pb-2 pl-4 text-left">产品名称</th>
@@ -108,7 +109,7 @@
 						{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsInput.goodsConfig.productConfig.product.id)}}
 							{{bp-input block=true widthSize="auto" 
 								value=goodsInput.salesTarget
-								disabled=(not businessinput.resourceConfig.representativeConfig.representative)
+								disabled=(not businessinput.resourceConfig.representativeConfig.representative.id)
 								local-class="input-prepend input-money"}}
 							{{!-- <p class="mt-2 mb-0 text-center" local-class="percent">
 									{{IndicatorAllocationPercent.percent}}%
@@ -121,7 +122,7 @@
 						{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsInput.goodsConfig.productConfig.product.id)}}
 							{{bp-input block=true widthSize="auto"
 									value=goodsInput.budget
-									disabled=(not businessinput.resourceConfig.representativeConfig.representative)
+									disabled=(not businessinput.resourceConfig.representativeConfig.representative.id)
 									local-class="input-prepend input-money"}}
 							{{!-- <p class="mt-2 mb-0 text-center" local-class="percent">
 									{{budgetPercent.percent}}%

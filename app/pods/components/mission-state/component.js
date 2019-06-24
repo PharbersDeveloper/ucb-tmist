@@ -4,7 +4,7 @@ import { computed } from '@ember/object';
 import { A } from '@ember/array';
 
 export default Component.extend({
-	classNames: ['px-1','mr-1'],
+	classNames: ['px-1', 'mr-1'],
 	tagName: 'span',
 	localClassNames: 'state',
 	localClassNameBindings: A(['missionNew', 'missionDone']),
