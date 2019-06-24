@@ -42,9 +42,9 @@ export default Route.extend({
 						goodsConfig: item,
 						salesTarget: '',	// 销售目标设定
 						budget: ''	//预算设定
-						// TODO 测试，用后删除
-						// salesTarget: 888,	// 销售目标设定
-						// budget: 88	//预算设定
+					// TODO 测试，用后删除
+					// salesTarget: 888,	// 销售目标设定
+					// budget: 88	//预算设定
 					});
 				}),
 				businessinput = null;
@@ -97,7 +97,6 @@ export default Route.extend({
 		let { detailProposal, destConfigs, destConfigHospitals, destConfigRegions } = pageIndexModel,
 			proposal = null,
 			businessInputs = null,
-			salesReports = A([]),
 			lastSeasonHospitalSalesReports = A([]),
 			navs = A([
 				{ name: '产品销售报告', route: 'page-scenario.index.performance' },
@@ -188,7 +187,6 @@ export default Route.extend({
 				selfGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 0);
 				competeGoodsConfigs = goodsConfigs.filter(ele => ele.get('productConfig.productType') === 1);
 
-
 				if (scenario.get('phase') > 1) {
 					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs, lastSeasonHospitalSalesReports);
 				} else {
@@ -197,14 +195,34 @@ export default Route.extend({
 				return pageIndexModel.resourceConfigManager.get('managerConfig');
 			}).then(data => {
 				managerConfig = data;
-				return all(businessInputs.map(ele => ele.get('goodsinputs')));
+				let isNewBusinessInputs = businessInputs.every(ele => ele.isNew),
+					businessInputsId = businessInputs.map(ele => ele.id);
+
+				if (isNewBusinessInputs) {
+					return all(businessInputs.map(ele => ele.get('goodsinputs')));
+				}
+				return all(businessInputsId.map(ele => store.findRecord('businessinput', ele)));
 			}).then(data => {
-				goodsInputs = data.reduce((acc, cur) => {
-					let inside = cur.reduce((iacc, icur) => iacc.concat(icur), []);
+				let isNewBusinessInputs = businessInputs.every(ele => ele.isNew),
+					goodsinputsIds = A([]);
 
-					return acc.concat(inside);
-				}, []);
+				if (isNewBusinessInputs) {
+					goodsInputs = data.reduce((acc, cur) => {
+						let inside = cur.reduce((iacc, icur) => iacc.concat(icur), []);
 
+						return acc.concat(inside);
+					}, []);
+					return goodsInputs;
+				}
+				data.forEach(ele => {
+					ele.get('goodsinputs').forEach(item => {
+						goodsinputsIds.push(item.id);
+					});
+				});
+				return all(goodsinputsIds.map(ele => store.findRecord('goodsinput', ele)));
+
+			}).then(data => {
+				goodsInputs = data;
 				return all(destConfigHospitals.map(ele => ele.get('hospitalConfig')));
 			}).then(data => {
 				return all(data.map(ele => ele.get('hospital')));
@@ -232,7 +250,7 @@ export default Route.extend({
 					destConfigs,
 					destConfigHospitals,
 					destConfigRegions,
-					salesReports,
+					salesReports: increaseSalesReports,
 					lastSeasonHospitalSalesReports,
 					resourceConfig: store.query('resourceConfig',
 						{ 'scenario-id': scenarioId }),

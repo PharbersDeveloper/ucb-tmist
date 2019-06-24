@@ -126,13 +126,7 @@
 								<td class="py-1">{{salesConfig.goodsConfig.productConfig.product.name}}</td>
 								<td class="py-1">{{salesConfig.goodsConfig.productConfig.treatmentArea }}</td>
 								<td class="py-1">
-									{{#each salesConfig.salesReport.hospitalSalesReports as |hsr|}}
-										{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.currentHospitalConfig.hospital.id)}}
-											{{#if (bp-eq hsr.goodsConfig.productConfig.product.id salesConfig.goodsConfig.productConfig.product.id)}}
-												{{hsr.drugEntranceInfo}}
-											{{/if}}
-										{{/if}}
-									{{/each}}
+									{{salesConfig.hospitalSalesReport.drugEntranceInfo}}
 								</td>
 								<td class="py-1">{{format-number salesConfig.patientCount}}</td>
 							</tr>

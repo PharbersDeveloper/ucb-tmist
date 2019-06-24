@@ -88,36 +88,12 @@ export default Route.extend({
 					return ele.get('productConfig');
 				});
 
-				// repPromiseArray = data.resourceConfigIds.map(ele => {
-				// 	return ele.get('representativeConfig');
-				// }),
-				// hospPromiseArray = data.destConfigIds.map(ele => {
-				// 	return ele.get('hospitalConfig');
-				// });
-
 				return all(promiseArray);
-				// return hash({
-				// 	productConfig: RSVP.Promise.all(promiseArray),
-				// 	representativeConfig: RSVP.Promise.all(repPromiseArray),
-				// 	hospitalConfig: RSVP.Promise.all(hospPromiseArray)
-				// });
 			}).then(data => {
 				productConfigs = data;
 				let promiseArray = data.map(ele => ele.get('product'));
 
-				// repPromiseArray = data.representativeConfig.map(ele => {
-				// 	return ele.get('representative');
-				// }),
-				// hospPromiseArray = data.hospitalConfig.map(ele => {
-				// 	return ele.get('hospital');
-				// });
-
 				return all(promiseArray);
-				// return hash({
-				// 	productConfig: RSVP.Promise.all(promiseArray),
-				// 	representativeConfig: RSVP.Promise.all(repPromiseArray),
-				// 	hospitalConfig: RSVP.Promise.all(hospPromiseArray)
-				// });
 			}).then(data => {
 				// 拼装基于产品的数据
 				let lineData = data.map((gc, index) => {
@@ -151,32 +127,4 @@ export default Route.extend({
 		// controller.set('notice', true);
 		controller.set('productTreatmentArea', model.treatmentArea.firstObject);
 	}
-	// beforeModel(transition) {
-	// 	let resourceConfig = this.modelFor('page-scenario'),
-	// 		destConfigHospitals = resourceConfig.destConfigHospitals,
-	// 		firstDestConfig = destConfigHospitals.get('firstObject'),
-	// 		proposalId = transition.params['page-scenario']['proposal_id'];
-
-	// 	this.transitionTo('/scenario/' + proposalId + '/index/hospital/' +
-	// 		firstDestConfig.get('id'));
-	// },
-	// model() {
-	// 	let pageScenarioModel = this.modelFor('page-scenario'),
-	// 		destConfigHospitals = pageScenarioModel.destConfigHospitals,
-	// 		goodsConfigs = pageScenarioModel.goodsConfigs,
-	// 		businessInputs = pageScenarioModel.businessInputs,
-	// 		resourceConfRep = pageScenarioModel.resourceConfRep;
-
-	// 	this.controllerFor('page-scenario.index').set('businessInputs', businessInputs);
-	// 	this.controllerFor('page-scenario').set('businessInputs', businessInputs);
-
-	// 	return hash({
-	// 		businessInputs: businessInputs,
-	// 		resourceConfigManager: pageScenarioModel.resourceConfigManager,
-	// 		goodsConfigs,
-	// 		destConfigHospitals,
-	// 		resourceConfRep,
-	// 		salesConfigs: pageScenarioModel.salesConfigs
-	// 	});
-	// }
 });
