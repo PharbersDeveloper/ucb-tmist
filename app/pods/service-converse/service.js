@@ -6,6 +6,8 @@ const CONVERSE = window.converse;
 export default Service.extend({
 	initPlugin: false,
 	initialize() {
+		console.log('initialize XMPP');
+		console.log(CONVERSE);
 		CONVERSE.initialize({
 			authentication: 'login', // 认证方式，默认为 'login'
 			'bosh_service_url': 'http://123.56.179.133:7070/http-bind/',

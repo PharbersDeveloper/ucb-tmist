@@ -20,24 +20,24 @@ export default Controller.extend({
 			// this.serviceCycle.set('needRefresh', true);
 			// this.serviceCycle.set('needRedirectToSce', true);
 		},
-		checkManagerReport() {
-			this.model.detailPaper.get('assessmentReports').then(res => {
-				this.transitionToRoute('page-report', res.get('id'));
-			});
+		checkManagerReport(paper) {
+			// this.model.detailPaper.get('assessmentReports').then(res => {
+			// 	this.transitionToRoute('page-report', res.get('id'));
+			// });
+			this.transitionToRoute('page-report', paper);
+
 		},
 		outputData(type) {
 			const applicationAdapter = this.store.adapterFor('application'),
 				{ ajax } = this;
 
-			let version = `${applicationAdapter.get('namespace')}`,
-				proposalId = this.model.proposal.get('id');
+			let version = `${applicationAdapter.get('namespace')}`;
 
 			ajax.request(`${version}/GenerateCSV`, {
 				method: 'POST',
 				data: JSON.stringify({
-					'proposal-id': proposalId,
+					'paper-id': this.model.detailPaper.get('id'),
 					'account-id': this.get('cookies').read('account_id'),
-					'scenario-id': this.model.scenario.get('id'),
 					'download-type': type
 				})
 			});

@@ -1,44 +1,54 @@
 .page-report {
     .sum-up-performance {
         height: 290px;
+
         .card-title {
             font-weight: bold;
             height: 54px;
             @extend %header-medium;
         }
+
         .sum-up-content {
             height: 236px;
+
             .level {
                 padding: 24px 120px;
+
                 .level-img {
-                    background-color: #666;
                     width: 128px;
                     height: 144px;
-                } 
+                }
+
                 .img-title {
                     @extend %p-secondary;
                 }
-               
+
             }
+
             .level-content {
                 max-width: 784px;
+
                 .level-content-title {
                     @extend %header-small;
                 }
-                .level-contetn-text{
+
+                .level-contetn-text {
                     @extend %p-primary;
                 }
             }
         }
     }
+
     .result {
         .result-title {
             font-weight: bold;
             @extend %header-medium;
         }
+
         .result-list {
             @extend %p-primary;
             height: 52px;
+
             .result-sub-title {
                 @extend %header-small;
                 font-weight: bold;
