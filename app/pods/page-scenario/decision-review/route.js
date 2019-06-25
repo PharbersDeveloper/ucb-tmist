@@ -84,6 +84,8 @@ export default Route.extend({
 					phase: scenario.get('phase'),
 					name: scenario.get('name')
 				});
+				handleUsableSeasons = handleUsableSeasons.uniqBy('id');
+
 				return all(salesReports.slice(-handleUsableSeasons.length).map(ele => {
 					return that.queryDeep(ele);
 				}));
@@ -107,7 +109,7 @@ export default Route.extend({
 					businput: businessinputs,
 					scenarioId: scenario.get('id')
 				});
-				tableData = data.map((item, index) => {
+				tableData = data.uniqBy('scenarioId').map((item, index) => {
 					let scenarioId = item.scenarioId,
 						detailData = A([]);
 

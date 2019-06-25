@@ -13,25 +13,26 @@
 				{{/body.left}}
 			{{/ph.body}}
 		{{/bp-page-header}}
-		{{#if model.assessmentReports}}
+		{{#if model}}
 			{{#bp-layout local-class='list-header' classNames='mt-4 px-4 border-bottom'}}
 				<p class="my-2 text-center">完成时间</p>
 				<p class="my-2 text-center">等级</p>
 				<p class="my-2 text-center"></p>
 				<p class="my-2 text-center"></p>
 			{{/bp-layout}}
-			{{#each model.assessmentReports as |assessmentReport|}}
+			{{#each model as |paper|}}
 				{{#bp-layout local-class='list-body' classNames='px-4'}}
-					<p class="my-2 text-center">{{bp-string-slice assessmentReport.time 0}}</p>
-					<p class="my-2 text-center">{{assessmentReport.simplifyResult.levelConfig.level.level}}</p>
+					<p class="my-2 text-center">{{bp-string-slice paper.endTime 0}}</p>
+					<p class="my-2 text-center">
+						{{paper.assessmentReports.lastObject.simplifyResult.levelConfig.level.level}}</p>
 					<p class="m-1 text-center">
-						{{#bp-button onClick=(action 'checkReport' assessmentReport) class='mr-1'}}
+						{{#bp-button type='link' onClick=(action 'checkReport' paper) class='mr-1'}}
 							查看
 						{{/bp-button}}
 					</p>
 					<p class="m-1 text-center">
-						{{#bp-button onClick=(action 'outputData' 'assessment') class='mr-1'}}
-							导出测试数据
+						{{#bp-button type='link' onClick=(action 'outputData' 'assessment' paper.id) class='mr-1'}}
+							导出
 						{{/bp-button}}
 					</p>
 				{{/bp-layout}}

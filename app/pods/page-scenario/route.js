@@ -6,7 +6,7 @@ import { hash, all } from 'rsvp';
 
 export default Route.extend({
 	cookies: service(),
-	converse: service('serviceConverse'),
+	// converse: service('serviceConverse'),
 	/**
 	 * 判断是否有 businessinput
 	 * @param  {model} scenario
@@ -37,16 +37,16 @@ export default Route.extend({
 
 		promiseArray = destConfigHospitals.map(ele => {
 			let goodsInputs = selfGoodsConfigs.map(item => {
-				return store.createRecord('goodsinput', {
-					destConfigId: ele.get('id'),
-					goodsConfig: item,
-					salesTarget: '',	// 销售目标设定
-					budget: ''	//预算设定
+					return store.createRecord('goodsinput', {
+						destConfigId: ele.get('id'),
+						goodsConfig: item,
+						salesTarget: '',	// 销售目标设定
+						budget: ''	//预算设定
 					// TODO 测试，用后删除
 					// salesTarget: 888,	// 销售目标设定
 					// budget: 88	//预算设定
-				});
-			}),
+					});
+				}),
 				businessinput = null;
 
 			if (isEmpty(lastSeasonHospitalSalesReports)) {
@@ -280,7 +280,7 @@ export default Route.extend({
 	},
 	setupController(controller, model) {
 		this._super(...arguments);
-		let converse = this.converse;
+		// let converse = this.converse;
 
 		controller.set('businessInputs', model.businessInputs);
 
@@ -289,23 +289,23 @@ export default Route.extend({
 			controller.set('notice', true);
 		}
 		// }
-		if (!controller.get('hasPlugin')) {
-			converse.initialize();
+		// if (!controller.get('hasPlugin')) {
+		// 	converse.initialize();
 
-			window.converse.plugins.add('chat_plugin', {
-				initialize: function () {
-					controller.set('hasPlugin', true);
-					this._converse.api.listen.on('message', obj => {
-						let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
+		// 	window.converse.plugins.add('chat_plugin', {
+		// 		initialize: function () {
+		// 			controller.set('hasPlugin', true);
+		// 			this._converse.api.listen.on('message', obj => {
+		// 				let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
 
-						window.console.log(JSON.parse(message).msg);
-						if (!isEmpty(message)) {
-							controller.set('xmppMessage', JSON.parse(message));
-							return JSON.parse(message);
-						}
-					});
-				}
-			});
-		}
+		// 				window.console.log(JSON.parse(message).msg);
+		// 				if (!isEmpty(message)) {
+		// 					controller.set('xmppMessage', JSON.parse(message));
+		// 					return JSON.parse(message);
+		// 				}
+		// 			});
+		// 		}
+		// 	});
+		// }
 	}
 });

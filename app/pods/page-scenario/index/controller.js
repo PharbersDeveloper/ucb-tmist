@@ -35,9 +35,8 @@ export default Controller.extend({
 			ajax.request(`${version}/GenerateCSV`, {
 				method: 'POST',
 				data: JSON.stringify({
-					'proposal-id': this.get('proposalId'),
+					'paper-id': this.model.paper.get('id'),
 					'account-id': this.get('cookies').read('account_id'),
-					'scenario-id': this.model.scenario.get('id'),
 					'download-type': type
 				})
 			});
