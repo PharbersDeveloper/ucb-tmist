@@ -6,7 +6,7 @@ export default DS.Model.extend({
 	name: DS.attr('string'),
 	describe: DS.attr('string'),
 	startTime: DS.attr('number'),
-	endTime: DS.attr('number'),
+	endTime: DS.attr('formatDate'),
 	state: DS.attr('number'),
 	totalPhase: DS.attr('number'),
 	paperinputs: DS.hasMany('paperinput'),

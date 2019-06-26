@@ -1,14 +1,14 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import ENV from 'ucb-tmist/config/environment';
-import { computed, observer } from '@ember/object';
+import { computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 // import { A } from '@ember/array';
 import { all } from 'rsvp';
 
 export default Controller.extend({
 	ajax: service(),
-	axios: service(),
+	// axios: service(),
 	cookies: service(),
 	converse: service('service-converse'),
 	verify: service('service-verify'),
@@ -19,121 +19,125 @@ export default Controller.extend({
 		}
 		return false;
 	}),
-	xmppResult: observer('xmppMessage.time', function () {
-		let clientId = ENV.clientId,
-			axios = this.axios,
-			accountId = this.get('cookies').read('account_id'),
-			proposalId = this.get('model').proposal.id,
-			// paperinputId = this.get('paperinputId') || null,
-			scenarioId = this.get('model').scenario.id,
-			xmppMessage = this.xmppMessage;
+	// xmppResult: observer('xmppMessage.time', function () {
+	// 	let clientId = ENV.clientId,
+	// 		axios = this.axios,
+	// 		accountId = this.get('cookies').read('account_id'),
+	// 		proposalId = this.get('model').proposal.id,
+	// 		// paperinputId = this.get('paperinputId') || null,
+	// 		scenarioId = this.get('model').scenario.id,
+	// 		xmppMessage = this.xmppMessage;
 
-		// if (ENV.environment === 'development') {
-		if (xmppMessage['type'] === 'calc') {
+	// 	// if (ENV.environment === 'development') {
+	// 	if (xmppMessage['type'] === 'calc') {
 
-			if (xmppMessage['client-id'] !== clientId) {
-				if (ENV.environment === 'development') {
-					window.console.log('client-id error');
-				}
-				return;
-			} else if (xmppMessage['account-id'] !== accountId) {
-				if (ENV.environment === 'development') {
-					window.console.log('账户 error');
-				}
-				return;
-			} else if (xmppMessage['proposal-id'] !== proposalId) {
-				if (ENV.environment === 'development') {
-					window.console.log('proposal-id error');
-				}
-				return;
+	// 		if (xmppMessage['client-id'] !== clientId) {
+	// 			if (ENV.environment === 'development') {
+	// 				window.console.log('client-id error');
+	// 			}
+	// 			return;
+	// 		} else if (xmppMessage['account-id'] !== accountId) {
+	// 			if (ENV.environment === 'development') {
+	// 				window.console.log('账户 error');
+	// 			}
+	// 			return;
+	// 		} else if (xmppMessage['proposal-id'] !== proposalId) {
+	// 			if (ENV.environment === 'development') {
+	// 				window.console.log('proposal-id error');
+	// 			}
+	// 			return;
 
-			// } else if (xmppMessage['paperInput-id'] !== paperinputId) {
-			// 	if (ENV.environment === 'development') {
-			// 		window.console.log('输入 error');
-			// 	}
-			// 	return;
-			} else if (xmppMessage['scenario-id'] !== scenarioId) {
-				if (ENV.environment === 'development') {
-					window.console.log('关卡 error');
-				}
-				return;
-			}
-			if (xmppMessage.status === 'ok') {
-				if (ENV.environment === 'development') {
-					window.console.log('结果已经返回');
-				}
-				this.set('loading', false);
-				return this.updatePaper(this.paperId, this.state);
-			}
-			window.console.log('计算错误');
+	// 			// } else if (xmppMessage['paperInput-id'] !== paperinputId) {
+	// 			// 	if (ENV.environment === 'development') {
+	// 			// 		window.console.log('输入 error');
+	// 			// 	}
+	// 			// 	return;
+	// 		} else if (xmppMessage['scenario-id'] !== scenarioId) {
+	// 			if (ENV.environment === 'development') {
+	// 				window.console.log('关卡 error');
+	// 			}
+	// 			return;
+	// 		}
+	// 		if (xmppMessage.status === 'ok') {
+	// 			if (ENV.environment === 'development') {
+	// 				window.console.log('结果已经返回');
+	// 			}
+	// 			this.set('loading', false);
+	// 			return this.updatePaper(this.paperId, this.state);
+	// 		}
+	// 		window.console.log('计算错误');
 
-		} else if (xmppMessage['type'] === 'download') {
-			if (xmppMessage['client-id'] !== clientId) {
-				if (ENV.environment === 'development') {
-					window.console.log('client-id error');
-				}
-				return;
-			} else if (xmppMessage['account-id'] !== accountId) {
-				if (ENV.environment === 'development') {
-					window.console.log('账户 error');
-				}
-				return;
-			}
+	// 	} else if (xmppMessage['type'] === 'download') {
+	// 		if (xmppMessage['client-id'] !== clientId) {
+	// 			if (ENV.environment === 'development') {
+	// 				window.console.log('client-id error');
+	// 			}
+	// 			return;
+	// 		} else if (xmppMessage['account-id'] !== accountId) {
+	// 			if (ENV.environment === 'development') {
+	// 				window.console.log('账户 error');
+	// 			}
+	// 			return;
+	// 		}
 
-			let fileNames = xmppMessage['fileNames'];
+	// 		let fileNames = xmppMessage['fileNames'];
 
-			return all(fileNames.map(ele => {
-				return axios.axios({
-					url: `${ele}`,
-					method: 'get',
-					responseType: 'blob'
-				});
-			})).then(data => {
-				data.forEach((res, index) => {
-					let content = res.data,
-						blob = new Blob([content], { type: 'text/csv' }),
-						fileName = fileNames[index].split('=')[1];
+	// 		return all(fileNames.map(ele => {
+	// 			return axios.axios({
+	// 				url: `${ele}`,
+	// 				method: 'get',
+	// 				responseType: 'blob'
+	// 			});
+	// 		})).then(data => {
+	// 			data.forEach((res, index) => {
+	// 				let content = res.data,
+	// 					blob = new Blob([content], { type: 'text/csv' }),
+	// 					fileName = fileNames[index].split('=')[1];
 
-					if ('download' in document.createElement('a')) { // 非IE下载
-						let elink = document.createElement('a');
+	// 				if ('download' in document.createElement('a')) { // 非IE下载
+	// 					let elink = document.createElement('a');
 
-						elink.download = fileName;
-						elink.style.display = 'none';
-						elink.href = URL.createObjectURL(blob);
-						document.body.appendChild(elink);
-						elink.click();
-						URL.revokeObjectURL(elink.href); // 释放URL 对象
-						document.body.removeChild(elink);
-					} else { // IE10+下载
-						navigator.msSaveBlob(blob, fileName);
-					}
-				});
-			}).catch(() => {
-			});
-		}
-		// switch (true) {
-		// case xmppMessage['client-id'] !== clientId:
-		// case xmppMessage['account-id'] !== accountId:
-		// case xmppMessage['proposal-id'] !== proposalId:
-		// case xmppMessage['paperInput-id'] !== paperinputId:
-		// case xmppMessage['scenario-id'] !== scenarioId:
-		// 	return;
-		// case xmppMessage.status === 'ok':
-		// 	return this.updatePaper(this.paperId, this.state);
-		// default:
-		// 	return;
-		// }
+	// 					elink.download = fileName;
+	// 					elink.style.display = 'none';
+	// 					elink.href = URL.createObjectURL(blob);
+	// 					document.body.appendChild(elink);
+	// 					elink.click();
+	// 					URL.revokeObjectURL(elink.href); // 释放URL 对象
+	// 					document.body.removeChild(elink);
+	// 				} else { // IE10+下载
+	// 					navigator.msSaveBlob(blob, fileName);
+	// 				}
+	// 			});
+	// 		}).catch(() => {
+	// 		});
+	// 	}
+	// 	// switch (true) {
+	// 	// case xmppMessage['client-id'] !== clientId:
+	// 	// case xmppMessage['account-id'] !== accountId:
+	// 	// case xmppMessage['proposal-id'] !== proposalId:
+	// 	// case xmppMessage['paperInput-id'] !== paperinputId:
+	// 	// case xmppMessage['scenario-id'] !== scenarioId:
+	// 	// 	return;
+	// 	// case xmppMessage.status === 'ok':
+	// 	// 	return this.updatePaper(this.paperId, this.state);
+	// 	// default:
+	// 	// 	return;
+	// 	// }
 
 
-	}),
+	// }),
 	allVerifySuccessful() {
-		let scenario = this.get('model.scenario');
+		let { scenario, proposal } = this.get('model'),
+			insideDetail = '并进入下一个季度决策';
 
+		if (scenario.phase === proposal.totalPhase) {
+			insideDetail = '并结束优时比区域周期计划测试';
+		}
 		this.set('warning', {
 			open: true,
 			title: `确认提交`,
 			detail: `您将提交本季度（${scenario.get('name')}）决策，
-				并进入下一个季度决策。提交后不可再更改本季度（${scenario.get('name')}）决策`
+				${insideDetail}。提交后不可再更改本季度（${scenario.get('name')}）决策。`
 		});
 		this.set('confirmSubmit', true);
 		return;
@@ -272,7 +276,7 @@ export default Controller.extend({
 	sendInput(state) {
 		this.set('loading', true);
 		const ajax = this.get('ajax'),
-			// converse = this.get('converse'),
+			converse = this.get('converse'),
 			applicationAdapter = this.get('store').adapterFor('application'),
 			store = this.get('store'),
 			model = this.get('model'),
@@ -363,6 +367,7 @@ export default Controller.extend({
 							window.console.log('等待 R 返回中...');
 						}
 						this.set('state', state);
+						converse.set('inputState', state);
 						this.set('paperId', paperId);
 						return this.xmppResult;
 					}
@@ -370,20 +375,20 @@ export default Controller.extend({
 			});
 	},
 
-	updatePaper(paperId, state) {
-		const that = this;
+	// updatePaper(paperId, state) {
+	// 	const that = this;
 
-		this.store.findRecord('paper', paperId, { reload: true })
-			.then(data => {
-				data.set('state', state);
-				return data.save();
-			}).then(() => {
-				this.set('loadingForSubmit', false);
+	// 	this.store.findRecord('paper', paperId, { reload: true })
+	// 		.then(data => {
+	// 			data.set('state', state);
+	// 			return data.save();
+	// 		}).then(() => {
+	// 			this.set('loadingForSubmit', false);
 
-				that.transitionToRoute('page-result');
-				return null;
-			});
-	},
+	// 			that.transitionToRoute('page-result');
+	// 			return null;
+	// 		});
+	// },
 	actions: {
 		submit() {
 			const judgeAuth = this.judgeOauth(),

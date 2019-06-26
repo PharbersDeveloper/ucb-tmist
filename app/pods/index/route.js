@@ -8,6 +8,7 @@ export default Route.extend({
 	cookies: service(),
 	ajax: service(),
 	serviceCycle: service(),
+	converse: service('serviceConverse'),
 	activate() {
 		this._super(...arguments);
 		let applicationController = this.controllerFor('application');
@@ -137,6 +138,30 @@ export default Route.extend({
 				businessInputs: isEmpty(paperinput) ? null : paperinput.get('businessinputs')
 			});
 		});
+	},
+	setupController(controller) {
+		this._super(...arguments);
+		let converse = this.converse;
+
+		console.log(!controller.get('hasPlugin'));
+		if (!controller.get('hasPlugin')) {
+			converse.initialize();
+
+			window.converse.plugins.add('chat_plugin', {
+				initialize: function () {
+					controller.set('hasPlugin', true);
+					this._converse.api.listen.on('message', obj => {
+						let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
+
+						window.console.log(JSON.parse(message).msg);
+						if (!isEmpty(message)) {
+							controller.set('xmppMessage', JSON.parse(message));
+							return JSON.parse(message);
+						}
+					});
+				}
+			});
+		}
 	}
 	// afterModel(model) {
 	// 	if (this.serviceCycle.needRedirectToSce) {
