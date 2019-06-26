@@ -23,9 +23,15 @@ export default Route.extend({
 			]),
 			increaseSalesReports = A([]),
 			tmpHead = A([]),
+			proposal = null,
 			tmpHeadQ = A([]);
 
-		return detailPaper.get('salesReports')
+		return detailProposal.get('proposal')
+			.then(data => {
+				proposal = data;
+
+				return detailPaper.get('salesReports');
+			})
 			.then(data => {
 				increaseSalesReports = data.sortBy('time');
 				return all(increaseSalesReports.map(ele => {
@@ -49,6 +55,7 @@ export default Route.extend({
 					increaseSalesReports,
 					scenario,
 					detailProposal,
+					proposal,
 					destConfigRegions,
 					resourceConfigRepresentatives,
 					destConfigHospitals,

@@ -54,7 +54,6 @@ export default Route.extend({
 				// 获取到医院下的代表，之后展示使用
 				return all(data.map(ele => ele.get('representative')));
 			}).then(() => {
-
 				return all(hospitalSalesReports.map(ele => ele.get('destConfig')));
 			}).then(data => {
 				return all(data.map(ele => ele.get('hospitalConfig')));
