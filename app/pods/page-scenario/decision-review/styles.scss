@@ -24,6 +24,10 @@
 
 				.dd-area {
 					flex: 1;
+					
+					.options {
+						transform: translate3d(0px, 40px, 0px) !important;
+					}
 				}
 			}
 		}

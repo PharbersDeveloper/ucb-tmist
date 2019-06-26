@@ -15,7 +15,8 @@ export default Controller.extend({
 			let tmpTableData = filterTableData.map(ele => {
 				let goodsInputs = ele.goodsInputs,
 					tmpGcProductId = tmpGc.get('productConfig.product.id'),
-					currentProductLastSeasonSales = ele.lastSeasonProductSales.findBy('goodsConfig.productConfig.product.id', tmpGcProductId);
+					currentProductLastSeasonSales = ele.lastSeasonProductSales.findBy('goodsConfig.productConfig.product.id', tmpGcProductId),
+					currentProductSalesConfig = ele.currentSalesConfigs.findBy('goodsConfig.productConfig.product.id', tmpGcProductId);
 
 				goodsInputs.forEach(item => {
 					let itemProductId = item.get('goodsConfig.productConfig.product.id');
@@ -26,6 +27,7 @@ export default Controller.extend({
 					}
 				});
 				ele.sales = isEmpty(currentProductLastSeasonSales) ? '-' : currentProductLastSeasonSales.get('sales');
+				ele.patientNumber = Number.prototype.toLocaleString.call(currentProductSalesConfig.get('patientCount'));
 				return ele;
 			});
 

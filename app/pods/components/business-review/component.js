@@ -31,39 +31,38 @@ export default Component.extend({
 		return [{
 			label: '医院名称',
 			valuePath: 'hospitalName',
-			sortable: false,
+			// sortable: false,
 			width: '190px'
 		}, {
 			label: '医院等级',
-			valuePath: 'hospitalLevel',
-			sortable: false
+			valuePath: 'hospitalLevel'
+			// sortable: false
 		}, {
 			label: '患者数量',
-			valuePath: 'patientNumber',
-			sortable: false
+			valuePath: 'patientNumber'
+			// sortable: false
 
 		}, {
 			label: '上季度销售额',
 			valuePath: 'sales',
-			cellComponent: 'light-table-format-number',
-			sortable: false
+			cellComponent: 'light-table-format-number'
+			// sortable: false
 
 		}, {
 			label: '代表',
-			valuePath: 'representative',
-			sortable: false
+			valuePath: 'representative'
+			// sortable: false
 		}, {
 			label: '销售目标设定',
 			valuePath: 'salesTarget',
-			cellComponent: 'light-table-format-number',
-			sortable: false
+			cellComponent: 'light-table-format-number'
+			// sortable: false
 
 		}, {
 			label: '预算费用',
 			valuePath: 'budget',
-			cellComponent: 'light-table-format-number',
-			sortable: false
-
+			cellComponent: 'light-table-format-number'
+			// sortable: false
 		}];
 	}),
 

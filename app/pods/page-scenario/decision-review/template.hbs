@@ -15,7 +15,7 @@
 							{{/if}}
 							{{bp-icon icon='down'}}
 						{{/dd.button}}
-						{{#dd.menu as |menu|}}
+						{{#dd.menu local-class="options" as |menu|}}
 							{{#each model.handleUsableSeasons as |usableSeason|}}
 								{{#menu.option value=usableSeason
 											onClick=(action (mut tmpSeason))}}
@@ -38,7 +38,7 @@
 							{{/if}}
 							{{bp-icon icon='down'}}
 						{{/dd.button}}
-						{{#dd.menu as |menu|}}
+						{{#dd.menu local-class="options" as |menu|}}
 							{{#each model.goodsConfigs as |gc|}}
 								{{#unless gc.productConfig.productType}}
 									{{#menu.option value=gc

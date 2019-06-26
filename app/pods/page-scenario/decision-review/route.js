@@ -115,9 +115,10 @@ export default Route.extend({
 
 					detailData = item.businput.map(ele => {
 						let biHospitalId = ele.get('destConfig.hospitalConfig.hospital.id'),
-							currentSalesConfig = salesConfigs.findBy('destConfig.hospitalConfig.hospital.id', biHospitalId),
-							sales = 0,
 							firstProduct = goodsConfigs.firstObject,
+							currentSalesConfigs = salesConfigs.filterBy('destConfig.hospitalConfig.hospital.id', biHospitalId),
+							currentProductSalesConfig = currentSalesConfigs.findBy('goodsConfig.productConfig.product.id', firstProduct.get('productConfig.product.id')),
+							sales = 0,
 							currentSeasonHospitalSalesReport = currentSalesReports[index],
 							currentHospitalSalesReports = currentSeasonHospitalSalesReport.filterBy('destConfig.hospitalConfig.hospital.id', biHospitalId),
 							currentReport = currentHospitalSalesReports.findBy('goodsConfig.productConfig.product.id', firstProduct.get('productConfig.product.id'));
@@ -128,7 +129,7 @@ export default Route.extend({
 							scenarioId,
 							hospitalName: ele.get('destConfig.hospitalConfig.hospital.name'),
 							hospitalLevel: ele.get('destConfig.hospitalConfig.hospital.hospitalLevel'),
-							patientNumber: Number.prototype.toLocaleString.call(currentSalesConfig.get('patientCount')),
+							patientNumber: Number.prototype.toLocaleString.call(currentProductSalesConfig.get('patientCount')),
 							sales: sales,
 							representative: isEmpty(ele.get('resourceConfig.representativeConfig.representative.name')) ? '-' : ele.get('resourceConfig.representativeConfig.representative.name'),
 							totalSalesTarget: isEmpty(ele.get('totalSalesTarget')) ? '-' : ele.get('totalSalesTarget'),
@@ -136,7 +137,8 @@ export default Route.extend({
 							totalBudget: isEmpty(ele.get('totalBudget')) ? '-' : ele.get('totalBudget'),
 							budget: isEmpty(ele.get('totalBudget')) ? '-' : ele.get('totalBudget'),
 							goodsInputs: ele.get('goodsinputs'),
-							lastSeasonProductSales: currentHospitalSalesReports
+							lastSeasonProductSales: currentHospitalSalesReports,
+							currentSalesConfigs: currentSalesConfigs
 						};
 					});
 
