@@ -33,7 +33,7 @@
 				查看历史成果
 			{{/link-to}}
 			<p class="m-0">
-				{{#if (bp-not-eq model.detailPaper.state 1 4)}}
+				{{#if (bp-eq model.detailPaper.state 0)}}
 					{{#bp-button type="primary" tagName='span'
 							onClick=(action 'startDeploy' model.detailProposal.proposal.id)}}
 						开始测试
