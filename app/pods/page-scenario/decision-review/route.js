@@ -129,7 +129,7 @@ export default Route.extend({
 							scenarioId,
 							hospitalName: ele.get('destConfig.hospitalConfig.hospital.name'),
 							hospitalLevel: ele.get('destConfig.hospitalConfig.hospital.hospitalLevel'),
-							patientNumber: Number.prototype.toLocaleString.call(currentProductSalesConfig.get('patientCount')),
+							patientNumber: currentProductSalesConfig.get('patientCount'),
 							sales: sales,
 							representative: isEmpty(ele.get('resourceConfig.representativeConfig.representative.name')) ? '-' : ele.get('resourceConfig.representativeConfig.representative.name'),
 							totalSalesTarget: isEmpty(ele.get('totalSalesTarget')) ? '-' : ele.get('totalSalesTarget'),
