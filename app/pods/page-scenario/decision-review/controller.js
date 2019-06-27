@@ -27,7 +27,7 @@ export default Controller.extend({
 					}
 				});
 				ele.sales = isEmpty(currentProductLastSeasonSales) ? '-' : currentProductLastSeasonSales.get('sales');
-				ele.patientNumber = Number.prototype.toLocaleString.call(currentProductSalesConfig.get('patientCount'));
+				ele.patientNumber = currentProductSalesConfig.get('patientCount');
 				return ele;
 			});
 

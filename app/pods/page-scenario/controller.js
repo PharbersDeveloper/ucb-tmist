@@ -189,12 +189,12 @@ export default Controller.extend({
 		}
 
 	},
-	// 提交验证与 new-tmist 不同，需要重新设计，可参考 new-tmist
 	judgeOauth() {
 		let oauthService = this.get('oauthService'),
 			judgeAuth = oauthService.judgeAuth();
 
-		return judgeAuth ? oauthService.redirectUri : null;
+		// judgeAuth 为 true ,表示cookies 存在，可以进行进一步的操作
+		return judgeAuth ? null : oauthService.redirectUri;
 	},
 	/**
 	 * 存在没有完成的 businessinputs
@@ -276,7 +276,7 @@ export default Controller.extend({
 	sendInput(state) {
 		this.set('loading', true);
 		const ajax = this.get('ajax'),
-			converse = this.get('converse'),
+			// converse = this.get('converse'),
 			applicationAdapter = this.get('store').adapterFor('application'),
 			store = this.get('store'),
 			model = this.get('model'),
@@ -366,8 +366,8 @@ export default Controller.extend({
 						if (ENV.environment === 'development') {
 							window.console.log('等待 R 返回中...');
 						}
-						this.set('state', state);
-						converse.set('inputState', state);
+						// this.set('state', state);
+						// converse.set('inputState', state);
 						this.set('paperId', paperId);
 						return this.xmppResult;
 					}
@@ -398,10 +398,11 @@ export default Controller.extend({
 			// 在page-scenario.business 获取之后进行的设置.
 			let businessinputs = this.model.businessInputs;
 
-			if (isEmpty(judgeAuth)) {
+			if (!isEmpty(judgeAuth)) {
 				window.location = judgeAuth;
 				return;
 			}
+
 			this.verificationBusinessinputs(businessinputs, representatives);
 		},
 		saveInputs() {
@@ -410,7 +411,7 @@ export default Controller.extend({
 			let judgeAuth = this.judgeOauth(),
 				scenario = this.get('model').scenario;
 
-			if (isEmpty(judgeAuth)) {
+			if (!isEmpty(judgeAuth)) {
 				window.location = judgeAuth;
 				return;
 			}
