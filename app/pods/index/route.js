@@ -149,6 +149,7 @@ export default Route.extend({
 
 			window.converse.plugins.add('chat_plugin', {
 				initialize: function () {
+					window.console.log('converse plugin initialize');
 					controller.set('hasPlugin', true);
 					this._converse.api.listen.on('message', obj => {
 						let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
@@ -158,6 +159,10 @@ export default Route.extend({
 							controller.set('xmppMessage', JSON.parse(message));
 							return JSON.parse(message);
 						}
+					});
+					this._converse.api.listen.on('disconnected', () => {
+						window.console.log('disconnected');
+						converse.initialize();
 					});
 				}
 			});

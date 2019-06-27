@@ -39,15 +39,14 @@ export default Component.extend({
 			// sortable: false
 		}, {
 			label: '患者数量',
-			valuePath: 'patientNumber'
+			valuePath: 'patientNumber',
+			cellComponent: 'light-table-format-number'
 			// sortable: false
-
 		}, {
 			label: '上季度销售额',
 			valuePath: 'sales',
 			cellComponent: 'light-table-format-number'
 			// sortable: false
-
 		}, {
 			label: '代表',
 			valuePath: 'representative'
@@ -57,7 +56,6 @@ export default Component.extend({
 			valuePath: 'salesTarget',
 			cellComponent: 'light-table-format-number'
 			// sortable: false
-
 		}, {
 			label: '预算费用',
 			valuePath: 'budget',

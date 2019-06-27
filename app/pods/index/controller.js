@@ -57,7 +57,9 @@ export default Controller.extend({
 					window.console.log('结果已经返回');
 				}
 				this.set('loading', false);
-				return this.updatePaper(this.model.detailPaper.id, this.converse.inputState);
+				this.transitionToRoute('page-result');
+				return;
+				// return this.updatePaper(this.model.detailPaper.id, this.converse.inputState);
 			}
 			window.console.log('计算错误');
 
@@ -126,20 +128,20 @@ export default Controller.extend({
 
 		return inputs.sortBy('time').reverse();
 	}),
-	updatePaper(paperId, state) {
-		const that = this;
+	// updatePaper(paperId, state) {
+	// 	const that = this;
 
-		this.store.findRecord('paper', paperId, { reload: true })
-			.then(data => {
-				data.set('state', state);
-				return data.save();
-			}).then(() => {
-				this.set('loadingForSubmit', false);
+	// 	this.store.findRecord('paper', paperId, { reload: true })
+	// 		.then(data => {
+	// 			data.set('state', state);
+	// 			return data.save();
+	// 		}).then(() => {
+	// 			this.set('loadingForSubmit', false);
 
-				that.transitionToRoute('page-result');
-				return null;
-			});
-	},
+	// 			that.transitionToRoute('page-result');
+	// 			return null;
+	// 		});
+	// },
 	entryMission(proposalId) {
 		let now = new Date().getTime();
 
