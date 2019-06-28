@@ -24,7 +24,7 @@ export default Controller.extend({
 			// this.model.detailPaper.get('assessmentReports').then(res => {
 			// 	this.transitionToRoute('page-report', res.get('id'));
 			// });
-			this.transitionToRoute('page-report', paper);
+			this.transitionToRoute('page-report', paper.get('id'));
 		},
 		outputData(type) {
 			const applicationAdapter = this.store.adapterFor('application'),
