@@ -27,6 +27,7 @@ export default Route.extend({
 			scenario = null,
 			scenarioId = null,
 			paperinput = null,
+			currentPaperId = '',
 			goodsConfigs = A([]);
 
 		// if (!isEmpty(applicationModel)) {
@@ -61,6 +62,7 @@ export default Route.extend({
 
 		}).then(data => {
 			data.forEach(ele => {
+				currentPaperId = ele.data.id;
 				store.pushPayload(ele);
 			});
 
@@ -107,7 +109,8 @@ export default Route.extend({
 				papers,
 				useableProposals,
 				detailProposal: useableProposals.get('firstObject'),
-				detailPaper: papers.get('firstObject'),
+				// detailPaper: papers.get('firstObject'),
+				detailPaper: store.peekRecord('paper', currentPaperId),
 				scenario,
 				destConfigs: store.query('destConfig',
 					{ 'scenario-id': scenarioId }),
