@@ -166,6 +166,10 @@ export default Route.extend({
 						window.console.log('disconnected');
 						converse.initialize();
 					});
+					this._converse.api.listen.on('statusChanged', status => {
+						window.console.log('statusChanged');
+						window.console.log('status');
+					});
 				}
 			});
 		}

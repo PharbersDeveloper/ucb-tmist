@@ -15,7 +15,6 @@ export default Route.extend({
 			{ detailProposal, scenario, destConfigRegions, destConfigHospitals, resourceConfigRepresentatives, goodsConfigs } = indexModel,
 			selfGoodsConfigs = goodsConfigs.filterBy('productConfig.productType', 0);
 
-		console.log(params['paper_id']);
 		let navs = A([
 				{ name: '产品销售报告', route: 'page-result.index' },
 				{ name: '地区销售报告', route: 'page-result.region' },
@@ -38,10 +37,9 @@ export default Route.extend({
 			.then(data => {
 				proposal = data;
 
-				return this.store.findRecord('paper', params['paper_id']);
+				return this.store.findRecord('paper', params['paper_id'], { reload: true });
 			}).then(data => {
 				paper = data;
-				console.log(paper);
 				return data.get('salesReports');
 			})
 			.then(data => {
