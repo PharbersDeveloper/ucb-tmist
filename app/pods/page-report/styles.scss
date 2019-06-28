@@ -1,6 +1,15 @@
 .page-report {
+
+    .mid-title {
+        height: 54px;
+
+        .card-title {
+            @extend %header-medium;
+        }
+    }
     .sum-up-performance {
         height: 290px;
+        flex: 1;
 
         .card-title {
             font-weight: bold;
@@ -40,6 +49,9 @@
     }
 
     .result {
+        height: 290px;
+        flex: 1;
+
         .result-title {
             font-weight: bold;
             @extend %header-medium;
