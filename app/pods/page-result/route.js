@@ -4,10 +4,9 @@ import { hash, all } from 'rsvp';
 import { isEmpty } from '@ember/utils';
 
 export default Route.extend({
-
-	model() {
+	model(params) {
 		const indexModel = this.modelFor('index'),
-			{ detailProposal, detailPaper, scenario, destConfigRegions, destConfigHospitals, resourceConfigRepresentatives, goodsConfigs } = indexModel,
+			{ detailProposal, scenario, destConfigRegions, destConfigHospitals, resourceConfigRepresentatives, goodsConfigs } = indexModel,
 			selfGoodsConfigs = goodsConfigs.filterBy('productConfig.productType', 0);
 
 		let navs = A([
@@ -24,13 +23,18 @@ export default Route.extend({
 			increaseSalesReports = A([]),
 			tmpHead = A([]),
 			proposal = null,
+			paper = null,
+			latestSeasonName = null,
 			tmpHeadQ = A([]);
 
 		return detailProposal.get('proposal')
 			.then(data => {
 				proposal = data;
 
-				return detailPaper.get('salesReports');
+				return this.store.findRecord('paper', params['paper_id'], { reload: true });
+			}).then(data => {
+				paper = data;
+				return data.get('salesReports');
 			})
 			.then(data => {
 				increaseSalesReports = data.sortBy('time');
@@ -38,7 +42,7 @@ export default Route.extend({
 					return ele.get('scenario');
 				}));
 			}).then(data => {
-
+				latestSeasonName = data.lastObject.get('name');
 				tmpHead = data.map(ele => {
 					let name = ele.get('name');
 
@@ -48,7 +52,8 @@ export default Route.extend({
 				tmpHeadQ = tmpHead.map(ele => ele);
 
 				return hash({
-					detailPaper,
+					latestSeasonName,
+					paper,
 					tmpHead,
 					tmpHeadQ,
 					barLineKeys,

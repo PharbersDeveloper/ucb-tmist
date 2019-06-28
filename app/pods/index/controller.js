@@ -57,7 +57,7 @@ export default Controller.extend({
 					window.console.log('结果已经返回');
 				}
 				this.set('loading', false);
-				this.transitionToRoute('page-result');
+				this.transitionToRoute('page-result', this.model.detailPaper.get('id'));
 				return;
 				// return this.updatePaper(this.model.detailPaper.id, this.converse.inputState);
 			}
@@ -143,6 +143,7 @@ export default Controller.extend({
 	// 		});
 	// },
 	entryMission(proposalId) {
+		localStorage.setItem('isHistory', false)
 		let now = new Date().getTime();
 
 		if (this.get('model').detailPaper.state !== 1) {

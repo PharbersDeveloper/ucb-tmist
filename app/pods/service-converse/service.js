@@ -1,13 +1,14 @@
 import Service from '@ember/service';
 // import { isEmpty } from '@ember/utils';
+import ENV from 'ucb-tmist/config/environment';
 
 const CONVERSE = window.converse;
 
 export default Service.extend({
 	initPlugin: false,
 	initialize() {
-		console.log('initialize XMPP');
-		console.log(CONVERSE);
+		window.console.log('initialize XMPP');
+
 		CONVERSE.initialize({
 			authentication: 'login', // 认证方式，默认为 'login'
 			'auto_reconnect': true,
@@ -17,6 +18,7 @@ export default Service.extend({
 			jid: 'swang@max.logic',
 			password: 'swang',
 			i18n: 'zh',
+			debug: ENV.environment === 'development',
 			'auto_join_rooms': [
 				{
 					jid: '5cbe7ab8f4ce4352ecb082a3@conference.max.logic',

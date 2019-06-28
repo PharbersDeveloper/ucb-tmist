@@ -27,6 +27,7 @@ export default Route.extend({
 			scenario = null,
 			scenarioId = null,
 			paperinput = null,
+			currentPaperId = '',
 			goodsConfigs = A([]);
 
 		// if (!isEmpty(applicationModel)) {
@@ -61,6 +62,7 @@ export default Route.extend({
 
 		}).then(data => {
 			data.forEach(ele => {
+				currentPaperId = ele.data.id;
 				store.pushPayload(ele);
 			});
 
@@ -104,11 +106,11 @@ export default Route.extend({
 			return all(data.map(ele => ele.get('productConfig')));
 		}).then(data => {
 			return hash({
-
 				papers,
 				useableProposals,
 				detailProposal: useableProposals.get('firstObject'),
-				detailPaper: papers.get('firstObject'),
+				// detailPaper: papers.get('firstObject'),
+				detailPaper: store.peekRecord('paper', currentPaperId),
 				scenario,
 				destConfigs: store.query('destConfig',
 					{ 'scenario-id': scenarioId }),
@@ -163,6 +165,10 @@ export default Route.extend({
 					this._converse.api.listen.on('disconnected', () => {
 						window.console.log('disconnected');
 						converse.initialize();
+					});
+					this._converse.api.listen.on('statusChanged', status => {
+						window.console.log('statusChanged');
+						window.console.log('status');
 					});
 				}
 			});

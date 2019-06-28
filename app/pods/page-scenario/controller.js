@@ -374,21 +374,6 @@ export default Controller.extend({
 				});
 			});
 	},
-
-	// updatePaper(paperId, state) {
-	// 	const that = this;
-
-	// 	this.store.findRecord('paper', paperId, { reload: true })
-	// 		.then(data => {
-	// 			data.set('state', state);
-	// 			return data.save();
-	// 		}).then(() => {
-	// 			this.set('loadingForSubmit', false);
-
-	// 			that.transitionToRoute('page-result');
-	// 			return null;
-	// 		});
-	// },
 	actions: {
 		submit() {
 			const judgeAuth = this.judgeOauth(),
@@ -435,7 +420,7 @@ export default Controller.extend({
 			this.sendInput(3);
 		},
 		testResult() {
-			this.transitionToRoute('page-result');
+			this.transitionToRoute('page-result', this.paperId);
 		}
 	}
 });
