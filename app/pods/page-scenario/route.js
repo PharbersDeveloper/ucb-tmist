@@ -20,8 +20,6 @@ export default Route.extend({
 			reDeploy = Number(localStorage.getItem('reDeploy')) === 1,
 			exitInEmberData = this.get('store').peekAll('businessinput');
 
-		// eslint-disable-next-line no-debugger
-		// debugger;
 		if ([1, 4].indexOf(state) >= 0 && !reDeploy || exitInEmberData.get('length') > 0) {
 			return paperInputs.lastObject.get('businessinputs');
 			// return this.get('store').peekAll('businessinput');

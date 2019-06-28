@@ -22,8 +22,8 @@ export default Controller.extend({
 					let itemProductId = item.get('goodsConfig.productConfig.product.id');
 
 					if (itemProductId === tmpGcProductId) {
-						ele.salesTarget = item.get('salesTarget');
-						ele.budget = item.get('budget');
+						ele.set('salesTarget', item.get('salesTarget'));
+						ele.set('budget', item.get('budget'));
 					}
 				});
 				ele.sales = isEmpty(currentProductLastSeasonSales) ? '-' : currentProductLastSeasonSales.get('sales');
