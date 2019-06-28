@@ -4,12 +4,15 @@ import { hash, all } from 'rsvp';
 import { isEmpty } from '@ember/utils';
 
 export default Route.extend({
-
-	model() {
+	beforeModel(transition) {
+		console.log(transition);
+	},
+	model(params) {
 		const indexModel = this.modelFor('index'),
-			{ detailProposal, detailPaper, scenario, destConfigRegions, destConfigHospitals, resourceConfigRepresentatives, goodsConfigs } = indexModel,
+			{ detailProposal, scenario, destConfigRegions, destConfigHospitals, resourceConfigRepresentatives, goodsConfigs } = indexModel,
 			selfGoodsConfigs = goodsConfigs.filterBy('productConfig.productType', 0);
 
+		console.log(params['paper_id']);
 		let navs = A([
 				{ name: '产品销售报告', route: 'page-result.index' },
 				{ name: '地区销售报告', route: 'page-result.region' },
@@ -24,13 +27,18 @@ export default Route.extend({
 			increaseSalesReports = A([]),
 			tmpHead = A([]),
 			proposal = null,
+			paper = null,
 			tmpHeadQ = A([]);
 
 		return detailProposal.get('proposal')
 			.then(data => {
 				proposal = data;
 
-				return detailPaper.get('salesReports');
+				return this.store.findRecord('paper', params['paper_id']);
+			}).then(data => {
+				paper = data;
+				console.log(paper);
+				return data.get('salesReports');
 			})
 			.then(data => {
 				increaseSalesReports = data.sortBy('time');
@@ -48,7 +56,7 @@ export default Route.extend({
 				tmpHeadQ = tmpHead.map(ele => ele);
 
 				return hash({
-					detailPaper,
+					paper,
 					tmpHead,
 					tmpHeadQ,
 					barLineKeys,

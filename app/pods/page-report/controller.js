@@ -14,19 +14,19 @@ export default Controller.extend({
 			code = model.get('assessmentReports.lastObject.simplifyResult.levelConfig.level.code');
 
 		switch (true) {
-		case code === 1:
-			return 'S级';
-		case code === 2:
-			return 'A级';
-		case code === 3:
-			return 'B级';
-		default:
-			return '未知级别';
+			case code === 1:
+				return 'S级';
+			case code === 2:
+				return 'A级';
+			case code === 3:
+				return 'B级';
+			default:
+				return '未知级别';
 		}
 	}),
 	actions: {
 		checkResult() {
-			this.transitionToRoute('page-result');
+			this.transitionToRoute('page-result', this.model.id);
 		},
 		outputData(type) {
 			const applicationAdapter = this.store.adapterFor('application'),

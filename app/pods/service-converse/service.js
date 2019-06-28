@@ -17,6 +17,7 @@ export default Service.extend({
 			jid: 'swang@max.logic',
 			password: 'swang',
 			i18n: 'zh',
+			debug: true,
 			'auto_join_rooms': [
 				{
 					jid: '5cbe7ab8f4ce4352ecb082a3@conference.max.logic',

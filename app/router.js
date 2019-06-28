@@ -18,7 +18,7 @@ Route.reopen({
 Router.map(function () {
 	this.route('page-login', { path: 'login' });
 	this.route('oauth-callback');
-	this.route('page-result', { path: 'result' }, function () {
+	this.route('page-result', { path: 'result/:paper_id' }, function () {
 		this.route('index', function () { });
 		this.route('loading');
 		this.route('region');
