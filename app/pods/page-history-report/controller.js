@@ -10,6 +10,7 @@ export default Controller.extend({
 	cookies: service(),
 	actions: {
 		checkReport(paper) {
+			localStorage.setItem('isHistory', true)
 			this.transitionToRoute('page-report', paper);
 		},
 		outputData(type, paperId) {

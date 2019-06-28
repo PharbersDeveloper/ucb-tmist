@@ -1,4 +1,7 @@
 .page-report {
+    .back {
+        @extend %p-small;
+    }
 
     .mid-title {
         height: 54px;

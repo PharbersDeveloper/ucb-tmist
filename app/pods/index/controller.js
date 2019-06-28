@@ -143,6 +143,7 @@ export default Controller.extend({
 	// 		});
 	// },
 	entryMission(proposalId) {
+		localStorage.setItem('isHistory', false)
 		let now = new Date().getTime();
 
 		if (this.get('model').detailPaper.state !== 1) {

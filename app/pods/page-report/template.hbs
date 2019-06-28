@@ -1,5 +1,10 @@
 {{#bp-layout direction="col" local-class="page-report" 
 	classNames="p-4"}}
+	{{#if isHistory}}
+		{{#link-to "page-history-report" local-class='back' classNames='mb-3'}}
+			返回
+		{{/link-to}}
+	{{/if}}
 	{{#bp-page-header class="mb-4" local-class='report-header' as |ph|}}
 		{{#ph.body as |body|}}
 			{{#body.left as |left|}}
@@ -48,7 +53,7 @@
 					</p>
 				{{/bp-layout}}
 				{{#bp-layout direction='col' class='pt-4' local-class='level-content'}}
-					{{!-- <p local-class='level-content-title' class="mb-3">等级评价</p> --}}
+					<p local-class='level-content-title' class="mb-3">评价</p>
 					<p local-class='level-contetn-text'>
 						{{model.assessmentReports.lastObject.simplifyResult.levelConfig.evaluation.value}}
 					</p>
