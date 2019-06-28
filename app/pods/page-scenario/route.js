@@ -21,7 +21,7 @@ export default Route.extend({
 			exitInEmberData = this.get('store').peekAll('businessinput');
 
 		// eslint-disable-next-line no-debugger
-		debugger;
+		// debugger;
 		if ([1, 4].indexOf(state) >= 0 && !reDeploy || exitInEmberData.get('length') > 0) {
 			return paperInputs.lastObject.get('businessinputs');
 			// return this.get('store').peekAll('businessinput');
