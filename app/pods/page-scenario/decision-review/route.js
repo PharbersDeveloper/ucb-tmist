@@ -2,7 +2,7 @@ import Route from '@ember/routing/route';
 import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
 import { hash, all } from 'rsvp';
-
+import EmberObject from '@ember/object';
 export default Route.extend({
 	queryDeep(salesReport) {
 		let result = A([]);
@@ -125,7 +125,7 @@ export default Route.extend({
 
 						sales = currentReport.get('sales');
 
-						return {
+						return EmberObject.create({
 							scenarioId,
 							hospitalName: ele.get('destConfig.hospitalConfig.hospital.name'),
 							hospitalLevel: ele.get('destConfig.hospitalConfig.hospital.hospitalLevel'),
@@ -139,7 +139,7 @@ export default Route.extend({
 							goodsInputs: ele.get('goodsinputs'),
 							lastSeasonProductSales: currentHospitalSalesReports,
 							currentSalesConfigs: currentSalesConfigs
-						};
+						});
 					});
 
 					return {
