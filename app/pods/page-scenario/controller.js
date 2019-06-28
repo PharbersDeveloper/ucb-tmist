@@ -420,6 +420,7 @@ export default Controller.extend({
 			this.sendInput(3);
 		},
 		testResult() {
+			console.log(this.paperId);
 			this.transitionToRoute('page-result', this.paperId);
 		}
 	}
