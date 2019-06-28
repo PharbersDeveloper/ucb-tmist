@@ -10,8 +10,8 @@ export default Controller.extend({
 	cookies: service(),
 	actions: {
 		checkReport(paper) {
-			localStorage.setItem('isHistory', true)
-			this.transitionToRoute('page-report', paper);
+			localStorage.setItem('isHistory', true);
+			this.transitionToRoute('page-report', paper.get('id'));
 		},
 		outputData(type, paperId) {
 			const applicationAdapter = this.store.adapterFor('application'),
