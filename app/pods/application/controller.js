@@ -94,7 +94,7 @@ export default Controller.extend({
 				// 	return response;
 			}).then((data) => {
 				if (!isEmpty(data)) {
-					this.transitionToRoute('page-result');
+					this.transitionToRoute('page-result', paperId);
 					return;
 				}
 

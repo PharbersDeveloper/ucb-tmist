@@ -30,9 +30,10 @@
 			<h2 local-class="card-title" class='bg-white'>等级评价</h2>
 			{{#bp-layout local-class='sum-up-content' cross='top'}}
 				{{#bp-layout direction='col' cross='center' local-class='level' classNames='mr-4'}}
+					{{log model.assessmentReports.lastObject.simplifyResult.levelConfig.level.image.img}}
 					<img src={{model.assessmentReports.lastObject.simplifyResult.levelConfig.level.image.img}}
-						alt={{model.assessmentReports.lastObject.simplifyResult.levelConfig.level.describe}} class="mb-4"
-						local-class='level-img'>
+						alt={{model.assessmentReports.lastObject.simplifyResult.levelConfig.level.describe}}
+						class="mb-4" local-class='level-img'>
 					{{!-- {{#if (bp-eq model.assessmentReports.lastObject.simplifyResult.levelConfig.level.code 1)}}
 						<p local-class="i mg-title">S级</p>
 					{{else if (bp-eq model.assessmentReports.lastObject.simplifyResult.levelConfig.level.code 2)}}

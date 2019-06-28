@@ -12,7 +12,17 @@
 				{{/left.item}}
 			{{/body.left}}
 			{{#body.right}}
-				{{#if (bp-not-eq model.scenario.phase model.detailProposal.proposal.totalPhase)}}
+				{{#if (bp-eq model.paper.state 3)}}
+					{{#bp-button classNames='mr-2'
+					disabled=false
+					onClick=(action 'outputData' 'business') }}
+						导出数据
+					{{/bp-button}}
+					{{#bp-button
+					onClick=(action 'checkManagerReport' model.paper) }}
+						查看测评综合表现
+					{{/bp-button}}
+				{{else if (bp-not-eq model.scenario.phase model.detailProposal.proposal.totalPhase)}}
 					{{#bp-button classNames='mr-2'
 					type='primary'
 
@@ -26,7 +36,7 @@
 						导出数据
 					{{/bp-button}}
 					{{#bp-button
-					onClick=(action 'checkManagerReport' model.detailPaper) }}
+					onClick=(action 'checkManagerReport' model.paper) }}
 						查看测评综合表现
 					{{/bp-button}}
 				{{/if}}
