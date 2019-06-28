@@ -2,16 +2,10 @@ import Route from '@ember/routing/route';
 import { A } from '@ember/array';
 import { hash, all } from 'rsvp';
 import { isEmpty } from '@ember/utils';
-import { inject as service } from '@ember/service';
 
 export default Route.extend({
-	handler: service('serviceResultHandler'),
-	beforeModel(transition) {
-		console.log(transition);
-	},
 	model(params) {
 		const indexModel = this.modelFor('index'),
-			handler = this.handler,
 			{ detailProposal, scenario, destConfigRegions, destConfigHospitals, resourceConfigRepresentatives, goodsConfigs } = indexModel,
 			selfGoodsConfigs = goodsConfigs.filterBy('productConfig.productType', 0);
 
