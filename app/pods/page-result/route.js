@@ -2,13 +2,16 @@ import Route from '@ember/routing/route';
 import { A } from '@ember/array';
 import { hash, all } from 'rsvp';
 import { isEmpty } from '@ember/utils';
+import { inject as service } from '@ember/service';
 
 export default Route.extend({
+	handler: service('serviceResultHandler'),
 	beforeModel(transition) {
 		console.log(transition);
 	},
 	model(params) {
 		const indexModel = this.modelFor('index'),
+			handler = this.handler,
 			{ detailProposal, scenario, destConfigRegions, destConfigHospitals, resourceConfigRepresentatives, goodsConfigs } = indexModel,
 			selfGoodsConfigs = goodsConfigs.filterBy('productConfig.productType', 0);
 
@@ -28,6 +31,7 @@ export default Route.extend({
 			tmpHead = A([]),
 			proposal = null,
 			paper = null,
+			latestSeasonName = null,
 			tmpHeadQ = A([]);
 
 		return detailProposal.get('proposal')
@@ -46,7 +50,7 @@ export default Route.extend({
 					return ele.get('scenario');
 				}));
 			}).then(data => {
-
+				latestSeasonName = data.lastObject.get('name');
 				tmpHead = data.map(ele => {
 					let name = ele.get('name');
 
@@ -56,6 +60,7 @@ export default Route.extend({
 				tmpHeadQ = tmpHead.map(ele => ele);
 
 				return hash({
+					latestSeasonName,
 					paper,
 					tmpHead,
 					tmpHeadQ,
