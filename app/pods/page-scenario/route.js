@@ -40,11 +40,11 @@ export default Route.extend({
 					return store.createRecord('goodsinput', {
 						destConfigId: ele.get('id'),
 						goodsConfig: item,
-						// salesTarget: '',	// 销售目标设定
-						// budget: ''	//预算设定
+						salesTarget: '',	// 销售目标设定
+						budget: ''	//预算设定
 						// TODO 测试，用后删除
-						salesTarget: 1,	// 销售目标设定
-						budget: 1	//预算设定
+						// salesTarget: 1,	// 销售目标设定
+						// budget: 1	//预算设定
 					});
 				}),
 				businessinput = null;
