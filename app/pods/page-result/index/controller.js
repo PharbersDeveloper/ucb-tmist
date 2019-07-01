@@ -8,7 +8,8 @@ import { A } from '@ember/array';
 export default Controller.extend({
 	circlePie: A([0, 90]),
 	handler: service('serviceResultHandler'),
-	barLineData: computed('productChooseProduct.id', function () {
+	// scenarioFlag: model.get('scenarioId'),
+	barLineData: computed('productChooseProduct.id', 'date', function () {
 		if (ENV.environment === 'development') {
 			window.console.log('recomputed 产品销售趋势图');
 		}

@@ -5,10 +5,10 @@ export default Route.extend({
 	beforeModel(transition) {
 		let resourceConfig = this.modelFor('page-scenario'),
 			destConfigHospitals = resourceConfig.destConfigHospitals,
-			firstDestConfig = destConfigHospitals.get('firstObject'),
-			proposalId = transition.params['page-scenario']['proposal_id'];
+			firstDestConfig = destConfigHospitals.get('firstObject');
+			// proposalId = transition.params['page-scenario']['proposal_id']
 
-		this.transitionTo('/scenario/' + proposalId + '/business/hospital/' +
+		this.transitionTo('/scenario/' + 'business/hospital/' +
 			firstDestConfig.get('id'));
 	},
 	model() {

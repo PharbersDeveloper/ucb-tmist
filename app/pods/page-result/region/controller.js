@@ -8,7 +8,7 @@ import { A } from '@ember/array';
 export default Controller.extend({
 	circlePie: A([0, 90]),
 	handler: service('serviceResultHandler'),
-	barLineData: computed('regionChooseCity.id', 'chooseProd', function () {
+	barLineData: computed('regionChooseCity.id', 'chooseProd', 'date', function () {
 		if (ENV.environment === 'development') {
 			window.console.log('recomputed 地区销售趋势图');
 		}
@@ -23,7 +23,7 @@ export default Controller.extend({
 
 		return handler.changeTrendData(model.barLineDataCity, formatCitySalesReports, findCityItemKey, findCityItemValue, findGoodsKey, findGoodsValue);
 	}),
-	tableData: computed('chooseProdTable.id', function () {
+	tableData: computed('chooseProdTable.id', 'date', function () {
 		if (ENV.environment === 'development') {
 			window.console.log('recomputed 区域销售数据表');
 		}

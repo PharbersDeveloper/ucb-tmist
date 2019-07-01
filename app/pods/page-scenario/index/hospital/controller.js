@@ -8,7 +8,7 @@ import { A } from '@ember/array';
 export default Controller.extend({
 	circlePie: A([0, 90]),
 	handler: service('serviceResultHandler'),
-	barLineData: computed('hospChooseHosp', 'chooseProd', function () {
+	barLineData: computed('hospChooseHosp', 'chooseProd', 'date', function () {
 		if (ENV.environment === 'development') {
 			window.console.log('recomputed 醫院销售趋势图');
 		}
@@ -24,7 +24,7 @@ export default Controller.extend({
 
 		return handler.changeTrendData(model.barLineDataHosp, formatHospitalSalesReports, findHospItemKey, findHospItemValue, findGoodsKey, findGoodsValue);
 	}),
-	tableData: computed('chooseProdTable', function () {
+	tableData: computed('chooseProdTable', 'date', function () {
 		if (ENV.environment === 'development') {
 			window.console.log('recomputed 医院销售数据表');
 		}

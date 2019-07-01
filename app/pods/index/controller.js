@@ -10,6 +10,7 @@ import { A } from '@ember/array';
 export default Controller.extend({
 	cookies: service(),
 	axios: service(),
+	statusService: service(),
 	converse: service('service-converse'),
 	// notice: localStorage.getItem('notice') !== 'false',
 	neverShow: A(['不在显示']),
@@ -19,7 +20,7 @@ export default Controller.extend({
 			accountId = this.get('cookies').read('account_id'),
 			proposalId = this.get('model').detailProposal.get('proposal.id'),
 			// paperinputId = this.get('paperinputId') || null,
-			scenarioId = this.get('model').scenario.id,
+			scenarioId = this.statusService.get('curScenarioId'),
 			xmppMessage = this.xmppMessage;
 
 		// if (ENV.environment === 'development') {
@@ -149,7 +150,7 @@ export default Controller.extend({
 		if (this.get('model').detailPaper.state !== 1) {
 			localStorage.setItem('paperStartTime', now);
 		}
-		this.transitionToRoute('page-scenario', proposalId);
+		this.transitionToRoute('page-scenario');
 	},
 	actions: {
 		startDeploy(proposalId) {

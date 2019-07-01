@@ -6,6 +6,7 @@ import { hash, all } from 'rsvp';
 
 export default Route.extend({
 	cookies: service(),
+	statusService: service(),
 	// converse: service('serviceConverse'),
 	/**
 	 * 判断是否有 businessinput
@@ -19,7 +20,6 @@ export default Route.extend({
 			paperInputs = paper.get('paperinputs'),
 			reDeploy = Number(localStorage.getItem('reDeploy')) === 1,
 			exitInEmberData = this.get('store').peekAll('businessinput');
-
 		if ([1, 4].indexOf(state) >= 0 && !reDeploy || exitInEmberData.get('length') > 0) {
 			return paperInputs.lastObject.get('businessinputs');
 			// return this.get('store').peekAll('businessinput');
@@ -40,11 +40,11 @@ export default Route.extend({
 					return store.createRecord('goodsinput', {
 						destConfigId: ele.get('id'),
 						goodsConfig: item,
-						salesTarget: '',	// 销售目标设定
-						budget: ''	//预算设定
-					// TODO 测试，用后删除
-					// salesTarget: 888,	// 销售目标设定
-					// budget: 88	//预算设定
+						// salesTarget: '',	// 销售目标设定
+						// budget: ''	//预算设定
+						// TODO 测试，用后删除
+						salesTarget: 1,	// 销售目标设定
+						budget: 1	//预算设定
 					});
 				}),
 				businessinput = null;
@@ -89,12 +89,20 @@ export default Route.extend({
 		const store = this.get('store'),
 			cookies = this.get('cookies'),
 			pageIndexModel = this.modelFor('index'),
-			{ scenario, resourceConfigRepresentatives, goodsConfigs } = pageIndexModel,
-			scenarioId = scenario.get('id'),
-			proposalId = params['proposal_id'],
-			paper = pageIndexModel.detailPaper;
+			// { resourceConfigRepresentatives } = pageIndexModel,
+			// scenarioId = scenario.get('id'),
+			// proposalId = params['proposal_id'];
+			// paper = pageIndexModel.detailPaper;
+			proposalId = localStorage.getItem('proposalId');
 
-		let { detailProposal, destConfigs, destConfigHospitals, destConfigRegions } = pageIndexModel,
+		let { detailProposal, destConfigs, destConfigRegions } = pageIndexModel,
+			resourceConfigRepresentatives = A([]),
+			destConfigHospitals = A([]),
+			resourceConfigManager = A([]),
+			goodsConfigs = A([]),
+			scenario = null,
+			scenarioId = '',
+			paper = null,
 			proposal = null,
 			businessInputs = null,
 			lastSeasonHospitalSalesReports = A([]),
@@ -117,9 +125,52 @@ export default Route.extend({
 			goodsInputsModel = A([]),
 			managerConfig = null;
 
+			store.unloadAll('businessinput');
+
 		return detailProposal.get('proposal')
 			.then(data => {
 				proposal = data;
+				return store.query('scenario', {
+					'proposal-id': proposal.get('id'),
+					'account-id': cookies.read('account_id')
+				}, { reload : true });
+			}).then(data => {
+				scenario = data.get('firstObject');
+				scenarioId = scenario.get('id');
+				this.statusService.set('curScenario', scenario);
+				this.statusService.set('curScenarioId', scenarioId);
+				return store.query('paper', {
+					'paper-id': this.statusService.get('genPaperId'),
+					// 'proposal-id': proposal.get('id'),
+					// 'account-id': cookies.read('account_id'),
+					'chart-type': 'hospital-sales-report-summary'
+				}, { reload : true });
+			}).then(data => {				
+				paper = data.get('firstObject');
+				return store.query('goodsConfig',{ 'scenario-id': scenarioId });
+			}).then(data => {
+				goodsConfigs = data;
+				return store.queryRecord('resourceConfig',
+					{
+						'scenario-id': scenarioId,
+						'resource-type': 0
+					});
+			}).then(data => {
+				resourceConfigManager = data;
+				return store.query('destConfig',
+					{
+						'scenario-id': scenarioId,
+						'dest-type': 1
+					});
+			}).then(data => {
+				destConfigHospitals = data;
+				return store.query('resourceConfig',
+					{
+						'scenario-id': scenarioId,
+						'resource-type': 1
+					});
+			}).then(data => {
+				resourceConfigRepresentatives = data;
 				return paper.get('salesReports');
 			}).then(data => {
 				increaseSalesReports = data.sortBy('time');
@@ -129,6 +180,7 @@ export default Route.extend({
 					return ele.get('scenario');
 				}), salesReport.get('hospitalSalesReports')]);
 
+				
 				// return salesReport.get('hospitalSalesReports');
 			}).then(data => {
 				tmpHeadQ = data[0].map(ele => {
@@ -193,7 +245,7 @@ export default Route.extend({
 				} else {
 					businessInputs = this.isHaveBusinessInput(paper, data, selfGoodsConfigs);
 				}
-				return pageIndexModel.resourceConfigManager.get('managerConfig');
+				return resourceConfigManager.get('managerConfig');
 			}).then(data => {
 				managerConfig = data;
 				let isNewBusinessInputs = businessInputs.every(ele => ele.isNew),
@@ -245,7 +297,7 @@ export default Route.extend({
 					scenario,
 					// detailPaperState: paper.get('state'),
 					resourceConfRep: pageIndexModel.resourceConfigRepresentatives,
-					resourceConfigManager: pageIndexModel.resourceConfigManager,
+					resourceConfigManager: resourceConfigManager,
 					managerGoodsConfigs: managerConfig.get('managerGoodsConfigs'),
 					goodsConfigs,
 					selfGoodsConfigs,
@@ -283,7 +335,8 @@ export default Route.extend({
 		// let converse = this.converse;
 
 		controller.set('businessInputs', model.businessInputs);
-
+		// controller.set('notice', true);
+		
 		// if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
 		if (isEmpty(controller.get('notice'))) {
 			controller.set('notice', true);

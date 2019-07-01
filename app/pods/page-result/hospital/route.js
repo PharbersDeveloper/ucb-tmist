@@ -9,7 +9,7 @@ export default Route.extend({
 	model() {
 		const { store, handler, cookies } = this,
 			pageResultModel = this.modelFor('page-result'),
-			{ detailProposal, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageResultModel;
+			{ curPaper, detailProposal, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageResultModel;
 
 		let paper = null,
 			increaseSalesReports = A([]),
@@ -27,8 +27,9 @@ export default Route.extend({
 			.then(data => {
 
 				return store.query('paper', {
-					'proposal-id': data.get('id'),
-					'account-id': cookies.read('account_id'),
+					// 'proposal-id': data.get('id'),
+					// 'account-id': cookies.read('account_id'),
+					'paper-id': curPaper.id,
 					'chart-type': 'hospital-sales-report-summary'
 				});
 			}).then(data => {
@@ -138,5 +139,9 @@ export default Route.extend({
 					uniqByProducts
 				});
 			});
+	},
+	setupController(controller, model) {
+		this._super(controller, model);
+		this.controller.set('date', new Date().getTime());
 	}
 });

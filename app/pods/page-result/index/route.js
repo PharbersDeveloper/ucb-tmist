@@ -54,7 +54,7 @@ export default Route.extend({
 				});
 
 				// 整理季度数据
-				formatSelfProductSalesReports = handler.formatReports(tmpHeadQ, selfProductSalesReports, selfGoodsConfigs.length);
+				formatSelfProductSalesReports = handler.formatReports(tmpHeadQ, selfProductSalesReports, selfGoodsConfigs.length);				
 				// 产品销售结构分布图
 				doubleCircleProduct = handler.salesConstruct(formatSelfProductSalesReports);
 				// 产品销售趋势图
@@ -105,5 +105,6 @@ export default Route.extend({
 		this.controller.set('doubleCircleData', model.doubleCircleProduct);
 		this.controller.set('tableHead', model.tableHeadProd);
 		this.controller.set('tableBody', model.tableBodyProd);
+		this.controller.set('date', new Date().getTime());
 	}
 });

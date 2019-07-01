@@ -94,6 +94,10 @@ export default Route.extend({
 					tableBodyCity
 				});
 			});
+	},
+	setupController(controller, model) {
+		this._super(controller, model);
+		this.controller.set('date', new Date().getTime());
 	}
 	// setupController(controller, model) {
 	// 	this._super(controller, model);

@@ -22,8 +22,12 @@ export default Controller.extend({
 					let itemProductId = item.get('goodsConfig.productConfig.product.id');
 
 					if (itemProductId === tmpGcProductId) {
+						// ele.set('')drugEntranceInfo: currentReport.get('drugEntranceInfo'),
 						ele.set('salesTarget', item.get('salesTarget'));
 						ele.set('budget', item.get('budget'));
+						ele.set('drugEntranceInfo', isEmpty(currentProductLastSeasonSales) ? '-' : currentProductLastSeasonSales.get('drugEntranceInfo') );
+						// window.console.log(ele.get('drugEntranceInfo'));
+						
 					}
 				});
 				ele.sales = isEmpty(currentProductLastSeasonSales) ? '-' : currentProductLastSeasonSales.get('sales');

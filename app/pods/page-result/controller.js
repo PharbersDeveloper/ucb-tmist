@@ -10,15 +10,11 @@ export default Controller.extend({
 	ajax: service(),
 	cookies: service(),
 	serviceCycle: service(),
+	isHistory: localStorage.getItem('isHistory'),
 	actions: {
 		continueTest() {
-			// let pageIndexModel = this.modelFor('index');
-
-			window.location = ENV.redirectUri;
-
-			// this.transitionToRoute('index');
-			// this.serviceCycle.set('needRefresh', true);
-			// this.serviceCycle.set('needRedirectToSce', true);
+			// window.location = ENV.redirectUri;
+			this.transitionToRoute('page-scenario');
 		},
 		checkManagerReport(paper) {
 			// this.model.detailPaper.get('assessmentReports').then(res => {
@@ -35,7 +31,7 @@ export default Controller.extend({
 			ajax.request(`${version}/GenerateCSV`, {
 				method: 'POST',
 				data: JSON.stringify({
-					'paper-id': this.model.paper.get('id'),
+					'paper-id': this.model.curPaper.get('id'),
 					'account-id': this.get('cookies').read('account_id'),
 					'download-type': type
 				})
