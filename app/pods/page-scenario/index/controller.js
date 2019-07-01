@@ -19,11 +19,11 @@ export default Controller.extend({
 	}),
 	actions: {
 		linkToRoute(routeCode) {
-			let proposalId = this.get('proposalId'),
-				route = routeCode === 'index' ? '' : routeCode;
+			// let proposalId = this.get('proposalId'),
+			let route = routeCode === 'index' ? '' : routeCode;
 
 			this.set('groupValue', routeCode);
-			this.transitionToRoute('/scenario/' + proposalId + '/index/' + route);
+			this.transitionToRoute('/scenario/index/' + route);
 		},
 		outputData(type) {
 			const applicationAdapter = this.store.adapterFor('application'),

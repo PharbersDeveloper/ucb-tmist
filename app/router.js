@@ -26,7 +26,7 @@ Router.map(function () {
 		this.route('representative');
 	});
 	this.route('page-notice', { path: 'notice/:proposal_id' });
-	this.route('page-scenario', { path: 'scenario/:proposal_id' }, function () {
+	this.route('page-scenario', { path: 'scenario' }, function () {
 		this.route('decision-review');
 
 		this.route('index', function () {

@@ -40,7 +40,10 @@ export default Component.extend({
 		}, {
 			label: '患者数量',
 			valuePath: 'patientNumber',
-			cellComponent: 'light-table-format-number'
+			// sortable: false
+		}, {
+			label: '药品准入情况',
+			valuePath: 'drugEntranceInfo',
 			// sortable: false
 		}, {
 			label: '上季度销售额',
@@ -76,6 +79,7 @@ export default Component.extend({
 				hospitalName: '',
 				hospitalLevel: '',
 				patientNumber: '',
+				drugEntranceInfo: '',
 				sales: '',
 				representative: '',
 				salesTarget: '',
@@ -85,6 +89,7 @@ export default Component.extend({
 			temp.hospitalName = d.hospitalName;
 			temp.hospitalLevel = d.hospitalLevel;
 			temp.patientNumber = d.patientNumber;
+			temp.drugEntranceInfo = d.drugEntranceInfo;
 			temp.sales = d.sales;
 			temp.representative = d.representative;
 			temp.salesTarget = d.salesTarget;

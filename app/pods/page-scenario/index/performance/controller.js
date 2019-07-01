@@ -14,7 +14,7 @@ export default Controller.extend({
 	tmpReg: null,
 
 	handler: service('serviceResultHandler'),
-	barLineData: computed('productChooseProduct.id', function () {
+	barLineData: computed('productChooseProduct.id', 'date', function () {
 		if (ENV.environment === 'development') {
 			window.console.log('recomputed 产品销售趋势图');
 		}

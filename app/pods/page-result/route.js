@@ -23,7 +23,7 @@ export default Route.extend({
 			increaseSalesReports = A([]),
 			tmpHead = A([]),
 			proposal = null,
-			paper = null,
+			curPaper = null,
 			latestSeasonName = null,
 			tmpHeadQ = A([]);
 
@@ -33,7 +33,7 @@ export default Route.extend({
 
 				return this.store.findRecord('paper', params['paper_id'], { reload: true });
 			}).then(data => {
-				paper = data;
+				curPaper = data;
 				return data.get('salesReports');
 			})
 			.then(data => {
@@ -50,10 +50,10 @@ export default Route.extend({
 					// return name.slice(0, 4) + name.slice(-4);
 				});
 				tmpHeadQ = tmpHead.map(ele => ele);
-
+				
 				return hash({
 					latestSeasonName,
-					paper,
+					curPaper,
 					tmpHead,
 					tmpHeadQ,
 					barLineKeys,

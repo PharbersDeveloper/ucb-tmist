@@ -9,6 +9,7 @@ export default Route.extend({
 	ajax: service(),
 	serviceCycle: service(),
 	converse: service('serviceConverse'),
+	statusService: service(),
 	activate() {
 		this._super(...arguments);
 		let applicationController = this.controllerFor('application');
@@ -66,11 +67,13 @@ export default Route.extend({
 				store.pushPayload(ele);
 			});
 
+			this.statusService.set('genPaperId', currentPaperId);
 			localStorage.setItem('proposalId', useableProposals.get('firstObject').get('proposal.id'));
 
 			return store.query('paper', {
-				'proposal-id': useableProposals.get('firstObject').get('proposal.id'),
-				'account-id': cookies.read('account_id'),
+				// 'proposal-id': useableProposals.get('firstObject').get('proposal.id'),
+				// 'account-id': cookies.read('account_id'),
+				'paper-id': currentPaperId,
 				'chart-type': 'hospital-sales-report-summary'
 			});
 		}).then(data => {
@@ -83,6 +86,8 @@ export default Route.extend({
 		}).then(data => {
 			scenario = data.get('firstObject');
 			scenarioId = scenario.get('id');
+			// this.statusService.set('curScenario', scenario);
+			// this.statusService.set('curScenarioId', scenarioId);
 			let state = papers.get('firstObject').get('state'),
 				reDeploy = Number(localStorage.getItem('reDeploy'));
 

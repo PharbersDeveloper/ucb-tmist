@@ -74,6 +74,7 @@
 		<tr>
 			<th class="border-0 pb-2 pl-4 text-left">产品名称</th>
 			<th class="border-0 pb-2 pl-2 text-center">治疗领域</th>
+			<th class="border-0 pb-2 pl-2 text-center">药品准入情况</th>
 			<th class="border-0 pb-2 pl-2 text-right">患者数量</th>
 			<th class="border-0 pb-2 pl-2 text-right">上季度销售额</th>
 			<th class="border-0 pb-2 pl-2 text-right">销售指标设定</th>
@@ -88,6 +89,13 @@
 				</td>
 				<td class="pl-2 border-0 text-center">
 					{{sc.goodsConfig.productConfig.treatmentArea}}
+				</td>
+				<td class="pl-2 border-0 text-center">
+					{{#each lastSales as |item|}}
+						{{#if (bp-eq item.goodsConfig.productConfig.product.id sc.goodsConfig.productConfig.product.id)}}
+							{{item.report.drugEntranceInfo}}
+						{{/if}}
+					{{/each}}
 				</td>
 				<td class="pl-2 border-0  text-right">
 					{{format-number sc.patientCount}}

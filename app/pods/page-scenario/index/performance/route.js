@@ -105,5 +105,6 @@ export default Route.extend({
 		this.controller.set('doubleCircleData', model.doubleCircleProduct);
 		this.controller.set('tableHead', model.tableHeadProd);
 		this.controller.set('tableBody', model.tableBodyProd);
+		this.controller.set('date', new Date().getTime());
 	}
 });

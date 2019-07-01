@@ -63,7 +63,7 @@ export default Controller.extend({
 			if (this.get('model').detailPaper.state !== 1) {
 				localStorage.setItem('paperStartTime', now);
 			}
-			this.transitionToRoute('page-scenario', proposalId);
+			this.transitionToRoute('page-scenario');
 		}
 	}
 });

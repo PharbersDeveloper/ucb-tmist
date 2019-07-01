@@ -50,7 +50,7 @@ export default Controller.extend({
 		return salesConfigs.map(ele => {
 			return {
 				goodsConfig: ele.get('goodsConfig'),
-				report: currentHospitalSalesReports.findBy('goodsConfig.productConfig.product.id', ele.get('goodsConfig.productConfig.product.id'))
+				report: currentHospitalSalesReports.findBy('goodsConfig.productConfig.product.id', ele.get('goodsConfig.productConfig.product.id')),
 			};
 		});
 

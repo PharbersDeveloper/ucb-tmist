@@ -2,6 +2,10 @@
 	height: 100%;
 	overflow: auto;
 
+    .back {
+        @extend %p-small;
+	}
+	
 	.result-header {
 		flex: 0 0 76px;
 	}

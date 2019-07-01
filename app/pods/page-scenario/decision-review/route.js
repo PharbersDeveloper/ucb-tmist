@@ -32,7 +32,7 @@ export default Route.extend({
 			salesConfigs = pageScenarioModel.salesConfigs,
 			lastSeasonHospitalSalesReports = pageScenarioModel.lastSeasonHospitalSalesReports,
 			paper = pageScenarioModel.paper,
-			resourceConfigRepresentatives = pageScenarioModel.resourceConfRep,
+			resourceConfigRepresentatives = pageScenarioModel.detailProposal,
 			store = this.get('store'),
 			that = this;
 
@@ -62,6 +62,12 @@ export default Route.extend({
 					}
 				}));
 			}).then(() => {
+				return all(salesConfigs.map(ele => ele.get('destConfig')));
+			}).then(data => {
+				return all(data.map(ele => ele.get('hospitalConfig')));
+			}).then(data => {
+				return all(data.map(ele => ele.get('hospital')));
+			}).then(() => {
 				return all(lastSeasonHospitalSalesReports.map(ele => ele.get('destConfig')));
 			}).then(data => {
 				return all(data.map(ele => ele.get('hospitalConfig')));
@@ -69,7 +75,7 @@ export default Route.extend({
 				return all(data.map(ele => ele.get('hospital')));
 			}).then(() => {
 				return paper.get('paperinputs');
-			}).then(data => {
+			}).then(data => {				
 				usableSeasons = data.filter(ele => ele.get('phase') > 0).sortBy('phase');
 
 				handleUsableSeasons = usableSeasons.map(ele => {
@@ -91,6 +97,8 @@ export default Route.extend({
 				}));
 			}).then(data => {
 				currentSalesReports = data;
+				// window.console.log(currentSalesReports);
+				
 
 				// if (usableSeasons.length === 0) {
 				// 	return [{
@@ -98,6 +106,8 @@ export default Route.extend({
 				// 		scenarioId: scenario.get('id')
 				// 	}];
 				// }
+				// window.console.log(usableSeasons);
+				
 				return all(usableSeasons.map(ele => {
 					return hash({
 						businput: ele.get('businessinputs'),
@@ -105,14 +115,20 @@ export default Route.extend({
 					});
 				}));
 			}).then(data => {
+				// let tmpbusinput = A([]);
+				// businessinputs.forEach(ele => {
+				// 	if (ele.id === null) {
+				// 		tmpbusinput.push(ele);
+				// 	}
+				// })
 				data.push({
-					businput: businessinputs,
+					businput: businessinputs.filter(ele => ele.get('id') === null),
 					scenarioId: scenario.get('id')
 				});
 				tableData = data.uniqBy('scenarioId').map((item, index) => {
 					let scenarioId = item.scenarioId,
 						detailData = A([]);
-
+					
 					detailData = item.businput.map(ele => {
 						let biHospitalId = ele.get('destConfig.hospitalConfig.hospital.id'),
 							firstProduct = goodsConfigs.firstObject,
@@ -124,7 +140,7 @@ export default Route.extend({
 							currentReport = currentHospitalSalesReports.findBy('goodsConfig.productConfig.product.id', firstProduct.get('productConfig.product.id'));
 
 						sales = currentReport.get('sales');
-
+						
 						return EmberObject.create({
 							scenarioId,
 							hospitalName: ele.get('destConfig.hospitalConfig.hospital.name'),
@@ -141,7 +157,7 @@ export default Route.extend({
 							currentSalesConfigs: currentSalesConfigs
 						});
 					});
-
+					
 					return {
 						scenarioId,
 						data: detailData

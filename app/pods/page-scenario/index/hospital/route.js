@@ -6,6 +6,7 @@ import { A } from '@ember/array';
 export default Route.extend({
 	handler: service('serviceResultHandler'),
 	cookies: service(),
+	statusService: service(),
 	model() {
 		const { store, cookies, handler } = this,
 			pageScenarioModel = this.modelFor('page-scenario'),
@@ -24,8 +25,9 @@ export default Route.extend({
 			barLineDataHosp = A([]);
 
 		return store.query('paper', {
-			'proposal-id': proposal.get('id'),
-			'account-id': cookies.read('account_id'),
+			'paper-id': this.statusService.get('genPaperId'),
+			// 'proposal-id': proposal.get('id'),
+			// 'account-id': cookies.read('account_id'),
 			'chart-type': 'hospital-sales-report-summary'
 		}).then(data => {
 			paper = data.firstObject;
@@ -129,6 +131,10 @@ export default Route.extend({
 					uniqByProducts
 				});
 			});
+	},
+	setupController(controller, model) {
+		this._super(controller, model);
+		this.controller.set('date', new Date().getTime());
 	}
 	// setupController(controller, model) {
 	// 	this._super(controller, model);

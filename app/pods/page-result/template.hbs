@@ -1,5 +1,10 @@
 {{#bp-layout direction="col" local-class="page-result" 
 	classNames="p-4"}}
+	{{#if isHistory}}
+		{{#link-to "page-history-report" local-class='back' classNames='mb-3'}}
+			返回
+		{{/link-to}}
+	{{/if}}
 	{{#bp-page-header class="mb-4" local-class='result-header' as |ph|}}
 		{{#ph.body as |body|}}
 			{{#body.left as |left|}}
@@ -13,14 +18,14 @@
 				{{/left.item}}
 			{{/body.left}}
 			{{#body.right}}
-				{{#if (bp-eq model.paper.state 3)}}
+				{{#if (bp-eq model.curPaper.state 3)}}
 					{{#bp-button classNames='mr-2'
 					disabled=false
 					onClick=(action 'outputData' 'business') }}
 						导出数据
 					{{/bp-button}}
 					{{#bp-button
-					onClick=(action 'checkManagerReport' model.paper) }}
+					onClick=(action 'checkManagerReport' model.curPaper) }}
 						查看测评综合表现
 					{{/bp-button}}
 				{{else if (bp-not-eq model.scenario.phase model.detailProposal.proposal.totalPhase)}}
@@ -37,7 +42,7 @@
 						导出数据
 					{{/bp-button}}
 					{{#bp-button
-					onClick=(action 'checkManagerReport' model.paper) }}
+					onClick=(action 'checkManagerReport' model.curPaper) }}
 						查看测评综合表现
 					{{/bp-button}}
 				{{/if}}
