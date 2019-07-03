@@ -3,6 +3,18 @@
         @extend %p-small;
     }
 
+    :global(.bp-page-header) {
+        :global(.left-area) {
+            p:nth-child(3) {
+                line-height: 20px;
+                font-size: 14px;
+                font-weight: 400;
+                margin-bottom: 8px;
+                color: #7A869A;
+            }
+        }
+    }
+
     .mid-title {
         height: 54px;
 

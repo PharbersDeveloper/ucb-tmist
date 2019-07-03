@@ -13,8 +13,9 @@
 				{{/left.item}}
 				{{#left.item}}
 					完成日期：{{model.endTime}}
-					{{!-- 用时：50min --}}
-					{{!-- {{model.scenario.name}} --}}
+				{{/left.item}}
+				{{#left.item}}
+					用时：{{time-difference model.startTime model.endTime}}
 				{{/left.item}}
 			{{/body.left}}
 			{{#body.right}}

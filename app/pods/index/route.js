@@ -110,6 +110,8 @@ export default Route.extend({
 			goodsConfigs = data;
 			return all(data.map(ele => ele.get('productConfig')));
 		}).then(data => {
+			localStorage.setItem('noticeFlag', true);
+
 			return hash({
 				papers,
 				useableProposals,

@@ -130,6 +130,8 @@
 										{{#if (bp-eq hsr.destConfig.hospitalConfig.hospital.id model.currentHospitalConfig.hospital.id)}}
 											{{#if (bp-eq hsr.goodsConfig.productConfig.product.id salesConfig.goodsConfig.productConfig.product.id)}}
 												{{hsr.drugEntranceInfo}}
+											{{else}}
+												-
 											{{/if}}
 										{{/if}}
 									{{/each}}

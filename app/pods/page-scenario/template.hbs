@@ -76,7 +76,7 @@
 		position='center'
 		local-class='modal-welcome'
 		backdropClose=false
-		onHidden=(action (mut notice) false) as |modal|}}
+		onHidden=(action 'closeNotice') as |modal|}}
 	{{#modal.header tagName='h2'}}
 		任务介绍（{{model.scenario.name}}）
 	{{/modal.header}}
