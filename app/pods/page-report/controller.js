@@ -24,7 +24,7 @@ export default Controller.extend({
 				return '未知级别';
 		}
 	}),
-	isHistory: localStorage.getItem('isHistory'),
+	isHistory: null,
 	actions: {
 		checkResult() {
 			this.transitionToRoute('page-result', this.model.id);

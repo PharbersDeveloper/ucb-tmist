@@ -144,13 +144,31 @@ export default Controller.extend({
 	// 		});
 	// },
 	entryMission(proposalId) {
-		localStorage.setItem('isHistory', false)
-		let now = new Date().getTime();
+		localStorage.setItem('isHistory', false);
+		let now = null,
+			date = new Date(),
+			Y = date.getFullYear() + '-',
+			M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-',
+			D = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()) + ' ',
+			h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':',
+			m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':',
+			s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+
+		// 输出结果：yyyy-mm-dd hh:mm:ss
+		now = Y + M + D + h + m + s;
 
 		if (this.get('model').detailPaper.state !== 1) {
 			localStorage.setItem('paperStartTime', now);
 		}
-		this.transitionToRoute('page-scenario');
+		if (this.get('model').detailPaper.state === 0) {
+			this.get('model').detailPaper.set('startTime', now);
+			this.get('model').detailPaper.save().then(() => {
+				this.transitionToRoute('page-scenario');
+			});
+		} else {
+			this.transitionToRoute('page-scenario');
+		}
+		// this.transitionToRoute('page-scenario.business');
 	},
 	actions: {
 		startDeploy(proposalId) {

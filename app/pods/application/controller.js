@@ -63,11 +63,22 @@ export default Controller.extend({
 				if (state === 1 || state === 4) {
 					paper.set('state', state);
 				}
-				paper.set('endTime', new Date().getTime());
+				let now = null,
+					date = new Date(),
+					Y = date.getFullYear() + '-',
+					M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-',
+					D = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()) + ' ',
+					h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':',
+					m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':',
+					s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
 
-				if (paper.state !== 1 || paper.state !== 4) {
-					paper.set('startTime', localStorage.getItem('startTime'));
-				}
+				// 输出结果：yyyy-mm-dd hh:mm:ss
+				now = Y + M + D + h + m + s;
+				paper.set('endTime', now);
+
+				// if (paper.state !== 1 || paper.state !== 4) {
+				// 	paper.set('startTime', localStorage.getItem('startTime'));
+				// }
 				return paper.save();
 
 			}).then(() => {
