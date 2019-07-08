@@ -335,9 +335,9 @@ export default Controller.extend({
 				}
 				paper.set('endTime', new Date().getTime());
 
-				if (paper.state !== 1 || paper.state !== 4) {
-					paper.set('startTime', localStorage.getItem('startTime'));
-				}
+				// if (paper.state !== 1 || paper.state !== 4) {
+				// 	paper.set('startTime', localStorage.getItem('startTime'));
+				// }
 				return paper.save();
 
 			}).then(() => {
