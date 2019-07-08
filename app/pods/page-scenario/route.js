@@ -125,7 +125,7 @@ export default Route.extend({
 			goodsInputsModel = A([]),
 			managerConfig = null;
 
-			store.unloadAll('businessinput');
+		store.unloadAll('businessinput');
 
 		return detailProposal.get('proposal')
 			.then(data => {
@@ -180,7 +180,6 @@ export default Route.extend({
 					return ele.get('scenario');
 				}), salesReport.get('hospitalSalesReports')]);
 
-				
 				// return salesReport.get('hospitalSalesReports');
 			}).then(data => {
 				tmpHeadQ = data[0].map(ele => {
@@ -336,9 +335,9 @@ export default Route.extend({
 
 		controller.set('businessInputs', model.businessInputs);
 		// controller.set('notice', true);
-		
+
 		// if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
-		if (isEmpty(controller.get('notice'))) {
+		if (localStorage.getItem('noticeFlag') === true) {
 			controller.set('notice', true);
 		}
 		// }
@@ -361,4 +360,9 @@ export default Route.extend({
 		// 	});
 		// }
 	}
+	// activate() {
+	// 	if (!isEmpty(this.get('controller'))) {
+	// 		this.get('controller').set('notice', true);
+	// 	}
+	// }
 });

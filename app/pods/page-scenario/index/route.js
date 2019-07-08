@@ -24,7 +24,7 @@ export default Route.extend({
 			tmpData = A([]),
 			productConfigs = A([]),
 			tmpHead = A([]),
-			lineColorTm = A(['#57D9A3', '#79E2F2', '#FFE380', '#8777D9 ']);
+			lineColorTm = A(['#57D9A3', '#FF8B00', '#FFE380', '#8777D9 ']);
 
 		return paper.get('salesReports')
 			.then(data => {

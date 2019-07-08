@@ -50,7 +50,7 @@ export default Route.extend({
 					// return name.slice(0, 4) + name.slice(-4);
 				});
 				tmpHeadQ = tmpHead.map(ele => ele);
-				
+
 				return hash({
 					latestSeasonName,
 					curPaper,

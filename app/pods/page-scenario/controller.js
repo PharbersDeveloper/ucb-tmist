@@ -378,6 +378,7 @@ export default Controller.extend({
 	},
 	actions: {
 		submit() {
+			localStorage.setItem('noticeFlag', true);
 			const judgeAuth = this.judgeOauth(),
 				store = this.get('store'),
 				representatives = store.peekAll('representative');
@@ -389,7 +390,6 @@ export default Controller.extend({
 				window.location = judgeAuth;
 				return;
 			}
-
 			this.verificationBusinessinputs(businessinputs, representatives);
 		},
 		saveInputs() {
@@ -410,6 +410,7 @@ export default Controller.extend({
 			this.sendInput(4);
 		},
 		confirmSubmit() {
+			localStorage.setItem('noticeFlag', true);
 			const model = this.get('model'),
 				{ scenario, proposal } = model;
 
@@ -423,6 +424,10 @@ export default Controller.extend({
 		},
 		testResult() {
 			this.transitionToRoute('page-result', this.paperId);
+		},
+		closeNotice() {
+			this.set('notice', false);
+			localStorage.setItem('noticeFlag', false);
 		}
 	}
 });

@@ -45,6 +45,8 @@
 	}
 
 	.values {
+        width: 130px;
+        text-align: right;
 		@extend %header-small;
 	}
 }
