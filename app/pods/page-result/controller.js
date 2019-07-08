@@ -10,10 +10,11 @@ export default Controller.extend({
 	ajax: service(),
 	cookies: service(),
 	serviceCycle: service(),
-	isHistory: localStorage.getItem('isHistory'),
+	isHistory: null,
 	actions: {
 		continueTest() {
 			// window.location = ENV.redirectUri;
+			localStorage.setItem('noticeFlag', true);
 			this.transitionToRoute('page-scenario');
 		},
 		checkManagerReport(paper) {

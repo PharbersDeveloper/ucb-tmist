@@ -2,6 +2,8 @@ import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 // import { isEmpty } from '@ember/utils';
 // import { A } from '@ember/array';
+import EmberObject from '@ember/object';
+
 
 export default Controller.extend({
 	// numberVerify: /^-?[1-9]\d*$/,
@@ -56,6 +58,14 @@ export default Controller.extend({
 
 	}),
 	actions: {
+		numberWarning() {
+			let warning = EmberObject.create();
+
+			warning.open = true;
+			warning.title = '非法值警告';
+			warning.detail = '请输入数字！';
+			this.set('warning', warning);
+		},
 		changedRep(item) {
 			let businessinput = this.get('businessinput');
 

@@ -70,6 +70,24 @@ export default Route.extend({
 				});
 			});
 	},
+	setupController(controller) {
+		this._super(...arguments);
+		if (localStorage.getItem('isHistory') === 'true') {
+			controller.set('isHistory', true);
+		} else {
+			controller.set('isHistory', false);
+		}
+	},
+	activate() {
+		this._super(...arguments);
+		let controller = this.controllerFor('page-report');
+
+		if (localStorage.getItem('isHistory') === 'true') {
+			controller.set('isHistory', true);
+		} else {
+			controller.set('isHistory', false);
+		}
+	},
 	afterModel() {
 		let applicationController = this.controllerFor('application');
 

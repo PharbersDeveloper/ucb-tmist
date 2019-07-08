@@ -334,11 +334,14 @@ export default Route.extend({
 		// let converse = this.converse;
 
 		controller.set('businessInputs', model.businessInputs);
+		controller.set('loading', false);
 		// controller.set('notice', true);
 
 		// if ([0, 2, 3].indexOf(model.paper.state) >= 0) {
-		if (localStorage.getItem('noticeFlag') === true) {
+		if (localStorage.getItem('noticeFlag') === 'true') {
 			controller.set('notice', true);
+		} else {
+			controller.set('notice', false);
 		}
 		// }
 		// if (!controller.get('hasPlugin')) {
@@ -359,10 +362,16 @@ export default Route.extend({
 		// 		}
 		// 	});
 		// }
+	},
+	activate() {
+		this._super(...arguments);
+		let controller = this.controllerFor('page-scenario');
+
+		controller.set('loading', false);
+		if (localStorage.getItem('noticeFlag') === 'true') {
+			controller.set('notice', true);
+		} else {
+			controller.set('notice', false);
+		}
 	}
-	// activate() {
-	// 	if (!isEmpty(this.get('controller'))) {
-	// 		this.get('controller').set('notice', true);
-	// 	}
-	// }
 });

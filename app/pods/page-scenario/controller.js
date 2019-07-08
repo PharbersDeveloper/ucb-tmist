@@ -13,7 +13,7 @@ export default Controller.extend({
 	converse: service('service-converse'),
 	verify: service('service-verify'),
 	oauthService: service('oauth_service'),
-	// notice: true,
+	notice: null,
 	testBtn: computed(function () {
 		if (ENV.environment === 'development') {
 			return true;
@@ -367,7 +367,7 @@ export default Controller.extend({
 						if (ENV.environment === 'development') {
 							window.console.log('等待 R 返回中...');
 						}
-						this.set('loading', false);
+						// this.set('loading', false);
 						// this.set('state', state);
 						// converse.set('inputState', state);
 						this.set('paperId', paperId);
