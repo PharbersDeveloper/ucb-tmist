@@ -2,6 +2,8 @@ import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 // import { isEmpty } from '@ember/utils';
 // import { A } from '@ember/array';
+import EmberObject from '@ember/object';
+
 
 export default Controller.extend({
 	// numberVerify: /^-?[1-9]\d*$/,
@@ -50,12 +52,20 @@ export default Controller.extend({
 		return salesConfigs.map(ele => {
 			return {
 				goodsConfig: ele.get('goodsConfig'),
-				report: currentHospitalSalesReports.findBy('goodsConfig.productConfig.product.id', ele.get('goodsConfig.productConfig.product.id')),
+				report: currentHospitalSalesReports.findBy('goodsConfig.productConfig.product.id', ele.get('goodsConfig.productConfig.product.id'))
 			};
 		});
 
 	}),
 	actions: {
+		numberWarning() {
+			let warning = EmberObject.create();
+
+			warning.open = true;
+			warning.title = '非法值警告';
+			warning.detail = '请输入数字！';
+			this.set('warning', warning);
+		},
 		changedRep(item) {
 			let businessinput = this.get('businessinput');
 
@@ -67,7 +77,8 @@ export default Controller.extend({
 		},
 		reInput() {
 			let businessinput = this.get('businessinput'),
-				goodsInputs = businessinput.get('goodsinputs');
+				goodsInputs = businessinput.get('goodsinputs'),
+				phase = this.model.scenario.get('phase');
 
 			goodsInputs.forEach(goodsInput => {
 				goodsInput.setProperties({
@@ -75,13 +86,15 @@ export default Controller.extend({
 					budget: ''
 				});
 			});
+			if (phase === 1) {
+				this.set('tmpRc', null);
 
-			this.set('tmpRc', null);
+				businessinput.setProperties({
+					resourceConfigId: '',
+					resourceConfig: null
+				});
+			}
 
-			businessinput.setProperties({
-				resourceConfigId: '',
-				resourceConfig: null
-			});
 		}
 	}
 });

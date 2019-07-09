@@ -1,6 +1,7 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
+	time: DS.attr('number'), // 只用于排序
 	accountId: DS.attr('string'),
 	proposalId: DS.attr('string'),
 	name: DS.attr('string'),
