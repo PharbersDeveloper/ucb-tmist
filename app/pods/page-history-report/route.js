@@ -21,6 +21,8 @@ export default Route.extend({
 			'account-id': cookies.read('account_id'),
 			'proposal-id': detailProposal.get('proposal.id'),
 			'query-type': 'assessment'
+		}).then(data => {
+			return data.sortBy('time').reverse();
 		});
 		// return paper.then(data => {
 		// 	return all(data.map(ele => ele.get('assessmentReports')));
