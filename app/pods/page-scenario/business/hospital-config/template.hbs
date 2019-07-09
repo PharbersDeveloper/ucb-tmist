@@ -115,7 +115,12 @@
 				<td class="pl-2 border-0 text-right">
 					{{#each model.goodsInputs as |goodsInput|}}
 						{{#if (bp-eq sc.goodsConfig.productConfig.product.id goodsInput.goodsConfig.productConfig.product.id)}}
-							{{bp-input block=true widthSize="auto" 
+							{{!-- {{bp-input block=true widthSize="auto" 
+								value=goodsInput.salesTarget
+								disabled=(not businessinput.resourceConfig.representativeConfig.representative.id)
+								local-class="input-prepend input-money"}} --}}
+							{{bp-input/number block=true widthSize="auto" 
+								onWarning=(action 'numberWarning')
 								value=goodsInput.salesTarget
 								disabled=(not businessinput.resourceConfig.representativeConfig.representative.id)
 								local-class="input-prepend input-money"}}
@@ -142,3 +147,21 @@
 		{{/each}}
 	</tbody>
 </table>
+{{#bp-modal open=warning.open 
+	position='center' 
+	onHidden=(action (mut warning.open) false) as |modal|}}
+	{{#modal.header}}
+		<h4 class="modal-title">
+			{{warning.title}}
+		</h4>
+	{{/modal.header}}
+	{{#modal.body classNames="p-4" }}
+		<p class="desc m-0">
+			{{warning.detail}}
+		</p>
+	{{/modal.body}}
+	{{#modal.footer}}
+		{{#bp-button type="primary" onClick=(action modal.close)}}好的{{/bp-button}}
+		{{!-- {{#bp-button type="success" onClick=(action modal.submit)}}Save{{/bp-button}} --}}
+	{{/modal.footer}}
+{{/bp-modal}}
