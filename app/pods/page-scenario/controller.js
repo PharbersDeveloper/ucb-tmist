@@ -277,7 +277,7 @@ export default Controller.extend({
 	sendInput(state) {
 		this.set('loading', true);
 		const ajax = this.get('ajax'),
-			// converse = this.get('converse'),
+			converse = this.get('converse'),
 			applicationAdapter = this.get('store').adapterFor('application'),
 			store = this.get('store'),
 			model = this.get('model'),
@@ -354,6 +354,8 @@ export default Controller.extend({
 					this.set('loading', false);
 					return null;
 				}
+				// 重新初始化 xmpp 的链接，保证由于不活跃状态的掉线不重连
+				converse.initialize();
 				return ajax.request(`${version}/CallRCalculate`, {
 					method: 'POST',
 					data: JSON.stringify({
@@ -362,8 +364,8 @@ export default Controller.extend({
 						'scenario-id': scenario.get('id')
 					})
 				}).then((response) => {
-
 					if (response.status === 'ok') {
+
 						if (ENV.environment === 'development') {
 							window.console.log('等待 R 返回中...');
 						}

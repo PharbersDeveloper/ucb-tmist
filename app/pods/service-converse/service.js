@@ -17,6 +17,7 @@ export default Service.extend({
 			'auto_login': true,
 			jid: 'swang@max.logic',
 			password: 'swang',
+			keepalive: true,
 			i18n: 'zh',
 			debug: ENV.environment === 'development',
 			'auto_join_rooms': [
