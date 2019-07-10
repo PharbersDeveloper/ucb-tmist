@@ -131,7 +131,9 @@
 											{{#if (bp-eq hsr.goodsConfig.productConfig.product.id salesConfig.goodsConfig.productConfig.product.id)}}
 												{{hsr.drugEntranceInfo}}
 											{{else}}
-												-
+												{{#if (bp-eq model.scenario.phase 1)}}
+													-
+												{{/if}}
 											{{/if}}
 										{{/if}}
 									{{/each}}

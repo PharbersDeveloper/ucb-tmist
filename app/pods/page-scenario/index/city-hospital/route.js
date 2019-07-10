@@ -14,7 +14,7 @@ export default Route.extend({
 	},
 	model() {
 		const pageScenarioModel = this.modelFor('page-scenario'),
-			{ destConfigRegions, salesConfigs, lastSeasonHospitalSalesReports } = pageScenarioModel;
+			{ scenario, destConfigRegions, salesConfigs, lastSeasonHospitalSalesReports } = pageScenarioModel;
 
 		let regionConfig = destConfigRegions.firstObject.get('regionConfig'),
 			cities = A([]),
@@ -52,6 +52,7 @@ export default Route.extend({
 				}, initTotal);
 
 			return hash({
+				scenario,
 				total,
 				hospitalNumbers,
 				city: cities.firstObject,

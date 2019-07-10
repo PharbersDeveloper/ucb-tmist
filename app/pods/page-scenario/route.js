@@ -20,6 +20,7 @@ export default Route.extend({
 			paperInputs = paper.get('paperinputs'),
 			reDeploy = Number(localStorage.getItem('reDeploy')) === 1,
 			exitInEmberData = this.get('store').peekAll('businessinput');
+
 		if ([1, 4].indexOf(state) >= 0 && !reDeploy || exitInEmberData.get('length') > 0) {
 			return paperInputs.lastObject.get('businessinputs');
 			// return this.get('store').peekAll('businessinput');
@@ -37,16 +38,16 @@ export default Route.extend({
 
 		promiseArray = destConfigHospitals.map(ele => {
 			let goodsInputs = selfGoodsConfigs.map(item => {
-					return store.createRecord('goodsinput', {
-						destConfigId: ele.get('id'),
-						goodsConfig: item,
-						salesTarget: '',	// 销售目标设定
-						budget: ''	//预算设定
-						// TODO 测试，用后删除
-						// salesTarget: 1,	// 销售目标设定
-						// budget: 1	//预算设定
-					});
-				}),
+				return store.createRecord('goodsinput', {
+					destConfigId: ele.get('id'),
+					goodsConfig: item,
+					salesTarget: '',	// 销售目标设定
+					budget: ''	//预算设定
+					// TODO 测试，用后删除
+					// salesTarget: 1,	// 销售目标设定
+					// budget: 1	//预算设定
+				});
+			}),
 				businessinput = null;
 
 			if (isEmpty(lastSeasonHospitalSalesReports)) {
@@ -133,7 +134,7 @@ export default Route.extend({
 				return store.query('scenario', {
 					'proposal-id': proposal.get('id'),
 					'account-id': cookies.read('account_id')
-				}, { reload : true });
+				}, { reload: true });
 			}).then(data => {
 				scenario = data.get('firstObject');
 				scenarioId = scenario.get('id');
@@ -144,10 +145,10 @@ export default Route.extend({
 					// 'proposal-id': proposal.get('id'),
 					// 'account-id': cookies.read('account_id'),
 					'chart-type': 'hospital-sales-report-summary'
-				}, { reload : true });
-			}).then(data => {				
+				}, { reload: true });
+			}).then(data => {
 				paper = data.get('firstObject');
-				return store.query('goodsConfig',{ 'scenario-id': scenarioId });
+				return store.query('goodsConfig', { 'scenario-id': scenarioId });
 			}).then(data => {
 				goodsConfigs = data;
 				return store.queryRecord('resourceConfig',
@@ -345,7 +346,7 @@ export default Route.extend({
 		}
 		// }
 		// if (!controller.get('hasPlugin')) {
-		// 	converse.initialize();
+		// converse.initialize();
 
 		// 	window.converse.plugins.add('chat_plugin', {
 		// 		initialize: function () {
