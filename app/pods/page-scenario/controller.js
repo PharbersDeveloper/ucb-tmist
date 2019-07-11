@@ -20,113 +20,6 @@ export default Controller.extend({
 		}
 		return false;
 	}),
-	// xmppResult: observer('xmppMessage.time', function () {
-	// 	let clientId = ENV.clientId,
-	// 		axios = this.axios,
-	// 		accountId = this.get('cookies').read('account_id'),
-	// 		proposalId = this.get('model').proposal.id,
-	// 		// paperinputId = this.get('paperinputId') || null,
-	// 		scenarioId = this.get('model').scenario.id,
-	// 		xmppMessage = this.xmppMessage;
-
-	// 	// if (ENV.environment === 'development') {
-	// 	if (xmppMessage['type'] === 'calc') {
-
-	// 		if (xmppMessage['client-id'] !== clientId) {
-	// 			if (ENV.environment === 'development') {
-	// 				window.console.log('client-id error');
-	// 			}
-	// 			return;
-	// 		} else if (xmppMessage['account-id'] !== accountId) {
-	// 			if (ENV.environment === 'development') {
-	// 				window.console.log('账户 error');
-	// 			}
-	// 			return;
-	// 		} else if (xmppMessage['proposal-id'] !== proposalId) {
-	// 			if (ENV.environment === 'development') {
-	// 				window.console.log('proposal-id error');
-	// 			}
-	// 			return;
-
-	// 			// } else if (xmppMessage['paperInput-id'] !== paperinputId) {
-	// 			// 	if (ENV.environment === 'development') {
-	// 			// 		window.console.log('输入 error');
-	// 			// 	}
-	// 			// 	return;
-	// 		} else if (xmppMessage['scenario-id'] !== scenarioId) {
-	// 			if (ENV.environment === 'development') {
-	// 				window.console.log('关卡 error');
-	// 			}
-	// 			return;
-	// 		}
-	// 		if (xmppMessage.status === 'ok') {
-	// 			if (ENV.environment === 'development') {
-	// 				window.console.log('结果已经返回');
-	// 			}
-	// 			this.set('loading', false);
-	// 			return this.updatePaper(this.paperId, this.state);
-	// 		}
-	// 		window.console.log('计算错误');
-
-	// 	} else if (xmppMessage['type'] === 'download') {
-	// 		if (xmppMessage['client-id'] !== clientId) {
-	// 			if (ENV.environment === 'development') {
-	// 				window.console.log('client-id error');
-	// 			}
-	// 			return;
-	// 		} else if (xmppMessage['account-id'] !== accountId) {
-	// 			if (ENV.environment === 'development') {
-	// 				window.console.log('账户 error');
-	// 			}
-	// 			return;
-	// 		}
-
-	// 		let fileNames = xmppMessage['fileNames'];
-
-	// 		return all(fileNames.map(ele => {
-	// 			return axios.axios({
-	// 				url: `${ele}`,
-	// 				method: 'get',
-	// 				responseType: 'blob'
-	// 			});
-	// 		})).then(data => {
-	// 			data.forEach((res, index) => {
-	// 				let content = res.data,
-	// 					blob = new Blob([content], { type: 'text/csv' }),
-	// 					fileName = fileNames[index].split('=')[1];
-
-	// 				if ('download' in document.createElement('a')) { // 非IE下载
-	// 					let elink = document.createElement('a');
-
-	// 					elink.download = fileName;
-	// 					elink.style.display = 'none';
-	// 					elink.href = URL.createObjectURL(blob);
-	// 					document.body.appendChild(elink);
-	// 					elink.click();
-	// 					URL.revokeObjectURL(elink.href); // 释放URL 对象
-	// 					document.body.removeChild(elink);
-	// 				} else { // IE10+下载
-	// 					navigator.msSaveBlob(blob, fileName);
-	// 				}
-	// 			});
-	// 		}).catch(() => {
-	// 		});
-	// 	}
-	// 	// switch (true) {
-	// 	// case xmppMessage['client-id'] !== clientId:
-	// 	// case xmppMessage['account-id'] !== accountId:
-	// 	// case xmppMessage['proposal-id'] !== proposalId:
-	// 	// case xmppMessage['paperInput-id'] !== paperinputId:
-	// 	// case xmppMessage['scenario-id'] !== scenarioId:
-	// 	// 	return;
-	// 	// case xmppMessage.status === 'ok':
-	// 	// 	return this.updatePaper(this.paperId, this.state);
-	// 	// default:
-	// 	// 	return;
-	// 	// }
-
-
-	// }),
 	allVerifySuccessful() {
 		let { scenario, proposal } = this.get('model'),
 			insideDetail = '并进入下一个季度决策';
@@ -210,7 +103,7 @@ export default Controller.extend({
 		if (isEmpty(firstNotFinishBI.get('resourceConfigId'))) {
 			detail = `尚未对“${hospitalName}”进行代表分配，请为其分配代表。`;
 		} else {
-			detail = `尚未对“${hospitalName}”进行资源分配，请为其分配资源。`;
+			detail = `尚未对“${hospitalName}”下的药品进行资源分配，请为其分配资源，若不分配，请输入值“0”。`;
 		}
 		this.set('warning', {
 			open: true,
@@ -277,7 +170,8 @@ export default Controller.extend({
 	sendInput(state) {
 		this.set('loading', true);
 		const ajax = this.get('ajax'),
-			converse = this.get('converse'),
+			// converse = this.get('converse'),
+			CONVERSE = window.converse,
 			applicationAdapter = this.get('store').adapterFor('application'),
 			store = this.get('store'),
 			model = this.get('model'),
@@ -292,6 +186,40 @@ export default Controller.extend({
 			phase = scenario.get('phase'),
 			businessinputs = businessInputs,
 			goodsinputs = goodsInputs;
+
+		if (state !== 1 && state !== 4) {
+			// converse.initialize();
+			try {
+				CONVERSE.plugins.add('chat_plugin', {
+					initialize: function () {
+						this._converse.log('converse plugin initialize');
+						this.indexController.set('hasPlugin', true);
+						this._converse.api.listen.on('message', obj => {
+							let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
+
+							window.console.log(JSON.parse(message).msg);
+							window.console.log(this._converse.api.user.status.get());
+							if (!isEmpty(message)) {
+								this.indexController.set('xmppMessage', JSON.parse(message));
+								return JSON.parse(message);
+							}
+						});
+						// this._converse.api.listen.on('disconnected', () => {
+						// 	window.console.log('disconnected');
+						// 	converse.initialize();
+						// });
+						// this._converse.api.listen.on('statusChanged', status => {
+						// 	window.console.log('statusChanged');
+						// 	window.console.log('status');
+						// });
+					}
+				});
+			} catch (error) {
+				// 说明已经存在，不做事情
+				window.console.warn(error);
+			}
+		}
+		// 重新初始化 xmpp 的链接，保证由于不活跃状态的掉线不重连
 
 		// goodsinputs.save()
 		all(goodsinputs.map(ele => ele.save()))
@@ -355,7 +283,7 @@ export default Controller.extend({
 					return null;
 				}
 				// 重新初始化 xmpp 的链接，保证由于不活跃状态的掉线不重连
-				converse.initialize();
+				// converse.initialize();
 				return ajax.request(`${version}/CallRCalculate`, {
 					method: 'POST',
 					data: JSON.stringify({

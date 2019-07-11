@@ -39,11 +39,11 @@ export default Component.extend({
 			// sortable: false
 		}, {
 			label: '患者数量',
-			valuePath: 'patientNumber',
+			valuePath: 'patientNumber'
 			// sortable: false
 		}, {
 			label: '药品准入情况',
-			valuePath: 'drugEntranceInfo',
+			valuePath: 'drugEntranceInfo'
 			// sortable: false
 		}, {
 			label: '上季度销售额',

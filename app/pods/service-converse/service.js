@@ -1,5 +1,4 @@
 import Service from '@ember/service';
-// import { isEmpty } from '@ember/utils';
 import ENV from 'ucb-tmist/config/environment';
 
 const CONVERSE = window.converse;
@@ -17,7 +16,7 @@ export default Service.extend({
 			'auto_login': true,
 			jid: 'swang@max.logic',
 			password: 'swang',
-			keepalive: true,
+			// keepalive: true,
 			i18n: 'zh',
 			debug: ENV.environment === 'development',
 			'auto_join_rooms': [
@@ -30,6 +29,24 @@ export default Service.extend({
 			'whitelisted_plugins': ['chat_plugin']
 		});
 	}
+	// generatePluginConfig(controller) {
+	// 	return EmberObject.create({
+	// 		initialize: function () {
+	// 			this._converse.log('converse plugin initialize');
+	// 			controller.set('hasPlugin', true);
+	// 			this._converse.api.listen.on('message', obj => {
+	// 				let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
+
+	// 				window.console.log(JSON.parse(message).msg);
+	// 				window.console.log(this._converse.api.user.status.get());
+	// 				if (!isEmpty(message)) {
+	// 					controller.set('xmppMessage', JSON.parse(message));
+	// 					return JSON.parse(message);
+	// 				}
+	// 			});
+	// 		}
+	// 	});
+	// }
 	// addPlugins(controller) {
 	// 	const that = this;
 

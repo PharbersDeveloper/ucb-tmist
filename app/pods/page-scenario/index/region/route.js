@@ -13,7 +13,7 @@ export default Route.extend({
 			{ increaseSalesReports, tmpHeadQ, selfGoodsConfigs, destConfigRegions, barLineKeys } = pageResultModel;
 
 		let citySalesReports = A([]),
-			citySalesReportsCities = A([]),
+			// citySalesReportsCities = A([]),
 			formatCitySalesReports = A([]),
 			cities = A([]),
 			tableHeadCity = A([]),

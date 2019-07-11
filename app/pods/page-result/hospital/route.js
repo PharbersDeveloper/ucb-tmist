@@ -7,7 +7,7 @@ export default Route.extend({
 	handler: service('serviceResultHandler'),
 	cookies: service(),
 	model() {
-		const { store, handler, cookies } = this,
+		const { store, handler } = this,
 			pageResultModel = this.modelFor('page-result'),
 			{ curPaper, detailProposal, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageResultModel;
 
@@ -24,7 +24,7 @@ export default Route.extend({
 			barLineDataHosp = A([]);
 
 		return detailProposal.get('proposal')
-			.then(data => {
+			.then(() => {
 
 				return store.query('paper', {
 					// 'proposal-id': data.get('id'),
