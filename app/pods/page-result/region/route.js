@@ -12,9 +12,9 @@ export default Route.extend({
 			pageResultModel = this.modelFor('page-result'),
 			{ increaseSalesReports, tmpHeadQ, selfGoodsConfigs, destConfigRegions, barLineKeys } = pageResultModel;
 
-		let citySalesReports = A([]),
-			// citySalesReportsCities = A([]),
-			formatCitySalesReports = A([]),
+		// let citySalesReports = A([]),
+		// citySalesReportsCities = A([]),
+		let formatCitySalesReports = A([]),
 			cities = A([]),
 			tableHeadCity = A([]),
 			tableBodyCity = A([]),
@@ -33,18 +33,18 @@ export default Route.extend({
 					return store.findRecord('citySalesReport', ele);
 				}));
 			}).then(data => {
-				citySalesReports = data;
+				// citySalesReports = data;
 				// 获取关联的所有城市信息
 				return all(data.map(ele => ele.get('city')));
-			}).then(data => {
-				citySalesReportsCities = data.map((ele, index) => {
-					return {
-						name: ele.name,
-						city: ele,
-						goodsConfig: citySalesReports[index].goodsConfig,
-						report: citySalesReports[index]
-					};
-				});
+			}).then(() => {
+				// citySalesReportsCities = data.map((ele, index) => {
+				// 	return {
+				// 		name: ele.name,
+				// 		city: ele,
+				// 		goodsConfig: citySalesReports[index].goodsConfig,
+				// 		report: citySalesReports[index]
+				// 	};
+				// });
 				return destConfigRegions.firstObject.get('regionConfig');
 			}).then(data => {
 				return data.get('region');
@@ -79,7 +79,7 @@ export default Route.extend({
 				barLineDataCity = handler.salesTrend(barLineKeys, formatCitySalesReports, tmpHeadQ);
 
 				let cityCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`,
-					`YTD销售额`],
+						`YTD销售额`],
 					lastSeasonReports = formatCitySalesReports.slice(-1).lastObject.dataReports;
 
 
