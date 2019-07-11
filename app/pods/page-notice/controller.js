@@ -57,7 +57,7 @@ export default Controller.extend({
 	// 	};
 	// }),
 	actions: {
-		entryMission(proposalId) {
+		entryMission() {
 			let now = new Date().getTime();
 
 			if (this.get('model').detailPaper.state !== 1) {

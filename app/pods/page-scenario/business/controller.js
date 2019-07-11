@@ -35,7 +35,7 @@ export default Controller.extend({
 		return destConfigHospitals;
 	}),
 	warning: computed('total.verify.{overTotalIndicators,overTotalBudgets,illegal}', function () {
-		let { overTotalIndicators, overTotalBudgets, illegal } =
+		let { overTotalIndicators, overTotalBudgets } =
 			this.get('total.verify'),
 			warning = { open: false, title: '', detail: '' };
 

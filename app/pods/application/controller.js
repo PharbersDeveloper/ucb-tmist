@@ -70,7 +70,7 @@ export default Controller.extend({
 					D = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()) + ' ',
 					h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':',
 					m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':',
-					s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+					s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
 
 				// 输出结果：yyyy-mm-dd hh:mm:ss
 				now = Y + M + D + h + m + s;
@@ -91,18 +91,6 @@ export default Controller.extend({
 					return null;
 				}
 				return 'test';
-				// TODO 无R计算的逻辑
-				// return ajax.request(`${version}/CallRCalculate`, {
-				// 	method: 'POST',
-				// 	data: JSON.stringify({
-				// 		'proposal-id': this.get('model').proposal.id,
-				// 		'account-id': this.get('cookies').read('account_id')
-				// 	})
-				// }).then((response) => {
-				// 	if (response.status === 'Success') {
-				// 		return that.updatePaper(store, paperId, state, that);
-				// 	}
-				// 	return response;
 			}).then((data) => {
 				if (!isEmpty(data)) {
 					this.transitionToRoute('page-result', paperId);
@@ -113,7 +101,6 @@ export default Controller.extend({
 				window.console.log('error');
 				window.console.log(err);
 			});
-		// });
 	},
 	judgeOauth() {
 		let oauthService = this.get('oauthService'),

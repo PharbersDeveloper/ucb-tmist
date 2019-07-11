@@ -8,9 +8,9 @@ export default Route.extend({
 	cookies: service(),
 	statusService: service(),
 	model() {
-		const { store, cookies, handler } = this,
+		const { store, handler } = this,
 			pageScenarioModel = this.modelFor('page-scenario'),
-			{ proposal, tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageScenarioModel;
+			{ tmpHeadQ, selfGoodsConfigs, destConfigHospitals, barLineKeys } = pageScenarioModel;
 
 		let paper = null,
 			hospitalSalesReports = A([]),

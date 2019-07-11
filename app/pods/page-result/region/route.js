@@ -13,7 +13,7 @@ export default Route.extend({
 			{ increaseSalesReports, tmpHeadQ, selfGoodsConfigs, destConfigRegions, barLineKeys } = pageResultModel;
 
 		let citySalesReports = A([]),
-			citySalesReportsCities = A([]),
+			// citySalesReportsCities = A([]),
 			formatCitySalesReports = A([]),
 			cities = A([]),
 			tableHeadCity = A([]),
@@ -79,7 +79,7 @@ export default Route.extend({
 				barLineDataCity = handler.salesTrend(barLineKeys, formatCitySalesReports, tmpHeadQ);
 
 				let cityCustomHead = [`指标贡献率`, `指标增长率`, `指标达成率`, `销售额同比增长`, `销售额环比增长`, `销售额贡献率`,
-						`YTD销售额`],
+					`YTD销售额`],
 					lastSeasonReports = formatCitySalesReports.slice(-1).lastObject.dataReports;
 
 

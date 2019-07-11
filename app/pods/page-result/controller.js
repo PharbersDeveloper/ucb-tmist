@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import ENV from 'ucb-tmist/config/environment';
+// import ENV from 'ucb-tmist/config/environment';
 import { inject as service } from '@ember/service';
 // import { isEmpty } from '@ember/utils';
 // import { all, reject } from 'rsvp';

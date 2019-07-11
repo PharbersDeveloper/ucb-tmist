@@ -143,7 +143,7 @@ export default Controller.extend({
 	// 			return null;
 	// 		});
 	// },
-	entryMission(proposalId) {
+	entryMission() {
 		localStorage.setItem('isHistory', false);
 		let now = null,
 			date = new Date(),
@@ -152,7 +152,7 @@ export default Controller.extend({
 			D = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()) + ' ',
 			h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':',
 			m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':',
-			s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+			s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
 
 		// 输出结果：yyyy-mm-dd hh:mm:ss
 		now = Y + M + D + h + m + s;

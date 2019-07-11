@@ -38,16 +38,16 @@ export default Route.extend({
 
 		promiseArray = destConfigHospitals.map(ele => {
 			let goodsInputs = selfGoodsConfigs.map(item => {
-				return store.createRecord('goodsinput', {
-					destConfigId: ele.get('id'),
-					goodsConfig: item,
-					salesTarget: '',	// 销售目标设定
-					budget: ''	//预算设定
+					return store.createRecord('goodsinput', {
+						destConfigId: ele.get('id'),
+						goodsConfig: item,
+						salesTarget: '',	// 销售目标设定
+						budget: ''	//预算设定
 					// TODO 测试，用后删除
 					// salesTarget: 1,	// 销售目标设定
 					// budget: 1	//预算设定
-				});
-			}),
+					});
+				}),
 				businessinput = null;
 
 			if (isEmpty(lastSeasonHospitalSalesReports)) {
@@ -86,7 +86,7 @@ export default Route.extend({
 		});
 		return promiseArray;
 	},
-	model(params) {
+	model() {
 		const store = this.get('store'),
 			cookies = this.get('cookies'),
 			pageIndexModel = this.modelFor('index'),
@@ -336,6 +336,7 @@ export default Route.extend({
 
 		controller.set('businessInputs', model.businessInputs);
 		controller.set('loading', false);
+		controller.set('indexController', this.controllerFor('index'));
 		// controller.set('notice', true);
 
 		// if ([0, 2, 3].indexOf(model.paper.state) >= 0) {

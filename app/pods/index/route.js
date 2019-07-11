@@ -150,35 +150,66 @@ export default Route.extend({
 	},
 	setupController(controller) {
 		this._super(...arguments);
-		let converse = this.converse;
+		const converse = this.converse,
+			CONVERSE = window.converse;
 
-		console.log(!controller.get('hasPlugin'));
+		window.console.log(!controller.get('hasPlugin'));
 		if (!controller.get('hasPlugin')) {
 			converse.initialize();
 
-			window.converse.plugins.add('chat_plugin', {
-				initialize: function () {
-					window.console.log('converse plugin initialize');
-					controller.set('hasPlugin', true);
-					this._converse.api.listen.on('message', obj => {
-						let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
+			// CONVERSE.plugins.add('chat_plugin', {
+			// 	initialize: function () {
+			// 		this._converse.log('converse plugin initialize');
+			// 		controller.set('hasPlugin', true);
+			// 		this._converse.api.listen.on('message', obj => {
+			// 			let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
 
-						window.console.log(JSON.parse(message).msg);
-						if (!isEmpty(message)) {
-							controller.set('xmppMessage', JSON.parse(message));
-							return JSON.parse(message);
-						}
-					});
-					this._converse.api.listen.on('disconnected', () => {
-						window.console.log('disconnected');
-						converse.initialize();
-					});
-					this._converse.api.listen.on('statusChanged', status => {
-						window.console.log('statusChanged');
-						window.console.log('status');
-					});
-				}
-			});
+			// 			window.console.log(JSON.parse(message).msg);
+			// 			window.console.log(this._converse.api.user.status.get());
+			// 			if (!isEmpty(message)) {
+			// 				controller.set('xmppMessage', JSON.parse(message));
+			// 				return JSON.parse(message);
+			// 			}
+			// 		});
+			// 		this._converse.api.listen.on('disconnected', () => {
+			// 			window.console.log('disconnected');
+			// 			converse.initialize();
+			// 		});
+			// 		this._converse.api.listen.on('statusChanged', status => {
+			// 			window.console.log('statusChanged');
+			// 			window.console.log('status');
+			// 		});
+			// 	}
+			// });
+
+			try {
+				CONVERSE.plugins.add('chat_plugin', {
+					initialize: function () {
+						this._converse.log('converse plugin initialize');
+						controller.set('hasPlugin', true);
+						this._converse.api.listen.on('message', obj => {
+							let message = isEmpty(obj.stanza.textContent) ? '{}' : obj.stanza.textContent;
+
+							window.console.log(JSON.parse(message).msg);
+							window.console.log(this._converse.api.user.status.get());
+							if (!isEmpty(message)) {
+								controller.set('xmppMessage', JSON.parse(message));
+								return JSON.parse(message);
+							}
+						});
+						// this._converse.api.listen.on('disconnected', () => {
+						// 	window.console.log('disconnected');
+						// 	converse.initialize();
+						// });
+						// this._converse.api.listen.on('statusChanged', status => {
+						// 	window.console.log('statusChanged');
+						// 	window.console.log('status');
+						// });
+					}
+				});
+			} catch (error) {
+				window.console.warn(error);
+			}
 		}
 	}
 	// afterModel(model) {
